@@ -17,6 +17,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import axios from 'axios';
+import BreederStore from '@/store/breeders';
 
 export default defineComponent({
   name: 'BreederForm',
@@ -25,6 +26,7 @@ export default defineComponent({
     const link = ref('');
     const picture = ref('');
     const title = ref('');
+    const breederStore = BreederStore;
 
     async function send() {
       try {
@@ -33,6 +35,7 @@ export default defineComponent({
           picture: picture.value,
           title: title.value,
         });
+        await breederStore().fetch();
       } catch (err) {
         console.log(err);
       }
