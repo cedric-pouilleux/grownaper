@@ -1,14 +1,17 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <h1>Home page</h1>
+    <BreederForm/>
+    <BreedersList/>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import BreederForm from '@/components/BreederForm.vue';
+import BreedersList from '@/components/BreedersList.vue';
 
 export default defineComponent({
-  name: 'HomeView',
+  name: 'HomePage',
+  components: { BreedersList, BreederForm },
 });
 </script>
