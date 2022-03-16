@@ -13,6 +13,7 @@
     "axios": "^0.26.1",
     "express": "^4.17.3",
     "netlify-lambda": "^2.0.15",
+    "pinia": "^2.0.12",
     "serverless-http": "^2.7.0",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
