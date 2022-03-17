@@ -1,12 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import axios from 'axios';
-
-type Variety = {
-  _id: string,
-  title: string,
-  slug: string
-}
+import { Variety } from '@/types';
 
 const varietyStore = defineStore('variety', () => {
   const all = ref<Variety[]>([]);

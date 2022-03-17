@@ -1,13 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import axios from 'axios';
-
-type Plant = {
-  _id: string,
-  createdAt: Date,
-  variety: string,
-  breeder: string
-}
+import { Plant } from '@/types';
 
 const plantStore = defineStore('plant', () => {
   const all = ref<Plant[]>([]);

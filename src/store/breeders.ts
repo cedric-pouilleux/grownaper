@@ -1,13 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import axios from 'axios';
-
-type Breeder = {
-  _id: string,
-  title: string,
-  picture?: string,
-  link?: string,
-}
+import { Breeder } from '@/types';
 
 const breederStore = defineStore('breeder', () => {
   const all = ref<Breeder[]>([]);

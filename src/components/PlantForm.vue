@@ -1,6 +1,11 @@
 <template>
-  <form @submit="add">
-    <h2>Add plant</h2>
+  <form v-on="{ submit: (editMode) ? edit : add }">
+    <h2>
+      <template v-if="editMode">
+        Edit plant <button @click="switchToAdd">cancel</button>
+      </template>
+      <template v-else>Add plant</template>
+    </h2>
     <label for="breeder-select">
       Breeder :
       <select v-model="selectedBreederId" id="breeder-select">
@@ -17,12 +22,14 @@
         </option>
       </select>
     </label>
-    <button type="submit">Submit</button>
+    <button type="submit">{{ editMode ? 'Edit' : 'Submit' }}</button>
   </form>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import {
+  defineComponent, watch, computed, ref,
+} from 'vue';
 import BreederStore from '@/store/breeders';
 import VarietyStore from '@/store/varieties';
 import PlantStore from '@/store/plants';
@@ -31,12 +38,19 @@ import axios from 'axios';
 export default defineComponent({
   name: 'PlantForm',
 
-  setup() {
+  props: {
+    id: { type: String, required: false },
+    variety: { type: String, default: '' },
+    breeder: { type: String, default: '' },
+  },
+
+  setup(props, { emit }) {
     const plantStore = PlantStore();
     const breederStore = BreederStore();
     const varietyStore = VarietyStore();
     const selectedBreederId = ref<string | null>(null);
     const selectedVarietyId = ref<string | null>(null);
+    const editMode = computed(() => Boolean(props.id));
 
     async function add(e: Event) : Promise<void> {
       e.preventDefault();
@@ -53,12 +67,38 @@ export default defineComponent({
       }
     }
 
+    async function edit(e: Event) : Promise<void> {
+      e.preventDefault();
+      try {
+        await axios.post('https://grownaper.herokuapp.com/plant/edit', {
+          id: props.id,
+          variety: props.variety,
+          breeder: props.breeder,
+        });
+        await plantStore.fetch();
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+    function switchToAdd() {
+      emit('addMode');
+    }
+
+    watch(() => props.id, (newVal) => {
+      selectedVarietyId.value = props.variety;
+      selectedBreederId.value = props.breeder;
+    });
+
     return {
       breederStore,
       varietyStore,
       selectedBreederId,
       selectedVarietyId,
+      editMode,
       add,
+      edit,
+      switchToAdd,
     };
   },
 
