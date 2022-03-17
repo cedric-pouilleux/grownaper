@@ -1,7 +1,10 @@
 <template>
   <div class="home">
+    <PlantForm/>
+    <VarietyForm/>
     <BreederForm/>
     <BreedersList/>
+    <VarietiesList/>
   </div>
 </template>
 
@@ -9,9 +12,18 @@
 import { defineComponent } from 'vue';
 import BreederForm from '@/components/BreederForm.vue';
 import BreedersList from '@/components/BreedersList.vue';
+import PlantForm from '@/components/PlantForm.vue';
+import VarietiesList from '@/components/VarietiesList.vue';
+import VarietyForm from '@/components/VarietyForm.vue';
 
 export default defineComponent({
   name: 'HomePage',
-  components: { BreedersList, BreederForm },
+  components: {
+    VarietyForm,
+    VarietiesList,
+    PlantForm,
+    BreedersList,
+    BreederForm,
+  },
 });
 </script>
