@@ -96,7 +96,7 @@ export default defineComponent({
       emit('addMode');
     }
 
-    watch(() => props.id, (newVal) => {
+    watch(() => props.id, () => {
       selectedVarietyId.value = props.variety;
       selectedBreederId.value = props.breeder;
       selectedCreatedAt.value = props.createdAt;

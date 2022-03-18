@@ -30,7 +30,7 @@ import { defineComponent, ref } from 'vue';
 import PlantForm from '@/components/PlantForm.vue';
 import plantStore from '@/store/plants';
 import QrcodeVue from 'qrcode.vue';
-import { Plant, Variety, Breeder } from '@/types';
+import { Plant } from '@/types';
 import axios from 'axios';
 import moment from 'moment';
 
@@ -63,8 +63,8 @@ export default defineComponent({
 
     function edit(plant: Plant) {
       selectedPlantId.value = plant._id;
-      selectedPlantVariety.value = plant.variety._id;
-      selectedPlantBreeder.value = plant.breeder._id;
+      selectedPlantVariety.value = plant.variety?._id || null;
+      selectedPlantBreeder.value = plant.breeder?._id || null;
       selectedCreatedAt.value = moment(plant.createdAt).format('YYYY-MM-DD');
     }
 
