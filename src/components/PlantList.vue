@@ -9,8 +9,8 @@
     <ul>
       <li v-for="plant in store.all" :key="plant._id">
         <header>
-          <p>{{ plant.breeder.title }}</p>
-          <p>{{ plant.variety.title }}</p>
+          <p v-if="plant.breeder">{{ plant.breeder.title }}</p>
+          <p v-if="plant.variety">{{ plant.variety.title }}</p>
           <div class="plants-list__createdAt">{{ readableDate(plant.createdAt) }}</div>
         </header>
         <qrcode-vue :value="plant.qrcode" :size="140" level="H" />
