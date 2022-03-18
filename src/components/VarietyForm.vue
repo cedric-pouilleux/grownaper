@@ -6,47 +6,52 @@
   </h2>
   <form v-on="{ submit: (edition) ? edit : add }">
     <label for="variety-title">
-      <input type="text" id="variety-title" v-model="varietyTitle" />
+      <input type="text"
+             required
+             id="variety-title"
+             v-model="title" />
     </label>
     <button type="submit">{{ edition ? 'Edit' : 'New' }}</button>
   </form>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from 'vue';
+import {
+  defineComponent, ref, watch, computed, PropType, reactive, toRefs,
+} from 'vue';
 import axios from 'axios';
 import VarietyStore from '@/store/varieties';
+import { Variety } from '@/types';
 
 export default defineComponent({
   name: 'VarietyForm',
 
   props: {
-    id: {
-      type: String,
-      default: null,
-    },
-    title: {
-      type: String,
-      default: null,
+    variety: {
+      type: Object as PropType<Variety>,
+      required: false,
     },
   },
 
-  setup(props) {
-    const varietyTitle = ref<string | null>(null);
-    const edition = ref<boolean>(false);
+  emit: ['cancel'],
+
+  setup(props, { emit }) {
     const varietyStore = VarietyStore();
 
-    watch(() => props.id, (value) => {
-      edition.value = !!value;
-      varietyTitle.value = props.title;
+    const variety = reactive<Variety>({
+      title: '',
+    });
+
+    watch(() => props.variety, (value) => {
+      Object.assign(variety, value || {
+        title: '',
+      });
     });
 
     async function add(e: Event) {
       e.preventDefault();
       try {
-        await axios.post('https://grownaper.herokuapp.com/variety/add', {
-          title: varietyTitle.value,
-        });
+        await axios.post('https://grownaper.herokuapp.com/variety/add', variety);
         await varietyStore.fetch();
       } catch (err) {
         console.log(err);
@@ -56,27 +61,19 @@ export default defineComponent({
     async function edit(e: Event) : Promise<void> {
       e.preventDefault();
       try {
-        await axios.put('https://grownaper.herokuapp.com/variety/edit', {
-          _id: props.id,
-          title: varietyTitle.value,
-        });
+        await axios.put('https://grownaper.herokuapp.com/variety/edit', variety);
         await varietyStore.fetch();
       } catch (err) {
         console.log(err);
       }
     }
 
-    function cancel() {
-      edition.value = false;
-      varietyTitle.value = null;
-    }
-
     return {
+      ...toRefs(variety),
+      edition: computed(() => !!props.variety),
+      cancel: () => emit('cancel'),
       add,
       edit,
-      varietyTitle,
-      edition,
-      cancel,
     };
   },
 

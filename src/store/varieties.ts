@@ -13,6 +13,10 @@ const varietyStore = defineStore('variety', () => {
     }
   }
 
+  fetch().then(
+    () => console.info('Varieties data fetch success'),
+  );
+
   return {
     fetch,
     all,

@@ -1,17 +1,15 @@
 type Variety = {
-  _id: string,
+  _id?: string,
   title: string,
-  slug: string,
-  // eslint-disable-next-line no-use-before-define
-  breeder: Breeder[],
+  slug?: string
 }
 
 type Breeder = {
-  _id: string,
+  _id?: string,
   title: string,
   picture?: string,
-  link?: string,
-  varieties: Variety[]
+  country?: string,
+  link?: string
 }
 
 type Plant = {

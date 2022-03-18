@@ -13,6 +13,10 @@ const plantStore = defineStore('plant', () => {
     }
   }
 
+  fetch().then(
+    () => console.info('Breeder data fetch success'),
+  );
+
   return {
     fetch,
     all,

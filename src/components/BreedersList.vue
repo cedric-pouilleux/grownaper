@@ -1,10 +1,11 @@
 <template>
   <div class="breeders-list">
     <h2>Breeders list</h2>
-    <BreederForm/>
+    <BreederForm :selected="selectedBreeder" @cancel="cancel"/>
     <ul class="row-list">
-      <li v-for="breeder in store.all" :key="breeder._id">
+      <li v-for="breeder in breeders.all" :key="breeder._id">
         {{breeder.title}} - {{breeder.picture}} - {{breeder.link}}
+        <button class="btn" @click="edit(breeder)">Edit</button>
         <button class="btn btn-danger" @click="remove(breeder._id)">Remove</button>
       </li>
     </ul>
@@ -12,10 +13,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import breederStore from '@/store/breeders';
 import BreederForm from '@/components/BreederForm.vue';
 import axios from 'axios';
+import { Breeder } from '@/types';
 
 export default defineComponent({
   name: 'BreedersList',
@@ -25,14 +27,15 @@ export default defineComponent({
   },
 
   setup() {
-    const store = breederStore();
-    store.fetch();
+    const breeders = breederStore();
+
+    const selectedBreeder = ref<Breeder | null>(null);
 
     async function remove(id: string): Promise<void> {
       try {
-        await axios.delete(`https://grownaper.herokuapp.com/breeders/delete/${id}`);
+        await axios.delete(`https://grownaper.herokuapp.com/breeder/delete/${id}`);
         // add visual action for delete success
-        await store.fetch();
+        await breeders.fetch();
       } catch (err) {
         console.log(err);
       }
@@ -40,7 +43,10 @@ export default defineComponent({
 
     return {
       remove,
-      store,
+      cancel: () => { selectedBreeder.value = null; },
+      edit: (breeder: Breeder) => { selectedBreeder.value = breeder; },
+      breeders,
+      selectedBreeder,
     };
   },
 });

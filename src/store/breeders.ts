@@ -13,6 +13,10 @@ const breederStore = defineStore('breeder', () => {
     }
   }
 
+  fetch().then(
+    () => console.info('Breeder data fetch success'),
+  );
+
   return {
     fetch,
     all,
