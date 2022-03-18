@@ -8,7 +8,10 @@
       Picture <input type="text" name="picture" id="breederForm_picture" v-model="picture" />
     </label>
     <label for="breederForm_link">
-      Link <input type="text" name="picture" id="breederForm_link" v-model="link" />
+      Link <input type="text" name="link" id="breederForm_link" v-model="link" />
+    </label>
+    <label for="breederForm_country">
+      Country <input type="text" name="country" id="breederForm_country" v-model="country" />
     </label>
     <button @click="send">Submit</button>
   </div>
@@ -26,6 +29,7 @@ export default defineComponent({
     const link = ref('');
     const picture = ref('');
     const title = ref('');
+    const country = ref('');
     const breederStore = BreederStore;
 
     async function send() {
@@ -34,6 +38,7 @@ export default defineComponent({
           link: link.value,
           picture: picture.value,
           title: title.value,
+          country: country.value,
         });
         await breederStore().fetch();
       } catch (err) {
@@ -46,6 +51,7 @@ export default defineComponent({
       picture,
       title,
       send,
+      country,
     };
   },
 });

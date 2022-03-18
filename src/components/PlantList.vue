@@ -117,7 +117,6 @@ export default defineComponent({
       list-style: none;
       display: flex;
       flex-wrap: wrap;
-      justify-content: space-between;
 
       li {
         border: 1px solid #ebebeb;

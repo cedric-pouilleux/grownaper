@@ -1,5 +1,6 @@
 <template>
   <h2>Varieties list</h2>
+  <VarietyForm/>
   <ul>
     <li v-for="variety in store.all" :key="variety._id">
       {{variety.title}}
@@ -12,9 +13,14 @@
 import { defineComponent } from 'vue';
 import varietiesStore from '@/store/varieties';
 import axios from 'axios';
+import VarietyForm from '@/components/VarietyForm.vue';
 
 export default defineComponent({
   name: 'VarietiesList',
+
+  components: {
+    VarietyForm,
+  },
 
   setup() {
     const store = varietiesStore();

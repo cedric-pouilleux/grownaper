@@ -1,9 +1,8 @@
 <template>
   <form v-on="{ submit: (editMode) ? edit : add }" class="plant-form">
+    <button v-if="editMode" @click="switchToAdd">cancel</button>
     <h2>
-      <template v-if="editMode">
-        Edit plant <button @click="switchToAdd">cancel</button>
-      </template>
+      <template v-if="editMode">Edit plant</template>
       <template v-else>Add plant</template>
     </h2>
     <label class="plant-form__label" for="plant-created-at">
@@ -53,9 +52,14 @@ export default defineComponent({
     const plantStore = PlantStore();
     const breederStore = BreederStore();
     const varietyStore = VarietyStore();
+
+    varietyStore.fetch();
+    breederStore.fetch();
+
     const selectedBreederId = ref<string | null>(null);
     const selectedVarietyId = ref<string | null>(null);
     const selectedCreatedAt = ref<string | null>(moment().format('YYYY-MM-D'));
+
     const editMode = computed(() => Boolean(props.id));
 
     async function add(e: Event) : Promise<void> {
