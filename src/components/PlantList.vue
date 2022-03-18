@@ -14,8 +14,12 @@
           <div class="plants-list__createdAt">{{ readableDate(plant.createdAt) }}</div>
         </header>
         <qrcode-vue :value="plant.qrcode" :size="140" level="H" />
-        <button @click="edit(plant)">Edit</button>
-        <button @click="remove(plant._id)">Remove</button>
+        <button class="btn"
+                :class="{ 'btn-warning' : requiredAction(plant) }"
+                @click="edit(plant)">
+          Edit
+        </button>
+        <button class="btn" @click="remove(plant._id)">Remove</button>
       </li>
     </ul>
   </div>
@@ -68,11 +72,15 @@ export default defineComponent({
       return moment(date).format('YYYY-MM-DD');
     }
 
-    function setToAddMode() {
+    function setToAddMode(): void {
       selectedPlantId.value = null;
       selectedPlantVariety.value = null;
       selectedPlantBreeder.value = null;
       selectedCreatedAt.value = readableDate(new Date());
+    }
+
+    function requiredAction(plant: Plant): boolean {
+      return !(plant.breeder && plant.variety);
     }
 
     return {
@@ -86,6 +94,7 @@ export default defineComponent({
       setToAddMode,
       selectedCreatedAt,
       moment,
+      requiredAction,
     };
   },
 
@@ -125,7 +134,7 @@ export default defineComponent({
         font-size: .9em;
         align-content: center;
         flex-direction: column;
-        justify-content: space-between;
+        justify-content: end;
         padding: 10px;
         max-width: 140px;
 
