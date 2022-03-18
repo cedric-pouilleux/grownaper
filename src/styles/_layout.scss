@@ -2,12 +2,25 @@ body {
   font-family: Arial;
 }
 
-.btn {
+h2 {
+  font-weight: 700;
+}
 
+ul.row-list {
+  > li {
+    border-bottom: 1px #333333 solid;
+    padding: 6px;
+  }
+}
+
+/**
+ * Button styles
+ */
+.btn {
   background-color: #ccc;
   border: 0;
   cursor: pointer;
-  color: #333;
+  color: #fff;
   font-size: .8em;
   padding: 4px 8px;
   border-bottom: 1px solid #ebebeb;
@@ -17,12 +30,14 @@ body {
   }
 
   &-secondary {
-    color: #fff;
     background-color: #333;
   }
 
+  &-danger {
+    background-color: #ff0000;
+  }
+
   &-warning {
-    color: #fff;
     background-color: #cf974e;
   }
 

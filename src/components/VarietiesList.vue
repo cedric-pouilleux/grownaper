@@ -1,19 +1,21 @@
 <template>
   <h2>Varieties list</h2>
-  <VarietyForm/>
-  <ul>
+  <VarietyForm :id="selectedVarietyId" :title="selectedVarietyTitle"/>
+  <ul class="row-list">
     <li v-for="variety in store.all" :key="variety._id">
       {{variety.title}}
-      <button @click="remove(variety._id)">Remove</button>
+      <button class="btn" @click="edit(variety)">Edit</button>
+      <button class="btn btn-danger" @click="remove(variety._id)">Remove</button>
     </li>
   </ul>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import varietiesStore from '@/store/varieties';
 import axios from 'axios';
 import VarietyForm from '@/components/VarietyForm.vue';
+import { Variety } from '@/types';
 
 export default defineComponent({
   name: 'VarietiesList',
@@ -26,6 +28,9 @@ export default defineComponent({
     const store = varietiesStore();
     store.fetch();
 
+    const selectedVarietyTitle = ref<string | null>(null);
+    const selectedVarietyId = ref<string | null>(null);
+
     async function remove(id: string): Promise<void> {
       try {
         await axios.delete(`https://grownaper.herokuapp.com/variety/delete/${id}`);
@@ -36,9 +41,24 @@ export default defineComponent({
       }
     }
 
+    async function edit(variety: Variety) {
+      selectedVarietyTitle.value = variety.title;
+      selectedVarietyId.value = variety._id;
+      /*
+      try {
+        await axios.put(`https://grownaper.herokuapp.com/variety/edit/${variety._id}`);
+        await store.fetch();
+      } catch (err) {
+        console.log(err);
+      } */
+    }
+
     return {
       remove,
+      edit,
       store,
+      selectedVarietyTitle,
+      selectedVarietyId,
     };
   },
 

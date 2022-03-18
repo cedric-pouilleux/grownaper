@@ -92,6 +92,9 @@ export default defineComponent({
       }
     }
 
+    /**
+     * Remove this like varietyForm
+     */
     function switchToAdd() {
       emit('addMode');
     }

@@ -1,7 +1,11 @@
 <template>
-  <div class="admin">
-    <BreedersList/>
-    <VarietiesList/>
+  <div class="grid">
+    <div>
+      <BreedersList/>
+    </div>
+    <div>
+      <VarietiesList/>
+    </div>
   </div>
 </template>
 
@@ -19,3 +23,16 @@ export default defineComponent({
 });
 
 </script>
+
+<style lang="scss">
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    ". . ."
+    ". . ."
+    ". . .";
+}
+</style>

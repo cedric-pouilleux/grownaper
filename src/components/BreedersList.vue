@@ -1,12 +1,14 @@
 <template>
-  <h2>Breeders list</h2>
-  <BreederForm/>
-  <ul>
-    <li v-for="breeder in store.all" :key="breeder._id">
-      {{breeder.title}} - {{breeder.picture}} - {{breeder.link}}
-      <button @click="remove(breeder._id)">Remove</button>
-    </li>
-  </ul>
+  <div class="breeders-list">
+    <h2>Breeders list</h2>
+    <BreederForm/>
+    <ul class="row-list">
+      <li v-for="breeder in store.all" :key="breeder._id">
+        {{breeder.title}} - {{breeder.picture}} - {{breeder.link}}
+        <button class="btn btn-danger" @click="remove(breeder._id)">Remove</button>
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script lang="ts">
@@ -43,3 +45,6 @@ export default defineComponent({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+</style>
