@@ -16,7 +16,7 @@ type Breeder = {
 
 type Plant = {
   _id: string,
-  createdAt: Date,
+  createdAt: string,
   qrcode: string,
   variety: Variety,
   breeder: Breeder

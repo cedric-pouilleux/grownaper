@@ -4,12 +4,15 @@
     <PlantForm :id="selectedPlantId"
                :variety="selectedPlantVariety"
                :breeder="selectedPlantBreeder"
+               :createdAt="selectedCreatedAt"
                @addMode="setToAddMode"/>
     <ul>
       <li v-for="plant in store.all" :key="plant._id">
-        <div class="plants-list__createdAt">{{ readableDate(plant.createdAt) }}</div>
-        <p>Breeder : {{ plant.breeder.title }}</p>
-        <p>Variety : {{ plant.variety.title }}</p>
+        <header>
+          <p>{{ plant.breeder.title }}</p>
+          <p>{{ plant.variety.title }}</p>
+          <div class="plants-list__createdAt">{{ readableDate(plant.createdAt) }}</div>
+        </header>
         <qrcode-vue :value="plant.qrcode" :size="140" level="H" />
         <button @click="edit(plant)">Edit</button>
         <button @click="remove(plant._id)">Remove</button>
@@ -41,6 +44,7 @@ export default defineComponent({
 
     const selectedPlantId = ref<string | null>(null);
     const selectedPlantVariety = ref<string | null>(null);
+    const selectedCreatedAt = ref<string | null>(null);
     const selectedPlantBreeder = ref<string | null>(null);
 
     async function remove(id: string): Promise<void> {
@@ -57,16 +61,18 @@ export default defineComponent({
       selectedPlantId.value = plant._id;
       selectedPlantVariety.value = plant.variety._id;
       selectedPlantBreeder.value = plant.breeder._id;
+      selectedCreatedAt.value = moment(plant.createdAt).format('YYYY-MM-DD');
     }
 
-    function readableDate(date: Date): string {
-      return moment(date).format('MMMM Do YYYY');
+    function readableDate(date: Date | string): string {
+      return moment(date).format('YYYY-MM-DD');
     }
 
     function setToAddMode() {
       selectedPlantId.value = null;
       selectedPlantVariety.value = null;
       selectedPlantBreeder.value = null;
+      selectedCreatedAt.value = readableDate(new Date());
     }
 
     return {
@@ -78,6 +84,8 @@ export default defineComponent({
       selectedPlantBreeder,
       selectedPlantVariety,
       setToAddMode,
+      selectedCreatedAt,
+      moment,
     };
   },
 
@@ -89,20 +97,36 @@ export default defineComponent({
 
   .plants-list {
 
+    &__createdAt   {
+      margin-top: 6px;
+      font-size: .8em;
+      font-weight: 700;
+    }
+
+    header {
+      padding: 12px;
+    }
+
+    p {
+      margin: 0;
+    }
+
     ul {
       margin: 0;
       padding: 0;
       list-style: none;
       display: flex;
-      column-gap: 20px;
+      flex-wrap: wrap;
+      justify-content: space-between;
 
       li {
         border: 1px solid #ebebeb;
+        margin: 4px;
         display: flex;
         font-size: .9em;
-        justify-content: end;
         align-content: center;
         flex-direction: column;
+        justify-content: space-between;
         padding: 10px;
         max-width: 140px;
 
