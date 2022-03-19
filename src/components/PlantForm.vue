@@ -80,7 +80,9 @@ export default defineComponent({
       variety: undefined,
     };
 
-    const plant = reactive<Plant>(defaultPlant);
+    const plant = reactive<Plant>({
+      ...defaultPlant,
+    });
 
     watch(() => props.selected, (value) => {
       Object.assign(plant, value || defaultPlant);
@@ -89,11 +91,6 @@ export default defineComponent({
     function dateChange(event: Event) {
       const target = event.target as HTMLInputElement;
       plant.createdAt = target.value;
-    }
-
-    function cancel() {
-      Object.assign(plant, defaultPlant);
-      emit('cancel');
     }
 
     function action() {
@@ -108,7 +105,7 @@ export default defineComponent({
     return {
       ...toRefs(plant),
       inputDateFormat: computed(() => moment(plant.createdAt).format('YYYY-MM-DD')),
-      cancel,
+      cancel: () => emit('cancel'),
       edition: computed(() => !!props.selected),
       breeders,
       varieties,

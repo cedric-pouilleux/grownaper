@@ -1,41 +1,52 @@
 <template>
-  <button v-if="edition" @click="cancel">Cancel</button>
-  <h2>{{ edition ? 'Edit' : 'Add'}} breeder</h2>
-  <form class="vertical-form" v-on="{ submit: (edition) ? edit : add }">
+  <div class="admin-component breeders-form">
+    <header class="admin-component__header">
+      <h2>{{ edition ? 'Edit' : 'Add'}} breeder</h2>
+      <button class="admin-component__header-options btn btn-danger"
+              v-if="edition"
+              @click="cancel"> Cancel
+      </button>
+    </header>
+    <form class="vertical-form" v-on="{ submit: (edition) ? edit : add }">
       <label for="breederForm_title">
-          Title
-          <input type="text"
-                 name="title"
-                 id="breederForm_title"
-                 v-model="title" />
+        Title
+        <input type="text"
+               class="input"
+               name="title"
+               id="breederForm_title"
+               v-model="title" />
       </label>
 
       <label for="breederForm_picture">
-          Picture
-          <input type="text"
-                 name="picture"
-                 id="breederForm_picture"
-                 v-model="picture" />
+        Picture
+        <input type="text"
+               class="input"
+               name="picture"
+               id="breederForm_picture"
+               v-model="picture" />
       </label>
 
       <label for="breederForm_link">
-          Link
-          <input type="text"
-                 name="link"
-                 id="breederForm_link"
-                 v-model="link" />
+        Link
+        <input type="text"
+               class="input"
+               name="link"
+               id="breederForm_link"
+               v-model="link" />
       </label>
 
       <label for="breederForm_country">
-          Country
-          <input type="text"
-                 name="country"
-                 id="breederForm_country"
-                 v-model="country" />
+        Country
+        <input type="text"
+               class="input"
+               name="country"
+               id="breederForm_country"
+               v-model="country" />
       </label>
 
-      <button type="submit">{{ edition ? 'Edit' : 'New'}}</button>
-  </form>
+      <button class="btn" type="submit">{{ edition ? 'Edit' : 'New'}}</button>
+    </form>
+  </div>
 </template>
 
 <script lang="ts">

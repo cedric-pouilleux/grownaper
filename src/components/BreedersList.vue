@@ -1,7 +1,8 @@
 <template>
-  <div class="breeders-list">
-    <h2>Breeders list</h2>
-    <BreederForm :selected="selectedBreeder" @cancel="cancel"/>
+  <div class="admin-component breeders-list">
+    <header class="admin-component__header">
+      <h2>Breeders</h2>
+    </header>
     <ul class="row-list">
       <li v-for="breeder in breeders.all" :key="breeder._id">
         {{breeder.title}} - {{breeder.picture}} - {{breeder.link}}
@@ -15,18 +16,15 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import breederStore from '@/store/breeders';
-import BreederForm from '@/components/BreederForm.vue';
 import axios from 'axios';
 import { Breeder } from '@/types';
 
 export default defineComponent({
   name: 'BreedersList',
 
-  components: {
-    BreederForm,
-  },
+  emits: ['edit'],
 
-  setup() {
+  setup(params, { emit }) {
     const breeders = breederStore();
 
     const selectedBreeder = ref<Breeder | null>(null);
@@ -44,7 +42,7 @@ export default defineComponent({
     return {
       remove,
       cancel: () => { selectedBreeder.value = null; },
-      edit: (breeder: Breeder) => { selectedBreeder.value = breeder; },
+      edit: (breeder: Breeder) => { emit('edit', breeder); },
       breeders,
       selectedBreeder,
     };

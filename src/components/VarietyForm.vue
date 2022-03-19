@@ -1,18 +1,37 @@
 <template>
+
   <h2>
     <button v-if="edition" @click="cancel">Cancel</button>
     <template v-if="edition">Edit</template>
     <template v-else>Add</template> variety
   </h2>
+
   <form v-on="{ submit: (edition) ? edit : add }">
+
     <label for="variety-title">
       <input type="text"
              required
              id="variety-title"
              v-model="title" />
     </label>
+
+    <label for="variety-feminized">
+      Feminized
+      <input type="checkbox"
+             id="variety-feminized"
+             v-model="feminized" />
+    </label>
+
+    <label for="variety-automatic">
+      Automatic
+      <input type="checkbox"
+             id="variety-automatic"
+             v-model="automatic" />
+    </label>
+
     <button type="submit">{{ edition ? 'Edit' : 'New' }}</button>
   </form>
+
 </template>
 
 <script lang="ts">
@@ -27,27 +46,31 @@ export default defineComponent({
   name: 'VarietyForm',
 
   props: {
-    variety: {
+    selected: {
       type: Object as PropType<Variety>,
       required: false,
     },
   },
 
-  emit: ['cancel'],
+  emits: ['cancel'],
 
   setup(props, { emit }) {
     const varietyStore = VarietyStore();
 
-    const variety = reactive<Variety>({
+    const empty = {
       title: '',
+      slug: '',
+      breeder: [],
       feminized: false,
       automatic: false,
+    };
+
+    const variety = reactive<Variety>({
+      ...empty,
     });
 
-    watch(() => props.variety, (value) => {
-      Object.assign(variety, value || {
-        title: '',
-      });
+    watch(() => props.selected, (value) => {
+      Object.assign(variety, value || empty);
     });
 
     async function add(e: Event) {
@@ -72,7 +95,7 @@ export default defineComponent({
 
     return {
       ...toRefs(variety),
-      edition: computed(() => !!props.variety),
+      edition: computed(() => !!props.selected),
       cancel: () => emit('cancel'),
       add,
       edit,

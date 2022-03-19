@@ -2,16 +2,91 @@ body {
   font-family: Arial;
 }
 
-h2 {
+h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
 }
 
-ul.row-list {
-  > li {
-    border-bottom: 1px #333333 solid;
-    padding: 6px;
+.input {
+  padding: 4px;
+  border: 1px solid #ccc;
+  border-radius: 0;
+}
+
+/**
+ * Layout
+ */
+.admin-component {
+  border: 1px solid #ebebeb;
+  padding: 12px;
+
+  &__header {
+    border-bottom: 1px solid #ebebeb;
+    display: flex;
+    align-items: baseline;
+    margin-bottom: 10px;
+
+    &-options {
+      margin-left: auto;
+    }
+  }
+
+  h2 {
+    font-size: 20px;
+    padding-bottom: 10px;
   }
 }
+
+/**
+ * form
+ */
+.vertical-form {
+
+  label {
+    display: grid;
+    font-size: 14px;
+
+    input {
+      margin: 4px 0;
+    }
+  }
+
+}
+
+/**
+ * row list
+ */
+.row-list {
+  &__item {
+    border-bottom: 1px #ebebeb solid;
+    padding: 6px;
+    display: flex;
+    font-size: 14px;
+    column-gap: 6px;
+    align-items: center;
+  }
+  &__actions {
+      margin-left: auto;
+  }
+}
+
+
+/**
+ * Tags
+ */
+.tag {
+  background-color: #ebebeb;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+.inline-tags {
+  display: flex;
+  column-gap: 4px;
+  .tag {
+  }
+}
+
 
 /**
  * Button styles
