@@ -1,6 +1,6 @@
 <template>
   <div>
-    <nav>
+    <nav class="top-nabvar">
       <router-link to="/">Home</router-link> |
       <router-link to="/admin">Admin</router-link>
     </nav>

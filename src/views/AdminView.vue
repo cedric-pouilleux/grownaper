@@ -31,8 +31,8 @@ export default defineComponent({
   setup() {
     const selectedBreeder = ref<Breeder | null>(null);
 
-    function editBreeder(value: any) {
-      selectedBreeder.value = value;
+    function editBreeder(breeder: Breeder) {
+      selectedBreeder.value = breeder;
     }
 
     function cancel() {
