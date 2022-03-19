@@ -3,7 +3,7 @@
   <VarietyForm :variety="selectedVariety" @cancel="cancel"/>
   <ul class="row-list">
     <li v-for="variety in varieties.all" :key="variety._id">
-      {{variety.title}}
+      {{variety.slug}}
       <button class="btn" @click="edit(variety)">Edit</button>
       <button class="btn btn-danger" @click="remove(variety._id)">
         Remove
@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, toRef } from 'vue';
+import { defineComponent, ref } from 'vue';
 import varietiesStore from '@/store/varieties';
 import axios from 'axios';
 import VarietyForm from '@/components/VarietyForm.vue';
@@ -33,7 +33,7 @@ export default defineComponent({
 
     async function remove(id: string): Promise<void> {
       try {
-        await axios.delete(`https://grownaper.herokuapp.com/variety/delete/${id}`);
+        await axios.delete(`${process.env.VUE_APP_SERVER_ADDRESS}/variety/delete/${id}`);
         await varieties.fetch();
       } catch (err) {
         console.log(err);

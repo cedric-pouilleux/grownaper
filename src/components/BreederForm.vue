@@ -40,7 +40,7 @@
 
 <script lang="ts">
 import {
-  defineComponent, PropType, toRefs, reactive, ref, computed, watch,
+  defineComponent, PropType, toRefs, reactive, computed, watch,
 } from 'vue';
 import axios from 'axios';
 import BreederStore from '@/store/breeders';
@@ -80,7 +80,7 @@ export default defineComponent({
     async function add(e: Event) {
       e.preventDefault();
       try {
-        await axios.post('https://grownaper.herokuapp.com/breeder/add', breeder);
+        await axios.post(`${process.env.VUE_APP_SERVER_ADDRESS}/breeder/add`, breeder);
         await breederStore.fetch();
       } catch (err) {
         console.log(err);
@@ -90,7 +90,7 @@ export default defineComponent({
     async function edit(e: Event) {
       e.preventDefault();
       try {
-        await axios.put('https://grownaper.herokuapp.com/breeder/edit', breeder);
+        await axios.put(`${process.env.VUE_APP_SERVER_ADDRESS}/breeder/edit`, breeder);
         await breederStore.fetch();
       } catch (err) {
         console.log(err);

@@ -6,9 +6,11 @@
       <li v-for="plant in plants.all" :key="plant._id">
         <header>
           <h3 v-if="plant.name">{{ plant.name }}</h3>
-          <p>{{ (plant.variety) ? plant.variety.title : 'No variety, select one' }}</p>
-          <p>{{ (plant.breeder) ? plant.breeder.title : 'No breeder, select one' }}</p>
-          <div class="plants-list__createdAt">{{ readableDate(plant.createdAt) }}</div>
+          <p>{{ plant.variety?.title && 'No variety, select one' }}</p>
+          <p>{{ plant.breeder?.title && 'No breeder, select one' }}</p>
+          <div class="plants-list__createdAt">
+            {{ inputDateFormat(plant.createdAt) }}
+          </div>
         </header>
         <qrcode-vue :value="plant.qrcode" :size="140" level="H" />
         <button class="btn"
@@ -25,14 +27,11 @@
 </template>
 
 <script lang="ts">
-import {
-  computed, defineComponent, reactive, ref,
-} from 'vue';
+import { defineComponent, ref } from 'vue';
 import PlantForm from '@/components/PlantForm.vue';
 import plantStore from '@/store/plants';
 import QrcodeVue from 'qrcode.vue';
-import { Breeder, Plant, Variety } from '@/types';
-import axios from 'axios';
+import { Plant } from '@/types';
 import moment from 'moment';
 
 export default defineComponent({
@@ -46,24 +45,17 @@ export default defineComponent({
   setup() {
     const plants = plantStore();
 
+    console.log(plants.all);
+
     const selectedPlant = ref<Plant | null>(null);
 
-    async function remove(id: string): Promise<void> {
-      try {
-        await axios.delete(`https://grownaper.herokuapp.com/plant/delete/${id}`);
-        await plants.fetch();
-      } catch (err) {
-        console.log(err);
-      }
-    }
-
     return {
-      remove,
+      remove: (id: string) => plants.remove(id),
       selectedPlant,
       plants,
       edit: (plant: Plant) => { selectedPlant.value = plant; },
       cancel: () => { selectedPlant.value = null; },
-      readableDate: (date: Date | string): string => moment(date).format('YYYY-MM-DD'),
+      inputDateFormat: (date: Date | string): string => moment(date).format('YYYY-MM-DD'),
       requiredAction: (plant: Plant): boolean => !(plant.breeder && plant.variety),
       moment,
     };
@@ -105,7 +97,7 @@ export default defineComponent({
         font-size: .9em;
         align-content: center;
         flex-direction: column;
-        justify-content: end;
+        justify-content: flex-end;
         padding: 10px;
         max-width: 140px;
 

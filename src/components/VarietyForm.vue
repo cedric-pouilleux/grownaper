@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import {
-  defineComponent, ref, watch, computed, PropType, reactive, toRefs,
+  defineComponent, watch, computed, PropType, reactive, toRefs,
 } from 'vue';
 import axios from 'axios';
 import VarietyStore from '@/store/varieties';
@@ -40,6 +40,8 @@ export default defineComponent({
 
     const variety = reactive<Variety>({
       title: '',
+      feminized: false,
+      automatic: false,
     });
 
     watch(() => props.variety, (value) => {
@@ -51,7 +53,7 @@ export default defineComponent({
     async function add(e: Event) {
       e.preventDefault();
       try {
-        await axios.post('https://grownaper.herokuapp.com/variety/add', variety);
+        await axios.post(`${process.env.VUE_APP_SERVER_ADDRESS}/variety/add`, variety);
         await varietyStore.fetch();
       } catch (err) {
         console.log(err);
@@ -61,7 +63,7 @@ export default defineComponent({
     async function edit(e: Event) : Promise<void> {
       e.preventDefault();
       try {
-        await axios.put('https://grownaper.herokuapp.com/variety/edit', variety);
+        await axios.put(`${process.env.VUE_APP_SERVER_ADDRESS}/variety/edit`, variety);
         await varietyStore.fetch();
       } catch (err) {
         console.log(err);

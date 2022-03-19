@@ -33,7 +33,7 @@ export default defineComponent({
 
     async function remove(id: string): Promise<void> {
       try {
-        await axios.delete(`https://grownaper.herokuapp.com/breeder/delete/${id}`);
+        await axios.delete(`${process.env.VUE_APP_SERVER_ADDRESS}/breeder/delete/${id}`);
         // add visual action for delete success
         await breeders.fetch();
       } catch (err) {

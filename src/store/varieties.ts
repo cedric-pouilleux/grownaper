@@ -7,7 +7,7 @@ const varietyStore = defineStore('variety', () => {
   const all = ref<Variety[]>([]);
 
   async function fetch() {
-    const result = await axios.get('https://grownaper.herokuapp.com/varieties');
+    const result = await axios.get(`${process.env.VUE_APP_SERVER_ADDRESS}/varieties`);
     if (result.data) {
       all.value = result.data;
     }

@@ -1,6 +1,8 @@
 type Variety = {
   _id?: string,
   title: string,
+  feminized: boolean,
+  automatic: boolean,
   slug?: string
 }
 

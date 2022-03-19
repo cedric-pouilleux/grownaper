@@ -3,16 +3,19 @@
   <button v-if="edition" @click="cancel">cancel</button>
   <h2>{{ edition ? 'Edit' : 'Add' }} plant</h2>
 
-  <form v-on="{ submit: (edition) ? edit : add }" class="plant-form">
+  <form @submit.prevent="action" class="plant-form">
 
     <label class="plant-form__label" for="plant-created-at">
       Created at :
-      <input type="date" id="plant-created-at" v-model="createdAt">
+      <input type="date"
+             id="plant-created-at"
+             :value="inputDateFormat"
+             @input="dateChange" />
     </label>
 
     <label class="plant-form__label" for="plant-name">
       Name :
-      <input type="text" id="plant-name" v-model="name">
+      <input type="text" id="plant-name" v-model="name" />
     </label>
 
     <label class="plant-form__label" for="breeder-select">
@@ -49,7 +52,6 @@ import {
 import BreederStore from '@/store/breeders';
 import VarietyStore from '@/store/varieties';
 import PlantStore from '@/store/plants';
-import axios from 'axios';
 import moment from 'moment';
 import { Plant } from '@/types';
 
@@ -70,53 +72,48 @@ export default defineComponent({
     const breeders = BreederStore();
     const varieties = VarietyStore();
 
-    const plant = reactive<Plant>({
+    const defaultPlant = {
       name: '',
       createdAt: moment().format('YYYY-MM-D'),
       qrcode: '',
       breeder: undefined,
       variety: undefined,
-    });
+    };
 
-    async function add(e: Event) : Promise<void> {
-      e.preventDefault();
-      try {
-        await axios.post('https://grownaper.herokuapp.com/plant/add', plant);
-        await plantStore.fetch();
-      } catch (err) {
-        console.log(err);
-      }
-    }
-
-    async function edit(e: Event) : Promise<void> {
-      e.preventDefault();
-      try {
-        await axios.put('https://grownaper.herokuapp.com/plant/edit', plant);
-        await plantStore.fetch();
-      } catch (err) {
-        console.log(err);
-      }
-    }
+    const plant = reactive<Plant>(defaultPlant);
 
     watch(() => props.selected, (value) => {
-      console.log(value);
-      Object.assign(plant, value || {
-        name: '',
-        createdAt: moment().format('YYYY-MM-D'),
-        qrcode: '',
-        breeder: undefined,
-        variety: undefined,
-      });
+      Object.assign(plant, value || defaultPlant);
     });
+
+    function dateChange(event: Event) {
+      const target = event.target as HTMLInputElement;
+      plant.createdAt = target.value;
+    }
+
+    function cancel() {
+      Object.assign(plant, defaultPlant);
+      emit('cancel');
+    }
+
+    function action() {
+      if (props.selected) {
+        plantStore.edit(plant);
+      } else {
+        plant.createdAt = moment(plant.createdAt).format();
+        plantStore.add(plant);
+      }
+    }
 
     return {
       ...toRefs(plant),
+      inputDateFormat: computed(() => moment(plant.createdAt).format('YYYY-MM-DD')),
+      cancel,
+      edition: computed(() => !!props.selected),
       breeders,
       varieties,
-      edition: computed(() => !!props.selected),
-      add,
-      edit,
-      cancel: () => emit('cancel'),
+      dateChange,
+      action,
     };
   },
 
