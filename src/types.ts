@@ -13,11 +13,12 @@ type Breeder = {
 }
 
 type Plant = {
-  _id: string,
+  _id?: string,
+  name: string,
   createdAt: string,
   qrcode: string,
-  variety: Variety,
-  breeder: Breeder
+  variety?: Variety,
+  breeder?: Breeder
 }
 
 export {

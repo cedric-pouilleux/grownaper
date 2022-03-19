@@ -1,75 +1,87 @@
 <template>
-  <form v-on="{ submit: (editMode) ? edit : add }" class="plant-form">
-    <button v-if="editMode" @click="switchToAdd">cancel</button>
-    <h2>
-      <template v-if="editMode">Edit plant</template>
-      <template v-else>Add plant</template>
-    </h2>
+
+  <button v-if="edition" @click="cancel">cancel</button>
+  <h2>{{ edition ? 'Edit' : 'Add' }} plant</h2>
+
+  <form v-on="{ submit: (edition) ? edit : add }" class="plant-form">
+
     <label class="plant-form__label" for="plant-created-at">
-      Created at : <input type="date" id="plant-created-at" v-model="selectedCreatedAt">
+      Created at :
+      <input type="date" id="plant-created-at" v-model="createdAt">
     </label>
+
+    <label class="plant-form__label" for="plant-name">
+      Name :
+      <input type="text" id="plant-name" v-model="name">
+    </label>
+
     <label class="plant-form__label" for="breeder-select">
       Breeder :
-      <select v-model="selectedBreederId" id="breeder-select">
-        <option v-for="breeder in breederStore.all" :key="breeder._id" :value="breeder._id">
-          {{breeder.title}}
+      <select v-model="breeder" id="breeder-select">
+        <option v-for="optionBreeder in breeders.all"
+                :key="optionBreeder._id"
+                :value="optionBreeder">
+          {{optionBreeder.title}}
         </option>
       </select>
     </label>
+
     <label class="plant-form__label" for="variety-select">
       Variety :
-      <select v-model="selectedVarietyId" id="variety-select">
-        <option v-for="variety in varietyStore.all" :key="variety._id" :value="variety._id">
-          {{variety.title}}
+      <select v-model="variety" id="variety-select">
+        <option v-for="optionVariety in varieties.all"
+                :key="optionVariety._id"
+                :value="optionVariety">
+          {{optionVariety.title}}
         </option>
       </select>
     </label>
-    <button type="submit">{{ editMode ? 'Edit' : 'New' }}</button>
+
+    <button type="submit">{{ edition ? 'Edit' : 'New' }}</button>
   </form>
+
 </template>
 
 <script lang="ts">
 import {
-  defineComponent, watch, computed, ref,
+  defineComponent, watch, computed, PropType, reactive, toRefs,
 } from 'vue';
 import BreederStore from '@/store/breeders';
 import VarietyStore from '@/store/varieties';
 import PlantStore from '@/store/plants';
 import axios from 'axios';
 import moment from 'moment';
+import { Plant } from '@/types';
 
 export default defineComponent({
   name: 'PlantForm',
 
+  emits: ['cancel'],
+
   props: {
-    id: { type: String, required: false },
-    variety: { type: String, default: '' },
-    breeder: { type: String, default: '' },
-    createdAt: { type: String, default: '' },
+    selected: {
+      type: Object as PropType<Plant>,
+      required: false,
+    },
   },
 
   setup(props, { emit }) {
     const plantStore = PlantStore();
-    const breederStore = BreederStore();
-    const varietyStore = VarietyStore();
+    const breeders = BreederStore();
+    const varieties = VarietyStore();
 
-    varietyStore.fetch();
-    breederStore.fetch();
-
-    const selectedBreederId = ref<string | null>(null);
-    const selectedVarietyId = ref<string | null>(null);
-    const selectedCreatedAt = ref<string | null>(moment().format('YYYY-MM-D'));
-
-    const editMode = computed(() => Boolean(props.id));
+    const plant = reactive<Plant>({
+      name: '',
+      createdAt: moment().format('YYYY-MM-D'),
+      qrcode: '',
+      breeder: undefined,
+      variety: undefined,
+    });
 
     async function add(e: Event) : Promise<void> {
       e.preventDefault();
       try {
-        await axios.post('https://grownaper.herokuapp.com/plant/add', {
-          createdAt: selectedCreatedAt.value,
-          breeder: selectedBreederId.value,
-          variety: selectedVarietyId.value,
-        });
+        await axios.post('https://grownaper.herokuapp.com/plant/add', plant);
         await plantStore.fetch();
       } catch (err) {
         console.log(err);
@@ -78,43 +90,33 @@ export default defineComponent({
 
     async function edit(e: Event) : Promise<void> {
       e.preventDefault();
-      console.log(props.variety, selectedVarietyId.value);
       try {
-        await axios.put('https://grownaper.herokuapp.com/plant/edit', {
-          id: props.id,
-          createdAt: selectedCreatedAt.value,
-          variety: selectedVarietyId.value,
-          breeder: selectedBreederId.value,
-        });
+        await axios.put('https://grownaper.herokuapp.com/plant/edit', plant);
         await plantStore.fetch();
       } catch (err) {
         console.log(err);
       }
     }
 
-    /**
-     * Remove this like varietyForm
-     */
-    function switchToAdd() {
-      emit('addMode');
-    }
-
-    watch(() => props.id, () => {
-      selectedVarietyId.value = props.variety;
-      selectedBreederId.value = props.breeder;
-      selectedCreatedAt.value = props.createdAt;
+    watch(() => props.selected, (value) => {
+      console.log(value);
+      Object.assign(plant, value || {
+        name: '',
+        createdAt: moment().format('YYYY-MM-D'),
+        qrcode: '',
+        breeder: undefined,
+        variety: undefined,
+      });
     });
 
     return {
-      breederStore,
-      varietyStore,
-      selectedBreederId,
-      selectedVarietyId,
-      editMode,
+      ...toRefs(plant),
+      breeders,
+      varieties,
+      edition: computed(() => !!props.selected),
       add,
       edit,
-      switchToAdd,
-      selectedCreatedAt,
+      cancel: () => emit('cancel'),
     };
   },
 

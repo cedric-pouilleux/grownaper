@@ -1,16 +1,13 @@
 <template>
   <div class="plants-list">
     <h2>Plants list</h2>
-    <PlantForm :id="selectedPlantId"
-               :variety="selectedPlantVariety"
-               :breeder="selectedPlantBreeder"
-               :createdAt="selectedCreatedAt"
-               @addMode="setToAddMode"/>
+    <PlantForm :selected="selectedPlant" @cancel="cancel"/>
     <ul>
-      <li v-for="plant in store.all" :key="plant._id">
+      <li v-for="plant in plants.all" :key="plant._id">
         <header>
-          <p v-if="plant.breeder">{{ plant.breeder.title }}</p>
-          <p v-if="plant.variety">{{ plant.variety.title }}</p>
+          <h3 v-if="plant.name">{{ plant.name }}</h3>
+          <p>{{ (plant.variety) ? plant.variety.title : 'No variety, select one' }}</p>
+          <p>{{ (plant.breeder) ? plant.breeder.title : 'No breeder, select one' }}</p>
           <div class="plants-list__createdAt">{{ readableDate(plant.createdAt) }}</div>
         </header>
         <qrcode-vue :value="plant.qrcode" :size="140" level="H" />
@@ -19,18 +16,22 @@
                 @click="edit(plant)">
           Edit
         </button>
-        <button class="btn" @click="remove(plant._id)">Remove</button>
+        <button class="btn" @click="remove(plant._id)">
+          Remove
+        </button>
       </li>
     </ul>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import {
+  computed, defineComponent, reactive, ref,
+} from 'vue';
 import PlantForm from '@/components/PlantForm.vue';
 import plantStore from '@/store/plants';
 import QrcodeVue from 'qrcode.vue';
-import { Plant } from '@/types';
+import { Breeder, Plant, Variety } from '@/types';
 import axios from 'axios';
 import moment from 'moment';
 
@@ -43,58 +44,28 @@ export default defineComponent({
   },
 
   setup() {
-    const store = plantStore();
-    store.fetch();
+    const plants = plantStore();
 
-    const selectedPlantId = ref<string | null>(null);
-    const selectedPlantVariety = ref<string | null>(null);
-    const selectedCreatedAt = ref<string | null>(null);
-    const selectedPlantBreeder = ref<string | null>(null);
+    const selectedPlant = ref<Plant | null>(null);
 
     async function remove(id: string): Promise<void> {
       try {
         await axios.delete(`https://grownaper.herokuapp.com/plant/delete/${id}`);
-        // add visual action for delete success
-        await store.fetch();
+        await plants.fetch();
       } catch (err) {
         console.log(err);
       }
     }
 
-    function edit(plant: Plant) {
-      selectedPlantId.value = plant._id;
-      selectedPlantVariety.value = plant.variety?._id || null;
-      selectedPlantBreeder.value = plant.breeder?._id || null;
-      selectedCreatedAt.value = moment(plant.createdAt).format('YYYY-MM-DD');
-    }
-
-    function readableDate(date: Date | string): string {
-      return moment(date).format('YYYY-MM-DD');
-    }
-
-    function setToAddMode(): void {
-      selectedPlantId.value = null;
-      selectedPlantVariety.value = null;
-      selectedPlantBreeder.value = null;
-      selectedCreatedAt.value = readableDate(new Date());
-    }
-
-    function requiredAction(plant: Plant): boolean {
-      return !(plant.breeder && plant.variety);
-    }
-
     return {
       remove,
-      edit,
-      readableDate,
-      store,
-      selectedPlantId,
-      selectedPlantBreeder,
-      selectedPlantVariety,
-      setToAddMode,
-      selectedCreatedAt,
+      selectedPlant,
+      plants,
+      edit: (plant: Plant) => { selectedPlant.value = plant; },
+      cancel: () => { selectedPlant.value = null; },
+      readableDate: (date: Date | string): string => moment(date).format('YYYY-MM-DD'),
+      requiredAction: (plant: Plant): boolean => !(plant.breeder && plant.variety),
       moment,
-      requiredAction,
     };
   },
 
