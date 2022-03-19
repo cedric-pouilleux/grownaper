@@ -5,6 +5,7 @@
     </header>
     <ul class="row-list">
       <li v-for="breeder in breeders.all" :key="breeder._id">
+        <img :src="breeder.picture" alt="" />
         {{breeder.title}} - {{breeder.picture}} - {{breeder.link}}
         <button class="btn" @click="edit(breeder)">Edit</button>
         <button class="btn btn-danger" @click="remove(breeder._id)">Remove</button>

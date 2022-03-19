@@ -9,7 +9,7 @@ type Variety = {
 type Breeder = {
   _id?: string,
   title: string,
-  picture?: string,
+  picture?: File,
   country?: string,
   link?: string
 }

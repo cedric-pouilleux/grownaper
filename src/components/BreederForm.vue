@@ -1,5 +1,6 @@
 <template>
   <div class="admin-component breeders-form">
+
     <header class="admin-component__header">
       <h2>{{ edition ? 'Edit' : 'Add'}} breeder</h2>
       <button class="admin-component__header-options btn btn-danger"
@@ -7,7 +8,11 @@
               @click="cancel"> Cancel
       </button>
     </header>
-    <form class="vertical-form" v-on="{ submit: (edition) ? edit : add }">
+
+    <form class="vertical-form"
+          v-on="{ submit: (edition) ? edit : add }"
+          enctype="multipart/form-data">
+
       <label for="breederForm_title">
         Title
         <input type="text"
@@ -15,15 +20,6 @@
                name="title"
                id="breederForm_title"
                v-model="title" />
-      </label>
-
-      <label for="breederForm_picture">
-        Picture
-        <input type="text"
-               class="input"
-               name="picture"
-               id="breederForm_picture"
-               v-model="picture" />
       </label>
 
       <label for="breederForm_link">
@@ -44,6 +40,15 @@
                v-model="country" />
       </label>
 
+      <label for="breeder-form_picture">
+        Picture
+        <input type="file"
+               class="input"
+               name="picture"
+               id="breeder-form_picture"
+               @change="change" />
+      </label>
+
       <button class="btn" type="submit">{{ edition ? 'Edit' : 'New'}}</button>
     </form>
   </div>
@@ -51,7 +56,7 @@
 
 <script lang="ts">
 import {
-  defineComponent, PropType, toRefs, reactive, computed, watch,
+  defineComponent, PropType, ref, toRefs, reactive, computed, watch,
 } from 'vue';
 import axios from 'axios';
 import BreederStore from '@/store/breeders';
@@ -72,26 +77,35 @@ export default defineComponent({
   setup(props, { emit }) {
     const breederStore = BreederStore();
 
-    const breeder = reactive<Breeder>({
+    const initialBreeder = {
       link: '',
-      picture: '',
+      picture: undefined,
       title: '',
       country: '',
+    };
+
+    const breeder = reactive<Breeder>({
+      ...initialBreeder,
     });
 
     watch(() => props.selected, (value) => {
-      Object.assign(breeder, value || {
-        link: '',
-        picture: '',
-        title: '',
-        country: '',
-      });
+      Object.assign(breeder, value || initialBreeder);
     });
 
     async function add(e: Event) {
       e.preventDefault();
+      const formData = new FormData();
+      console.log(breeder.picture);
+      formData.append('title', breeder.title);
+      formData.append('country', breeder.country || '');
+      formData.append('picture', breeder.picture || '');
+      formData.append('link', breeder.link || '');
       try {
-        await axios.post(`${process.env.VUE_APP_SERVER_ADDRESS}/breeder/add`, breeder);
+        await axios.post(`${process.env.VUE_APP_SERVER_ADDRESS}/breeder/add`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
         await breederStore.fetch();
       } catch (err) {
         console.log(err);
@@ -108,12 +122,21 @@ export default defineComponent({
       }
     }
 
+    function change(event: Event) {
+      const target = event.target as HTMLInputElement;
+      if (target?.files?.length) {
+        const file = target.files[0];
+        breeder.picture = file;
+      }
+    }
+
     return {
       ...toRefs(breeder),
       edition: computed(() => !!props.selected),
       cancel: () => emit('cancel'),
       add,
       edit,
+      change,
     };
   },
 });
