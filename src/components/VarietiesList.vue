@@ -6,6 +6,7 @@
         <ul class="inline-tags">
           <li v-if="variety.feminized" class="tag">Feminize</li>
           <li v-if="variety.automatic" class="tag">Automatic</li>
+          <li v-if="variety.floTime" class="tag">{{ variety.floTime }}</li>
         </ul>
         {{variety.title}}
         <div class="row-list__actions">

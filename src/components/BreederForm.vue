@@ -16,6 +16,7 @@
       <label for="breederForm_title">
         Title
         <input type="text"
+               required
                class="input"
                name="title"
                id="breederForm_title"
@@ -56,7 +57,7 @@
 
 <script lang="ts">
 import {
-  defineComponent, PropType, ref, toRefs, reactive, computed, watch,
+  defineComponent, PropType, toRefs, reactive, computed, watch,
 } from 'vue';
 import axios from 'axios';
 import BreederStore from '@/store/breeders';
@@ -95,7 +96,6 @@ export default defineComponent({
     async function add(e: Event) {
       e.preventDefault();
       const formData = new FormData();
-      console.log(breeder.picture);
       formData.append('title', breeder.title);
       formData.append('country', breeder.country || '');
       formData.append('picture', breeder.picture || '');
@@ -114,8 +114,21 @@ export default defineComponent({
 
     async function edit(e: Event) {
       e.preventDefault();
+      if (!breeder._id) {
+        throw new Error('Breeder id is required');
+      }
+      const formData = new FormData();
+      formData.append('_id', breeder._id || '');
+      formData.append('title', breeder.title);
+      formData.append('country', breeder.country || '');
+      formData.append('picture', breeder.picture || '');
+      formData.append('link', breeder.link || '');
       try {
-        await axios.put(`${process.env.VUE_APP_SERVER_ADDRESS}/breeder/edit`, breeder);
+        await axios.put(`${process.env.VUE_APP_SERVER_ADDRESS}/breeder/edit`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
         await breederStore.fetch();
       } catch (err) {
         console.log(err);

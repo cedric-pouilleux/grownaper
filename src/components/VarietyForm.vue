@@ -1,38 +1,57 @@
 <template>
 
-  {{selected}}
+  <div class="admin-component">
 
-  <h2>
-    <button v-if="edition" @click="cancel">Cancel</button>
-    <template v-if="edition">Edit</template>
-    <template v-else>Add</template> variety
-  </h2>
+    <header class="admin-component__header">
+      <h2>
+        <button v-if="edition" @click="cancel">Cancel</button>
+        <template v-if="edition">Edit</template>
+        <template v-else>Add</template> variety
+      </h2>
+    </header>
 
-  <form v-on="{ submit: (edition) ? edit : add }">
+    <form class="vertical-form" v-on="{ submit: (edition) ? edit : add }">
 
-    <label for="variety-title">
-      <input type="text"
-             required
-             id="variety-title"
-             v-model="title" />
-    </label>
+      <label for="variety-title">
+        Title
+        <input class="input"
+               type="text"
+               name="title"
+               required
+               id="variety-title"
+               v-model="title" />
+      </label>
 
-    <label for="variety-feminized">
-      Feminized
-      <input type="checkbox"
-             id="variety-feminized"
-             v-model="feminized" />
-    </label>
+      <label for="variety-feminized">
+        Feminized
+        <input class="input"
+               type="checkbox"
+               name="feminized"
+               id="variety-feminized"
+               v-model="feminized" />
+      </label>
 
-    <label for="variety-automatic">
-      Automatic
-      <input type="checkbox"
-             id="variety-automatic"
-             v-model="automatic" />
-    </label>
+      <label for="variety-automatic">
+        Automatic
+        <input class="input"
+               type="checkbox"
+               id="variety-automatic"
+               name="automatic"
+               v-model="automatic" />
+      </label>
 
-    <button type="submit">{{ edition ? 'Edit' : 'New' }}</button>
-  </form>
+      <label for="variety-flowering-time">
+        Flowering time
+        <input class="input"
+               type="number"
+               name="floTime"
+               id="variety-flowering-time"
+               v-model="floTime" />
+      </label>
+
+      <button type="submit">{{ edition ? 'Edit' : 'New' }}</button>
+    </form>
+  </div>
 
 </template>
 
@@ -65,6 +84,7 @@ export default defineComponent({
       breeder: [],
       feminized: false,
       automatic: false,
+      floTime: 70,
     };
 
     const variety = reactive<Variety>({

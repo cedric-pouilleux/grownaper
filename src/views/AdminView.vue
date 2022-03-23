@@ -8,11 +8,11 @@
       <BreedersList @edit="editBreeder"/>
     </div>
     <div>
+      <VarietyForm :selected="selectedVariety"
+                   @cancel="cancelVarietySelection"/>
       <VarietiesList @edit="editVariety"/>
     </div>
     <div>
-      <VarietyForm :selected="selectedVariety"
-                   @cancel="cancelVarietySelection"/>
     </div>
   </div>
 </template>

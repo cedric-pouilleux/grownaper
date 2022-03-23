@@ -3,7 +3,8 @@ type Variety = {
   title: string,
   feminized: boolean,
   automatic: boolean,
-  slug?: string
+  slug?: string,
+  floTime: number
 }
 
 type Breeder = {

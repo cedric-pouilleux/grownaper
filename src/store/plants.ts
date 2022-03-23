@@ -1,17 +1,17 @@
 import { defineStore } from 'pinia';
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
 import axios from 'axios';
 import { Plant } from '@/types';
 
 const SERVER = process.env.VUE_APP_SERVER_ADDRESS;
 
 const plantStore = defineStore('plant', () => {
-  const all = reactive<Plant[]>([]);
+  const all = ref<Plant[]>([]);
 
   async function fetch(): Promise<void> {
     try {
       const result = await axios.get(`${SERVER}/plants`);
-      Object.assign(all, result.data);
+      all.value = result.data;
     } catch (err) {
       console.error('Data not found');
     }
@@ -45,7 +45,7 @@ const plantStore = defineStore('plant', () => {
   }
 
   fetch().then(
-    () => console.info('Breeder data fetch success'),
+    () => console.info('Plants data fetch success'),
   );
 
   return {

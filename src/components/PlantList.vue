@@ -3,7 +3,7 @@
     <h2>Plants list</h2>
     <PlantForm :selected="selectedPlant" @cancel="cancel"/>
     <ul>
-      <li v-for="plant in plants.all" :key="plant._id">
+      <li v-for="plant in all" :key="plant._id" :data-id="plant._id">
         <header>
           <h3 v-if="plant.name">{{ plant.name }}</h3>
           <p>{{ plant.variety?.title && 'No variety, select one' }}</p>
@@ -33,6 +33,7 @@ import plantStore from '@/store/plants';
 import QrcodeVue from 'qrcode.vue';
 import { Plant } from '@/types';
 import moment from 'moment';
+import { storeToRefs } from 'pinia';
 
 export default defineComponent({
   name: 'PlantList',
@@ -43,16 +44,15 @@ export default defineComponent({
   },
 
   setup() {
-    const plants = plantStore();
-
-    console.log(plants.all);
+    const store = plantStore();
+    const { all } = storeToRefs(store);
 
     const selectedPlant = ref<Plant | null>(null);
 
     return {
-      remove: (id: string) => plants.remove(id),
+      remove: (id: string) => store.remove(id),
       selectedPlant,
-      plants,
+      all,
       edit: (plant: Plant) => { selectedPlant.value = plant; },
       cancel: () => { selectedPlant.value = null; },
       inputDateFormat: (date: Date | string): string => moment(date).format('YYYY-MM-DD'),
