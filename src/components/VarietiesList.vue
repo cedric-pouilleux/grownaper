@@ -1,7 +1,6 @@
 <template>
   <div class="admin-component varieties-list">
     <h2>Varieties</h2>
-    <VarietyForm :selected="selectedVariety" @cancel="cancel"/>
     <ul class="row-list">
       <li class="row-list__item" v-for="variety in varieties.all" :key="variety._id">
         <ul class="inline-tags">
@@ -24,20 +23,15 @@
 import { defineComponent, ref } from 'vue';
 import varietiesStore from '@/store/varieties';
 import axios from 'axios';
-import VarietyForm from '@/components/VarietyForm.vue';
 import { Variety } from '@/types';
 
 export default defineComponent({
   name: 'VarietiesList',
 
-  components: {
-    VarietyForm,
-  },
+  emits: ['edit'],
 
-  setup() {
+  setup(params, { emit }) {
     const varieties = varietiesStore();
-
-    const selectedVariety = ref<Variety | null>(null);
 
     async function remove(id: string): Promise<void> {
       try {
@@ -49,8 +43,7 @@ export default defineComponent({
     }
 
     return {
-      selectedVariety,
-      edit: (variety: Variety) => { selectedVariety.value = variety; },
+      edit: (variety: Variety) => { emit('edit', variety); },
       remove,
       varieties,
     };

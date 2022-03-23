@@ -1,15 +1,18 @@
 <template>
   <div class="grid">
     <div>
-      <BreederForm :selected="selectedBreeder" @cancel="cancel"/>
+      <BreederForm :selected="selectedBreeder"
+                   @cancel="cancelBreederSelection"/>
     </div>
     <div>
       <BreedersList @edit="editBreeder"/>
     </div>
     <div>
+      <VarietiesList @edit="editVariety"/>
     </div>
     <div>
-      <VarietiesList/>
+      <VarietyForm :selected="selectedVariety"
+                   @cancel="cancelVarietySelection"/>
     </div>
   </div>
 </template>
@@ -19,20 +22,27 @@ import BreedersList from '@/components/BreedersList.vue';
 import BreederForm from '@/components/BreederForm.vue';
 import VarietiesList from '@/components/VarietiesList.vue';
 import { defineComponent, ref } from 'vue';
-import { Breeder } from '@/types';
+import { Breeder, Variety } from '@/types';
+import VarietyForm from '@/components/VarietyForm.vue';
 
 export default defineComponent({
   name: 'AdminPage',
   components: {
+    VarietyForm,
     BreederForm,
     VarietiesList,
     BreedersList,
   },
   setup() {
     const selectedBreeder = ref<Breeder | null>(null);
+    const selectedVariety = ref<Variety | null>(null);
 
     function editBreeder(breeder: Breeder) {
       selectedBreeder.value = breeder;
+    }
+
+    function editVariety(variety: Variety) {
+      selectedVariety.value = variety;
     }
 
     function cancel() {
@@ -41,7 +51,11 @@ export default defineComponent({
 
     return {
       selectedBreeder,
+      selectedVariety,
       editBreeder,
+      editVariety,
+      cancelBreederSelection: () => { selectedBreeder.value = null; },
+      cancelVarietySelection: () => { selectedVariety.value = null; },
       cancel,
     };
   },
@@ -52,12 +66,12 @@ export default defineComponent({
 <style lang="scss">
 .grid {
   display: grid;
-  grid-template-columns: 1fr 3fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
   gap: 0 10px;
   grid-template-areas:
-    ". . ."
-    ". . ."
-    ". . .";
+    ". ."
+    ". ."
+    ". .";
 }
 </style>

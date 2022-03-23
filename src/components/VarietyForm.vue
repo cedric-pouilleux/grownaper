@@ -1,5 +1,7 @@
 <template>
 
+  {{selected}}
+
   <h2>
     <button v-if="edition" @click="cancel">Cancel</button>
     <template v-if="edition">Edit</template>
