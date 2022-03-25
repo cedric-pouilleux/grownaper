@@ -1,4 +1,4 @@
-type Variety = {
+interface Variety {
   _id?: string,
   title: string,
   feminized: boolean,
@@ -7,16 +7,16 @@ type Variety = {
   floTime: number
 }
 
-type Breeder = {
-  _id?: string,
+interface Breeder {
+  _id: string,
   title: string,
   picture?: File,
   country?: string,
   link?: string
 }
 
-type Plant = {
-  _id?: string,
+interface Plant {
+  _id: string,
   name: string,
   createdAt: string,
   qrcode: string,
@@ -24,8 +24,31 @@ type Plant = {
   breeder?: Breeder
 }
 
+interface FeederProduct {
+  _id: string,
+  title: string,
+  slug: string,
+  description?: string,
+  picture?: File,
+  link?: string,
+  // eslint-disable-next-line no-use-before-define
+  feeder?: Feeder
+}
+
+interface Feeder {
+  _id: string,
+  title: string,
+  slug: string,
+  description?: string,
+  picture?: File,
+  link?: string,
+  products?: FeederProduct[]
+}
+
 export {
   Plant,
   Variety,
   Breeder,
+  Feeder,
+  FeederProduct,
 };

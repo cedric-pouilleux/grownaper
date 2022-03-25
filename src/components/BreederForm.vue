@@ -85,7 +85,7 @@ export default defineComponent({
       country: '',
     };
 
-    const breeder = reactive<Breeder>({
+    const breeder = reactive<Partial<Breeder>>({
       ...initialBreeder,
     });
 
@@ -96,7 +96,7 @@ export default defineComponent({
     async function add(e: Event) {
       e.preventDefault();
       const formData = new FormData();
-      formData.append('title', breeder.title);
+      formData.append('title', breeder.title || '');
       formData.append('country', breeder.country || '');
       formData.append('picture', breeder.picture || '');
       formData.append('link', breeder.link || '');
@@ -119,7 +119,7 @@ export default defineComponent({
       }
       const formData = new FormData();
       formData.append('_id', breeder._id || '');
-      formData.append('title', breeder.title);
+      formData.append('title', breeder.title || '');
       formData.append('country', breeder.country || '');
       formData.append('picture', breeder.picture || '');
       formData.append('link', breeder.link || '');

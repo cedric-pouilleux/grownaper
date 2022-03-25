@@ -80,7 +80,7 @@ export default defineComponent({
       variety: undefined,
     };
 
-    const plant = reactive<Plant>({
+    const plant = reactive<Partial<Plant>>({
       ...defaultPlant,
     });
 

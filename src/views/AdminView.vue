@@ -1,18 +1,16 @@
 <template>
   <div class="grid">
     <div>
-      <BreederForm :selected="selectedBreeder"
-                   @cancel="cancelBreederSelection"/>
-    </div>
-    <div>
+      <BreederForm :selected="selectedBreeder" @cancel="cancelBreederSelection"/>
       <BreedersList @edit="editBreeder"/>
     </div>
     <div>
-      <VarietyForm :selected="selectedVariety"
-                   @cancel="cancelVarietySelection"/>
+      <VarietyForm :selected="selectedVariety" @cancel="cancelVarietySelection"/>
       <VarietiesList @edit="editVariety"/>
     </div>
     <div>
+      <FeederForm :selected="selectedFeeder" @cancel="cancelFeederSelection"/>
+      <FeederList @edit="editFeeder"/>
     </div>
   </div>
 </template>
@@ -22,12 +20,16 @@ import BreedersList from '@/components/BreedersList.vue';
 import BreederForm from '@/components/BreederForm.vue';
 import VarietiesList from '@/components/VarietiesList.vue';
 import { defineComponent, ref } from 'vue';
-import { Breeder, Variety } from '@/types';
+import { Breeder, Feeder, Variety } from '@/types';
 import VarietyForm from '@/components/VarietyForm.vue';
+import FeederForm from '@/components/FeederForm.vue';
+import FeederList from '@/components/FeederList.vue';
 
 export default defineComponent({
   name: 'AdminPage',
   components: {
+    FeederList,
+    FeederForm,
     VarietyForm,
     BreederForm,
     VarietiesList,
@@ -36,13 +38,18 @@ export default defineComponent({
   setup() {
     const selectedBreeder = ref<Breeder | null>(null);
     const selectedVariety = ref<Variety | null>(null);
+    const selectedFeeder = ref<Feeder | null>(null);
 
-    function editBreeder(breeder: Breeder) {
+    function editBreeder(breeder: Breeder): void {
       selectedBreeder.value = breeder;
     }
 
-    function editVariety(variety: Variety) {
+    function editVariety(variety: Variety): void {
       selectedVariety.value = variety;
+    }
+
+    function editFeeder(feeder: Feeder): void {
+      selectedFeeder.value = feeder;
     }
 
     function cancel() {
@@ -52,10 +59,13 @@ export default defineComponent({
     return {
       selectedBreeder,
       selectedVariety,
+      selectedFeeder,
       editBreeder,
       editVariety,
+      editFeeder,
       cancelBreederSelection: () => { selectedBreeder.value = null; },
       cancelVarietySelection: () => { selectedVariety.value = null; },
+      cancelFeederSelection: () => { selectedFeeder.value = null; },
       cancel,
     };
   },

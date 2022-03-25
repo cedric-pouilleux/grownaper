@@ -4,11 +4,14 @@
       <h2>Breeders</h2>
     </header>
     <ul class="row-list">
-      <li v-for="breeder in breeders.all" :key="breeder._id">
-        <img :src="breeder.picture" alt="" width="80" />
-        {{breeder.title}} - {{breeder.picture}} - {{breeder.link}}
-        <button class="btn" @click="edit(breeder)">Edit</button>
-        <button class="btn btn-danger" @click="remove(breeder._id)">Remove</button>
+      <li class="row-list__item" v-for="breeder in breeders.all" :key="breeder._id">
+        <img class="rounded" :src="breeder.picture" alt="" width="40" />
+        <a v-if="breeder.link" :href="breeder.link">{{breeder.title}}</a>
+        <p v-else>{{breeder.title}}</p>
+        <div class="row-list__actions">
+          <button class="btn" @click="edit(breeder)">Edit</button>
+          <button class="btn btn-danger" @click="remove(breeder._id)">Remove</button>
+        </div>
       </li>
     </ul>
   </div>
@@ -52,4 +55,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.rounded {
+  border-radius: 100%;
+  border:1px solid #000;
+}
 </style>

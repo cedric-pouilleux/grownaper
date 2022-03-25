@@ -1,11 +1,10 @@
 import { defineStore } from 'pinia';
-import { reactive, ref } from 'vue';
+import { ref } from 'vue';
 import axios from 'axios';
 import { Plant } from '@/types';
 
-const SERVER = process.env.VUE_APP_SERVER_ADDRESS;
-
 const plantStore = defineStore('plant', () => {
+  const SERVER = process.env.VUE_APP_SERVER_ADDRESS;
   const all = ref<Plant[]>([]);
 
   async function fetch(): Promise<void> {
@@ -17,7 +16,7 @@ const plantStore = defineStore('plant', () => {
     }
   }
 
-  async function add(plant: Plant): Promise<void> {
+  async function add(plant: Partial<Plant>): Promise<void> {
     try {
       await axios.post(`${SERVER}/plant/add`, plant);
       await fetch();
@@ -26,7 +25,7 @@ const plantStore = defineStore('plant', () => {
     }
   }
 
-  async function edit(plant: Plant): Promise<void> {
+  async function edit(plant: Partial<Plant>): Promise<void> {
     try {
       await axios.put(`${SERVER}/plant/edit`, plant);
       await fetch();

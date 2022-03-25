@@ -6,8 +6,8 @@
       <li v-for="plant in all" :key="plant._id" :data-id="plant._id">
         <header>
           <h3 v-if="plant.name">{{ plant.name }}</h3>
-          <p>{{ plant.variety?.title && 'No variety, select one' }}</p>
-          <p>{{ plant.breeder?.title && 'No breeder, select one' }}</p>
+          <p v-if="plant.variety">{{ plant.variety?.title }}</p>
+          <p v-if="plant.breeder">{{ plant.breeder?.title }}</p>
           <div class="plants-list__createdAt">
             {{ inputDateFormat(plant.createdAt) }}
           </div>
