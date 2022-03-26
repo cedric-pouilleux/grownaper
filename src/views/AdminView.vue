@@ -12,6 +12,10 @@
       <FeederForm :selected="selectedFeeder" @cancel="cancelFeederSelection"/>
       <FeederList @edit="editFeeder"/>
     </div>
+    <div>
+      <FeederProductForm :selected="selectedFeederProduct" @cancel="cancelFeederProductSelection" />
+      <FeederProductList @edit="editFeederProduct"/>
+    </div>
   </div>
 </template>
 
@@ -20,14 +24,20 @@ import BreedersList from '@/components/BreedersList.vue';
 import BreederForm from '@/components/BreederForm.vue';
 import VarietiesList from '@/components/VarietiesList.vue';
 import { defineComponent, ref } from 'vue';
-import { Breeder, Feeder, Variety } from '@/types';
+import {
+  Breeder, Feeder, FeederProduct, Variety,
+} from '@/types';
 import VarietyForm from '@/components/VarietyForm.vue';
 import FeederForm from '@/components/FeederForm.vue';
 import FeederList from '@/components/FeederList.vue';
+import FeederProductForm from '@/components/FeederProductForm.vue';
+import FeederProductList from '@/components/FeedersProductsList.vue';
 
 export default defineComponent({
   name: 'AdminPage',
   components: {
+    FeederProductList,
+    FeederProductForm,
     FeederList,
     FeederForm,
     VarietyForm,
@@ -39,6 +49,7 @@ export default defineComponent({
     const selectedBreeder = ref<Breeder | null>(null);
     const selectedVariety = ref<Variety | null>(null);
     const selectedFeeder = ref<Feeder | null>(null);
+    const selectedFeederProduct = ref<FeederProduct | null>(null);
 
     function editBreeder(breeder: Breeder): void {
       selectedBreeder.value = breeder;
@@ -52,6 +63,10 @@ export default defineComponent({
       selectedFeeder.value = feeder;
     }
 
+    function editFeederProduct(feederProduct: FeederProduct): void {
+      selectedFeederProduct.value = feederProduct;
+    }
+
     function cancel() {
       selectedBreeder.value = null;
     }
@@ -60,12 +75,15 @@ export default defineComponent({
       selectedBreeder,
       selectedVariety,
       selectedFeeder,
+      selectedFeederProduct,
       editBreeder,
       editVariety,
       editFeeder,
+      editFeederProduct,
       cancelBreederSelection: () => { selectedBreeder.value = null; },
       cancelVarietySelection: () => { selectedVariety.value = null; },
       cancelFeederSelection: () => { selectedFeeder.value = null; },
+      cancelFeederProductSelection: () => { selectedFeederProduct.value = null; },
       cancel,
     };
   },
