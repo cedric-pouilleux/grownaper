@@ -8,6 +8,8 @@
           <h3 v-if="plant.name">{{ plant.name }}</h3>
           <p v-if="plant.variety">{{ plant.variety?.title }}</p>
           <p v-if="plant.breeder">{{ plant.breeder?.title }}</p>
+          {{plant.feminized}}
+          {{plant.automatic}}
           <div class="plants-list__createdAt">
             {{ inputDateFormat(plant.createdAt) }}
           </div>

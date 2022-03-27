@@ -4,8 +4,6 @@
     <ul class="row-list">
       <li class="row-list__item" v-for="variety in varieties.all" :key="variety._id">
         <ul class="inline-tags">
-          <li v-if="variety.feminized" class="tag">Feminize</li>
-          <li v-if="variety.automatic" class="tag">Automatic</li>
           <li v-if="variety.floTime" class="tag">{{ variety.floTime }}</li>
         </ul>
         {{variety.title}}

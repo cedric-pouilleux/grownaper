@@ -40,6 +40,24 @@
       </select>
     </label>
 
+    <label for="variety-feminized">
+      Feminized
+      <input class="input"
+             type="checkbox"
+             name="feminized"
+             id="variety-feminized"
+             v-model="feminized" />
+    </label>
+
+    <label for="variety-automatic">
+      Automatic
+      <input class="input"
+             type="checkbox"
+             id="variety-automatic"
+             name="automatic"
+             v-model="automatic" />
+    </label>
+
     <button type="submit">{{ edition ? 'Edit' : 'New' }}</button>
   </form>
 
@@ -76,6 +94,8 @@ export default defineComponent({
       name: '',
       createdAt: moment().format('YYYY-MM-D'),
       qrcode: '',
+      feminized: false,
+      automatic: false,
       breeder: undefined,
       variety: undefined,
     };

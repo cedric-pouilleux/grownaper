@@ -22,24 +22,6 @@
                v-model="title" />
       </label>
 
-      <label for="variety-feminized">
-        Feminized
-        <input class="input"
-               type="checkbox"
-               name="feminized"
-               id="variety-feminized"
-               v-model="feminized" />
-      </label>
-
-      <label for="variety-automatic">
-        Automatic
-        <input class="input"
-               type="checkbox"
-               id="variety-automatic"
-               name="automatic"
-               v-model="automatic" />
-      </label>
-
       <label for="variety-flowering-time">
         Flowering time
         <input class="input"
@@ -57,11 +39,12 @@
 
 <script lang="ts">
 import {
-  defineComponent, watch, computed, PropType, reactive, toRefs,
+  defineComponent, watch, computed, PropType, ref, reactive, toRefs,
 } from 'vue';
 import axios from 'axios';
 import VarietyStore from '@/store/varieties';
-import { Variety } from '@/types';
+import BreederStore from '@/store/breeders';
+import { Breeder, Variety } from '@/types';
 
 export default defineComponent({
   name: 'VarietyForm',
@@ -77,17 +60,16 @@ export default defineComponent({
 
   setup(props, { emit }) {
     const varietyStore = VarietyStore();
+    const selectedBreeders = ref<Breeder[]>([]);
 
     const empty = {
       title: '',
-      slug: '',
-      breeder: [],
       feminized: false,
       automatic: false,
       floTime: 70,
     };
 
-    const variety = reactive<Variety>({
+    const variety = reactive<Partial<Variety>>({
       ...empty,
     });
 
@@ -117,6 +99,7 @@ export default defineComponent({
 
     return {
       ...toRefs(variety),
+      selectedBreeders,
       edition: computed(() => !!props.selected),
       cancel: () => emit('cancel'),
       add,

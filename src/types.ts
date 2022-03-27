@@ -1,9 +1,9 @@
 interface Variety {
-  _id?: string,
+  _id: string,
   title: string,
   feminized: boolean,
   automatic: boolean,
-  slug?: string,
+  slug: string,
   floTime: number
 }
 
@@ -20,6 +20,8 @@ interface Plant {
   name: string,
   createdAt: string,
   qrcode: string,
+  feminized: boolean,
+  automatic: boolean,
   variety?: Variety,
   breeder?: Breeder
 }
