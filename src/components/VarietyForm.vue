@@ -22,6 +22,40 @@
                v-model="title" />
       </label>
 
+      <label for="plant-phenotype">
+        Phenotype
+        <input type="number" v-model="phenotype" id="plant-phenotype" />
+      </label>
+
+      <label for="variety-feminized">
+        Feminized
+        <input class="input"
+               type="checkbox"
+               name="feminized"
+               id="variety-feminized"
+               v-model="feminized" />
+      </label>
+
+      <label for="variety-automatic">
+        Automatic
+        <input class="input"
+               type="checkbox"
+               id="variety-automatic"
+               name="automatic"
+               v-model="automatic" />
+      </label>
+
+      <label class="plant-form__label" for="breeder-select">
+        Breeder :
+        <select v-model="breeder" id="breeder-select">
+          <option v-for="optionBreeder in breederStore.all"
+                  :key="optionBreeder._id"
+                  :value="optionBreeder">
+            {{optionBreeder.title}}
+          </option>
+        </select>
+      </label>
+
       <label for="variety-flowering-time">
         Flowering time
         <input class="input"
@@ -60,12 +94,15 @@ export default defineComponent({
 
   setup(props, { emit }) {
     const varietyStore = VarietyStore();
+    const breederStore = BreederStore();
     const selectedBreeders = ref<Breeder[]>([]);
 
     const empty = {
       title: '',
       feminized: false,
       automatic: false,
+      phenotype: 1,
+      breeder: undefined,
       floTime: 70,
     };
 
@@ -100,6 +137,7 @@ export default defineComponent({
     return {
       ...toRefs(variety),
       selectedBreeders,
+      breederStore,
       edition: computed(() => !!props.selected),
       cancel: () => emit('cancel'),
       add,

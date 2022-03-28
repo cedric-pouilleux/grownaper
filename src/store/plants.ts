@@ -25,6 +25,18 @@ const plantStore = defineStore('plant', () => {
     }
   }
 
+  async function addNote(plantId: string, noteContent: string): Promise<void> {
+    try {
+      await axios.post(`${SERVER}/plant/notes/add/${plantId}`, {
+        date: new Date(),
+        content: noteContent,
+      });
+      await fetch();
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   async function edit(plant: Partial<Plant>): Promise<void> {
     try {
       await axios.put(`${SERVER}/plant/edit`, plant);
@@ -48,6 +60,7 @@ const plantStore = defineStore('plant', () => {
   );
 
   return {
+    addNote,
     fetch,
     add,
     edit,

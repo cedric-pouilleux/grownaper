@@ -1,12 +1,3 @@
-interface Variety {
-  _id: string,
-  title: string,
-  feminized: boolean,
-  automatic: boolean,
-  slug: string,
-  floTime: number
-}
-
 interface Breeder {
   _id: string,
   title: string,
@@ -15,15 +6,30 @@ interface Breeder {
   link?: string
 }
 
+interface Variety {
+  _id: string,
+  title: string,
+  slug: string,
+  feminized: boolean,
+  automatic: boolean,
+  phenotype: number,
+  floTime: number,
+  breeder: Breeder
+}
+
+interface Note {
+  date: Date,
+  content: string
+}
+
 interface Plant {
   _id: string,
   name: string,
   createdAt: string,
   qrcode: string,
-  feminized: boolean,
-  automatic: boolean,
   variety?: Variety,
   breeder?: Breeder
+  notes: Note[]
 }
 
 interface FeederProduct {
@@ -52,5 +58,6 @@ export {
   Variety,
   Breeder,
   Feeder,
+  Note,
   FeederProduct,
 };

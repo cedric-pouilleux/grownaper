@@ -7,14 +7,13 @@
         <header>
           <h3 v-if="plant.name">{{ plant.name }}</h3>
           <p v-if="plant.variety">{{ plant.variety?.title }}</p>
-          <p v-if="plant.breeder">{{ plant.breeder?.title }}</p>
-          {{plant.feminized}}
-          {{plant.automatic}}
           <div class="plants-list__createdAt">
             {{ inputDateFormat(plant.createdAt) }}
           </div>
         </header>
         <qrcode-vue :value="plant.qrcode" :size="140" level="H" />
+        {{plant.notes}}
+        <PlantNote :id="plant._id" />
         <button class="btn"
                 :class="{ 'btn-warning' : requiredAction(plant) }"
                 @click="edit(plant)">
@@ -31,6 +30,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import PlantForm from '@/components/PlantForm.vue';
+import PlantNote from '@/components/PlantNote.vue';
 import plantStore from '@/store/plants';
 import QrcodeVue from 'qrcode.vue';
 import { Plant } from '@/types';
@@ -42,6 +42,7 @@ export default defineComponent({
 
   components: {
     QrcodeVue,
+    PlantNote,
     PlantForm,
   },
 
@@ -50,10 +51,12 @@ export default defineComponent({
     const { all } = storeToRefs(store);
 
     const selectedPlant = ref<Plant | null>(null);
+    const note = ref<string | null>(null);
 
     return {
       remove: (id: string) => store.remove(id),
       selectedPlant,
+      note,
       all,
       edit: (plant: Plant) => { selectedPlant.value = plant; },
       cancel: () => { selectedPlant.value = null; },

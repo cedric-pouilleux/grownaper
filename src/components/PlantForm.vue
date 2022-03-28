@@ -18,17 +18,6 @@
       <input type="text" id="plant-name" v-model="name" />
     </label>
 
-    <label class="plant-form__label" for="breeder-select">
-      Breeder :
-      <select v-model="breeder" id="breeder-select">
-        <option v-for="optionBreeder in breeders.all"
-                :key="optionBreeder._id"
-                :value="optionBreeder">
-          {{optionBreeder.title}}
-        </option>
-      </select>
-    </label>
-
     <label class="plant-form__label" for="variety-select">
       Variety :
       <select v-model="variety" id="variety-select">
@@ -38,24 +27,6 @@
           {{optionVariety.title}}
         </option>
       </select>
-    </label>
-
-    <label for="variety-feminized">
-      Feminized
-      <input class="input"
-             type="checkbox"
-             name="feminized"
-             id="variety-feminized"
-             v-model="feminized" />
-    </label>
-
-    <label for="variety-automatic">
-      Automatic
-      <input class="input"
-             type="checkbox"
-             id="variety-automatic"
-             name="automatic"
-             v-model="automatic" />
     </label>
 
     <button type="submit">{{ edition ? 'Edit' : 'New' }}</button>
