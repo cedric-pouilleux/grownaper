@@ -4,6 +4,7 @@
       <router-link to="/">Home</router-link> |
       <router-link to="/admin">Admin</router-link>
     </nav>
+    <el-button>I am ElButton</el-button>
     <router-view/>
   </div>
 </template>

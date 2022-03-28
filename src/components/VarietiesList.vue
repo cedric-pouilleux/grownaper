@@ -1,20 +1,23 @@
 <template>
   <div class="admin-component varieties-list">
     <h2>Varieties</h2>
-    <ul class="row-list">
-      <li class="row-list__item" v-for="variety in varieties.all" :key="variety._id">
-        <ul class="inline-tags">
-          <li v-if="variety.floTime" class="tag">{{ variety.floTime }}</li>
-        </ul>
-        {{variety.title}}
-        <div class="row-list__actions">
-          <button class="btn" @click="edit(variety)">Edit</button>
-          <button class="btn btn-danger" @click="remove(variety._id)">
-            Remove
-          </button>
-        </div>
-      </li>
-    </ul>
+    <el-table :data="varieties.all" style="width: 100%">
+      <el-table-column prop="title" label="title" width="180" />
+      <el-table-column prop="feminized" label="feminized" />
+      <el-table-column prop="automatic" label="automatic" />
+      <el-table-column prop="phenotype" label="phenotype" />
+      <el-table-column prop="floTime" label="floTime" />
+      <el-table-column prop="breeder.title" label="breeder" />
+      <el-table-column label="Operations">
+        <template #default="scope">
+          <el-button size="small"
+                     @click="edit(scope.row)">Edit</el-button>
+          <el-button size="small"
+                     type="danger"
+                     @click="remove(scope.row)">Delete</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
   </div>
 </template>
 
@@ -32,9 +35,9 @@ export default defineComponent({
   setup(params, { emit }) {
     const varieties = varietiesStore();
 
-    async function remove(id: string): Promise<void> {
+    async function remove(variety: Variety): Promise<void> {
       try {
-        await axios.delete(`${process.env.VUE_APP_SERVER_ADDRESS}/variety/delete/${id}`);
+        await axios.delete(`${process.env.VUE_APP_SERVER_ADDRESS}/variety/delete/${variety._id}`);
         await varieties.fetch();
       } catch (err) {
         console.log(err);
