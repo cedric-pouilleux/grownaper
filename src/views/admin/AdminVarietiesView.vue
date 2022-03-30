@@ -1,21 +1,7 @@
 <template>
-
-  <VarietyForm :selected="selectedVariety"
-               :opened="formOpened"
-               @close="closeForm"/>
-  <BreederForm :selected="selectedBreeder"
-               :opened="formBreederOpened"
-               @close="closeBreederForm"/>
-
-  <el-menu router
-           mode="horizontal"
-           background-color="#333"
-           text-color="#fff"
-           active-text-color="#ff0000">
-    <el-menu-item :index="{ name: 'AdminVarieties' }">Varieties & Breeders</el-menu-item>
-    <el-menu-item :index="{ name: 'AdminFeeders' }">Feeders & Products</el-menu-item>
-  </el-menu>
-
+  <VarietyForm :selected="selectedVariety" :opened="formOpened" @close="closeForm"/>
+  <BreederForm :selected="selectedBreeder" :opened="formBreederOpened" @close="closeBreederForm"/>
+  <admin-ui-navigation/>
   <el-container>
     <el-aside width="400px">
       <el-main>
@@ -26,17 +12,16 @@
       <VarietiesList @edit="editVariety" @add="addVariety"/>
     </el-main>
   </el-container>
-
 </template>
 
 <script lang="ts">
-
 import { defineComponent, ref } from 'vue';
 import VarietiesList from '@/components/VarietiesList.vue';
 import BreedersList from '@/components/BreedersList.vue';
 import { Breeder, Variety } from '@/types';
 import VarietyForm from '@/components/VarietyForm.vue';
 import BreederForm from '@/components/BreederForm.vue';
+import AdminUiNavigation from '@/components/admin/ui/Navigation.vue';
 
 export default defineComponent({
   name: 'AdminVarietiesView',
@@ -45,6 +30,7 @@ export default defineComponent({
     VarietiesList,
     BreedersList,
     VarietyForm,
+    AdminUiNavigation,
   },
   setup() {
     const selectedVariety = ref<Variety | null>(null);

@@ -5,14 +5,7 @@
   <feeder-product-form :selected="selectedFeederProduct"
                :opened="formFeederProductOpened"
                @close="closeFeederProductForm"/>
-  <el-menu router
-           mode="horizontal"
-           background-color="#333"
-           text-color="#fff"
-           active-text-color="#ff0000">
-    <el-menu-item :index="{ name: 'AdminVarieties' }">Varieties & Breeders</el-menu-item>
-    <el-menu-item :index="{ name: 'AdminFeeders' }">Feeders & Products</el-menu-item>
-  </el-menu>
+  <admin-ui-navigation/>
   <el-container>
     <el-aside width="600px">
       <el-main>
@@ -32,11 +25,16 @@ import FeederProductList from '@/components/FeedersProductsList.vue';
 import { Feeder, FeederProduct } from '@/types';
 import FeederProductForm from '@/components/FeederProductForm.vue';
 import FeederForm from '@/components/FeederForm.vue';
+import AdminUiNavigation from '@/components/admin/ui/Navigation.vue';
 
 export default defineComponent({
   name: 'AdminFeedersView',
   components: {
-    FeederForm, FeederProductForm, FeederProductList, FeederList,
+    AdminUiNavigation,
+    FeederForm,
+    FeederProductForm,
+    FeederProductList,
+    FeederList,
   },
   setup() {
     const formFeederOpened = ref<boolean>(false);
