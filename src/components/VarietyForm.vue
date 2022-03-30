@@ -39,8 +39,9 @@
     </template>
     <template #footer>
       <div style="flex: auto">
-        <el-button v-if="selected" size="large" type="primary" @click="edit">Save</el-button>
-        <el-button v-else size="large" type="primary" @click="add">Add</el-button>
+        <el-button size="large" type="primary" @click="action">
+          {{ selected ? 'Save' : 'Add'}}
+        </el-button>
       </div>
     </template>
   </el-drawer>
@@ -53,7 +54,7 @@ import {
 import VarietyStore from '@/store/varieties';
 import BreederStore from '@/store/breeders';
 import { Breeder, Variety } from '@/types';
-import { ElMessageBox } from 'element-plus';
+import { ElNotification } from 'element-plus';
 
 export default defineComponent({
   name: 'VarietyForm',
@@ -98,22 +99,25 @@ export default defineComponent({
       drawer.value = props.opened;
     }, { immediate: true });
 
-    function add() {
-      varietyStore.add(variety);
-    }
-
-    function edit() {
-      varietyStore.edit(variety);
-    }
-
-    function confirmClick() {
-      ElMessageBox.confirm('Do you really want edit')
-        .then(() => {
-          drawer.value = false;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+    async function action(): Promise<void> {
+      if (props.selected) {
+        const edited = await varietyStore.edit(variety);
+        if (edited) {
+          ElNotification.success({
+            message: `ID : ${variety.title} has been edited`,
+            offset: 100,
+          });
+        }
+      } else {
+        const added = await varietyStore.add(variety);
+        if (added) {
+          ElNotification.success({
+            message: `ID : ${variety.title} has been added`,
+            offset: 100,
+          });
+        }
+      }
+      emit('close');
     }
 
     function handleClose() {
@@ -126,11 +130,9 @@ export default defineComponent({
       breederStore,
       edition: computed(() => !!props.selected),
       cancel: () => emit('cancel'),
-      add,
-      edit,
-      confirmClick,
       drawer,
       handleClose,
+      action,
     };
   },
 

@@ -14,22 +14,22 @@ const varietyStore = defineStore('variety', () => {
     }
   }
 
-  async function add(variety: Partial<Variety>): Promise<void> {
-    try {
-      await axios.post(`${SERVER}/variety/add`, variety);
+  async function add(variety: Partial<Variety>): Promise<boolean> {
+    const result = await axios.post(`${SERVER}/variety/add`, variety);
+    if (result.status === 201) {
       await fetch();
-    } catch (err) {
-      console.log(err);
+      return true;
     }
+    return false;
   }
 
-  async function edit(variety: Partial<Variety>): Promise<void> {
-    try {
-      await axios.put(`${SERVER}/variety/edit`, variety);
+  async function edit(variety: Partial<Variety>): Promise<boolean> {
+    const result = await axios.put(`${SERVER}/variety/edit`, variety);
+    if (result.status === 201) {
       await fetch();
-    } catch (err) {
-      console.log(err);
+      return true;
     }
+    return false;
   }
 
   async function remove(id: string): Promise<boolean> {

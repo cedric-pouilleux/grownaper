@@ -18,7 +18,9 @@
 
   <el-container>
     <el-aside width="400px">
-      <BreedersList @edit="editBreeder" @add="addBreeder"/>
+      <el-main>
+        <BreedersList @edit="editBreeder" @add="addBreeder"/>
+      </el-main>
     </el-aside>
     <el-main>
       <VarietiesList @edit="editVariety" @add="addVariety"/>

@@ -1,6 +1,6 @@
 <template>
 
-  <el-drawer v-model="drawer" direction="ltr">
+  <el-drawer v-model="drawer" direction="ltr" :before-close="handleClose">
     <template #title>
       <h2>{{ selected ? 'Edit' : 'Add' }} breeder</h2>
     </template>
@@ -33,8 +33,9 @@
     </template>
     <template #footer>
       <div style="flex: auto">
-        <el-button v-if="selected" size="large" type="primary" @click="edit">Save</el-button>
-        <el-button v-else size="large" type="primary" @click="add">Add</el-button>
+        <el-button size="large" type="primary" @click="action">
+          {{ selected ? 'Save' : 'Add'}}
+        </el-button>
       </div>
     </template>
   </el-drawer>
@@ -63,7 +64,7 @@ export default defineComponent({
     },
   },
 
-  emits: ['cancel'],
+  emits: ['cancel', 'close'],
 
   setup(props, { emit }) {
     const breederStore = BreederStore();
@@ -88,36 +89,25 @@ export default defineComponent({
       drawer.value = props.opened;
     }, { immediate: true });
 
-    async function add() {
-      const added = await breederStore.add(breeder);
-      if (added) {
-        ElNotification.success({
-          message: `Title : ${breeder.title} has been added`,
-          offset: 100,
-        });
+    async function action(): Promise<void> {
+      if (props.selected) {
+        const edited = await breederStore.edit(breeder);
+        if (edited) {
+          ElNotification.success({
+            message: `Title : ${breeder.title} has been edited`,
+            offset: 100,
+          });
+        }
       } else {
-        ElNotification.error({
-          message: `Problem with add : ${breeder.title}`,
-          offset: 100,
-        });
+        const added = await breederStore.add(breeder);
+        if (added) {
+          ElNotification.success({
+            message: `ID : ${breeder.title} has been added`,
+            offset: 100,
+          });
+        }
       }
-      drawer.value = false;
-    }
-
-    async function edit() {
-      const edited = await breederStore.edit(breeder);
-      if (edited) {
-        ElNotification.success({
-          message: `ID : ${breeder._id} has been edited`,
-          offset: 100,
-        });
-      } else {
-        ElNotification.error({
-          message: `Problem with edition : ${breeder._id}`,
-          offset: 100,
-        });
-      }
-      drawer.value = false;
+      emit('close');
     }
 
     function change(event: Event) {
@@ -132,10 +122,10 @@ export default defineComponent({
       ...toRefs(breeder),
       edition: computed(() => !!props.selected),
       cancel: () => emit('cancel'),
-      add,
-      edit,
       change,
+      action,
       drawer,
+      handleClose: () => emit('close'),
     };
   },
 });
