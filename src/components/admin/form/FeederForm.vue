@@ -4,7 +4,7 @@
       <h2>{{ selected ? 'Edit' : 'Add'}} feeder</h2>
     </template>
     <template #default>
-      <el-form>
+      <el-form label-width="120px">
         <el-form-item label="Title">
           <el-input v-model="title" />
         </el-form-item>

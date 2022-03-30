@@ -5,22 +5,27 @@
       <el-button round size="small" @click="add">New variety</el-button>
     </el-header>
     <el-table :data="varieties.all">
-      <el-table-column prop="title" label="title" width="180"  />
-      <el-table-column prop="feminized" label="feminized" />
-      <el-table-column prop="automatic" label="automatic" />
-      <el-table-column prop="phenotype" label="phenotype" />
-      <el-table-column prop="floTime" label="floTime" />
-      <el-table-column prop="breeder.title" label="breeder" />
+      <el-table-column prop="title" label="Title" width="180"  />
+      <el-table-column prop="feminized" label="Feminized" />
+      <el-table-column prop="automatic" label="Automatic" />
+      <el-table-column prop="phenotype" label="Phenotype" />
+      <el-table-column prop="floTime" label="Flowering time" />
+      <el-table-column prop="breeder.title" label="Breeder" />
       <el-table-column width="100" >
         <template #default="scope">
           <el-button-group class="ml-4">
             <el-button :icon="Edit"
                        size="small"
                        @click="edit(scope.row)"/>
-            <el-button :icon="Delete"
-                       size="small"
-                       type="danger"
-                       @click="remove(scope.row)"/>
+            <el-popconfirm title="Are you sure to delete this?"
+                           @confirm="remove(scope.row)">
+              <template #reference>
+                <el-button :icon="Delete"
+                           size="small"
+                           type="danger">
+                </el-button>
+              </template>
+            </el-popconfirm>
           </el-button-group>
         </template>
       </el-table-column>

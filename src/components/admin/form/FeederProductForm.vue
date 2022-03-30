@@ -4,7 +4,7 @@
       <h2>{{ selected ? 'Edit' : 'Add'}} product</h2>
     </template>
     <template #default>
-      <el-form>
+      <el-form label-width="120px">
         <el-form-item label="Title">
           <el-input v-model="title" />
         </el-form-item>
@@ -14,8 +14,8 @@
         <el-form-item label="Description">
           <el-input v-model="description" />
         </el-form-item>
-        <el-form-item>
-          <el-select v-model="feeder" :placeholder="feeder?.title || 'Your breeder'">
+        <el-form-item label="Feeder">
+          <el-select v-model="feeder" :placeholder="feeder?.title || 'Select associate feeder'">
             <el-option v-for="optionBreeder in feederStore.all"
                        :key="optionBreeder._id"
                        :value="optionBreeder">

@@ -1,14 +1,15 @@
 <template>
   <div class="common-layout">
-    <el-container>
-      <el-header>
-        <el-menu router mode="horizontal">
-          <el-menu-item :index="{ name: 'Plants' }">Plants</el-menu-item>
-          <el-menu-item :index="{ name: 'Admin' }">Admin</el-menu-item>
-        </el-menu>
-      </el-header>
-      <router-view/>
-    </el-container>
+    <el-menu router
+             :default-active="1"
+             mode="horizontal"
+             background-color="#ebebeb"
+             text-color="#333"
+             active-text-color="#ff0000">
+      <el-menu-item :index="{ name: 'Plants' }">Plants</el-menu-item>
+      <el-menu-item :index="{ name: 'Admin' }">Admin</el-menu-item>
+    </el-menu>
+    <router-view/>
   </div>
 </template>
 

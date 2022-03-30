@@ -19,12 +19,15 @@
             <el-button :icon="Edit"
                        size="small"
                        @click="edit(scope.row)"></el-button>
-
-            <el-button :icon="Delete"
-                       size="small"
-                       type="danger"
-                       @click="remove(scope.row._id)">
-            </el-button>
+            <el-popconfirm title="Are you sure to delete this?"
+                           @confirm="remove(scope.row._id)">
+              <template #reference>
+                <el-button :icon="Delete"
+                           size="small"
+                           type="danger">
+                </el-button>
+              </template>
+            </el-popconfirm>
           </el-button-group>
         </template>
       </el-table-column>
