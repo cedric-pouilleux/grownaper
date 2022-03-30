@@ -1,32 +1,48 @@
 <template>
-  <div class="admin-component feeders-list">
-    <header class="admin-component__header">
+  <el-container>
+    <el-header class="feeders-options">
       <h2>Feeders</h2>
-    </header>
-    <ul class="row-list">
-      <li class="row-list__item" v-for="feeder in all" :key="feeder._id">
-        <img class="rounded" :src="feeder.picture" alt="" width="40" />
-        <a v-if="feeder.link" :href="feeder.link">{{feeder.title}}</a>
-        <p v-else>{{breeder.title}}</p>
-        <div class="row-list__actions">
-          <button class="btn" @click="edit(feeder)">Edit</button>
-          <button class="btn btn-danger" @click="remove(feeder._id)">Remove</button>
-        </div>
-      </li>
-    </ul>
-  </div>
+      <el-button round size="small" @click="add">New feeder</el-button>
+    </el-header>
+    <el-table :data="all" style="width: 100%">
+      <el-table-column prop="picture" width="40">
+        <template #default="scope">
+          <el-avatar size="small" :src="scope.row.picture"/>
+        </template>
+      </el-table-column>
+      <el-table-column prop="title" label="Title" />
+      <el-table-column prop="description" label="Description" />
+      <el-table-column prop="link" label="Links" />
+      <el-table-column width="100" >
+        <template #default="scope">
+          <el-button-group class="ml-4">
+            <el-button :icon="Edit"
+                       size="small"
+                       @click="edit(scope.row)"></el-button>
+
+            <el-button :icon="Delete"
+                       size="small"
+                       type="danger"
+                       @click="remove(scope.row._id)">
+            </el-button>
+          </el-button-group>
+        </template>
+      </el-table-column>
+    </el-table>
+  </el-container>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { Feeder } from '@/types';
 import feederStore from '@/store/feeders';
+import { Edit, Delete } from '@element-plus/icons-vue';
 import { storeToRefs } from 'pinia';
 
 export default defineComponent({
   name: 'FeederList',
 
-  emits: ['edit'],
+  emits: ['edit', 'add'],
 
   setup(params, { emit }) {
     const store = feederStore();
@@ -38,10 +54,26 @@ export default defineComponent({
       remove: (id: string) => store.remove(id),
       cancel: () => { selectedFeeder.value = null; },
       edit: (feeder: Feeder) => { emit('edit', feeder); },
+      add: () => { emit('add'); },
       all,
       selectedFeeder,
+      Edit,
+      Delete,
     };
   },
 
 });
 </script>
+
+<style lang="scss" scoped>
+.feeders-options {
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  width: 100%;
+}
+h2 {
+  font-size: 1.4em;
+}
+</style>

@@ -1,78 +1,62 @@
 <template>
-  <div class="admin-component feeders-products-form">
-
-    <header class="admin-component__header">
-      <h2>{{ edition ? 'Edit' : 'Add'}} feeder product</h2>
-      <button class="admin-component__header-options btn btn-danger"
-              v-if="edition"
-              @click="cancel"> Cancel
-      </button>
-    </header>
-
-    <form class="vertical-form" @submit.prevent="action"
-          enctype="multipart/form-data">
-
-      <label for="feederForm_title">
-        Title
-        <input type="text"
-               required
-               class="input"
-               name="title"
-               id="feederForm_title"
-               v-model="title" />
-      </label>
-
-      <label for="feederForm_link">
-        Link
-        <input type="text"
-               class="input"
-               name="link"
-               id="feederForm_link"
-               v-model="link" />
-      </label>
-
-      <label for="feederForm_link">
-        Description
-        <input type="text"
-               class="input"
-               name="description"
-               id="feederForm_description"
-               v-model="description" />
-      </label>
-
-      <label for="breeder-form_picture">
-        Picture
-        <input type="file"
-               class="input"
-               name="picture"
-               id="breeder-form_picture"
-               @change="change" />
-      </label>
-
-      <label for="breeder-form_picture">
-        Feeder
-        <select v-model="feeder" id="variety-select">
-          <option v-for="optionVariety in feederStore.all"
-                  :key="optionVariety._id"
-                  :value="optionVariety._id">
-            {{optionVariety.title}}
-          </option>
-        </select>
-      </label>
-
-      <button class="btn" type="submit">{{ edition ? 'Edit' : 'New'}}</button>
-    </form>
-  </div>
+  <el-drawer v-model="drawer" :before-close="handleClose">
+    <template #title>
+      <h2>{{ selected ? 'Edit' : 'Add'}} product</h2>
+    </template>
+    <template #default>
+      <el-form>
+        <el-form-item label="Title">
+          <el-input v-model="title" />
+        </el-form-item>
+        <el-form-item label="Link">
+          <el-input v-model="link" />
+        </el-form-item>
+        <el-form-item label="Description">
+          <el-input v-model="description" />
+        </el-form-item>
+        <el-form-item>
+          <el-select v-model="feeder" :placeholder="feeder?.title || 'Your breeder'">
+            <el-option v-for="optionBreeder in feederStore.all"
+                       :key="optionBreeder._id"
+                       :value="optionBreeder">
+              {{optionBreeder.title}}
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="Picture">
+          <el-upload type="file"
+                     ref="upload"
+                     :auto-upload="false"
+                     :limit="1"
+                     name="picture"
+                     v-model="picture"
+                     @change="change">
+            <template #trigger>
+              <el-button type="primary">Select file</el-button>
+            </template>
+          </el-upload>
+        </el-form-item>
+      </el-form>
+    </template>
+    <template #footer>
+      <div style="flex: auto">
+        <el-button size="large" type="primary" @click="action">
+          {{ selected ? 'Save' : 'Add'}}
+        </el-button>
+      </div>
+    </template>
+  </el-drawer>
 </template>
 
 <script lang="ts">
 import {
   computed,
-  defineComponent, PropType, reactive, toRefs, watch,
+  defineComponent, PropType, reactive, ref, toRefs, watch,
 } from 'vue';
 import { FeederProduct } from '@/types';
 import FeederProductStore from '@/store/feeders-products';
 import FeederStore from '@/store/feeders';
+import { ElNotification } from 'element-plus';
 
 export default defineComponent({
   name: 'FeederProductForm',
@@ -82,20 +66,25 @@ export default defineComponent({
       type: Object as PropType<FeederProduct>,
       required: false,
     },
+    opened: {
+      type: Boolean,
+      default: false,
+    },
   },
 
-  emits: ['cancel'],
+  emits: ['close'],
 
   setup(props, { emit }) {
     const initial = {
       title: '',
-      description: null,
-      picture: null,
-      link: null,
-      feeder: null,
+      description: '',
+      picture: undefined,
+      link: '',
+      feeder: undefined,
     };
 
     const feederStore = FeederStore();
+    const drawer = ref<boolean>(false);
     const feederProductStore = FeederProductStore();
 
     const feederProduct = reactive<Partial<FeederProduct>>({
@@ -104,28 +93,53 @@ export default defineComponent({
 
     watch(() => props.selected, (value) => {
       Object.assign(feederProduct, value || initial);
-    });
+    }, { immediate: true });
 
-    function action() {
-      const formData = new FormData();
-      formData.append('title', feederProduct.title || '');
-      formData.append('description', feederProduct.description || '');
-      formData.append('picture', feederProduct.picture || '');
-      formData.append('link', feederProduct.link || '');
-      formData.append('feeder', feederProduct.feeder || '');
+    watch(() => props.opened, () => {
+      drawer.value = props.opened;
+    }, { immediate: true });
+
+    async function action(): Promise<void> {
       if (props.selected) {
-        feederProductStore.edit(feederProduct, formData);
+        const edited = await feederProductStore.edit(feederProduct);
+        if (edited) {
+          ElNotification.success({
+            message: `ID : ${feederProduct.title} has been edited`,
+            offset: 100,
+          });
+        }
       } else {
-        feederProductStore.add(feederProduct, formData);
+        const added = await feederProductStore.add(feederProduct);
+        if (added) {
+          ElNotification.success({
+            message: `ID : ${feederProduct.title} has been added`,
+            offset: 100,
+          });
+        }
+      }
+      emit('close');
+    }
+
+    function change(event: Event) {
+      const target = event.target as HTMLInputElement;
+      if (target?.files?.length) {
+        const file = target.files[0];
+        feederProduct.picture = file;
       }
     }
 
+    function handleClose() {
+      emit('close');
+    }
+
     return {
+      drawer,
       ...toRefs(feederProduct),
       edition: computed(() => !!props.selected),
-      cancel: () => emit('cancel'),
       feederStore,
+      handleClose,
       action,
+      change,
     };
   },
 });

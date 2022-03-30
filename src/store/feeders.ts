@@ -14,47 +14,47 @@ const feederStore = defineStore('feeder', () => {
     }
   }
 
-  async function add(feeder: Partial<Feeder>): Promise<void> {
+  async function add(feeder: Partial<Feeder>): Promise<boolean> {
     const formData = new FormData();
     formData.append('title', feeder.title || '');
     formData.append('picture', feeder.picture || '');
     formData.append('link', feeder.link || '');
-    try {
-      await axios.post(`${SERVER}/feeders/add`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+    const result = await axios.post(`${SERVER}/feeders/add`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    if (result.status === 201) {
       await fetch();
-    } catch (err) {
-      console.error(err);
+      return true;
     }
+    return false;
   }
 
-  async function edit(feeder: Partial<Feeder>): Promise<void> {
+  async function edit(feeder: Partial<Feeder>): Promise<boolean> {
     const formData = new FormData();
     formData.append('title', feeder.title || '');
     formData.append('picture', feeder.picture || '');
     formData.append('link', feeder.link || '');
-    try {
-      await axios.put(`${SERVER}/feeders/edit/${feeder._id}`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+    const result = await axios.put(`${SERVER}/feeders/edit/${feeder._id}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    if (result.status === 201) {
       await fetch();
-    } catch (err) {
-      console.error(err);
+      return true;
     }
+    return false;
   }
 
-  async function remove(id: string): Promise<void> {
-    try {
-      await axios.delete(`${SERVER}/feeders/delete/${id}`);
+  async function remove(id: string): Promise<boolean> {
+    const result = await axios.delete(`${SERVER}/feeders/delete/${id}`);
+    if (result.status === 201) {
       await fetch();
-    } catch (err) {
-      console.error(err);
+      return true;
     }
+    return false;
   }
 
   fetch().then(

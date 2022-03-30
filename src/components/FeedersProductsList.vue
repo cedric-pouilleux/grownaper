@@ -1,14 +1,35 @@
 <template>
-  <div class="feeders-products-list">
-    <h2>Feeders products list</h2>
-    <ul>
-      <li v-for="feederProduct in all" :key="feederProduct._id" :data-id="feederProduct._id">
-        {{feederProduct.title}}
-        <button class="btn" @click="edit(feederProduct)">Edit</button>
-        <button class="btn" @click="remove(feederProduct._id)">Remove</button>
-      </li>
-    </ul>
-  </div>
+  <el-container>
+    <el-header class="feeders-products-options">
+      <h2>Products</h2>
+      <el-button round size="small" @click="add">New product</el-button>
+    </el-header>
+    <el-table :data="all" style="width: 100%">
+      <el-table-column prop="picture" width="40">
+        <template #default="scope">
+          <el-avatar size="small" :src="scope.row.picture"/>
+        </template>
+      </el-table-column>
+      <el-table-column prop="title" label="Title" />
+      <el-table-column prop="description" label="Description" />
+      <el-table-column prop="link" label="Links" />
+      <el-table-column width="100" >
+        <template #default="scope">
+          <el-button-group class="ml-4">
+            <el-button :icon="Edit"
+                       size="small"
+                       @click="edit(scope.row)"></el-button>
+
+            <el-button :icon="Delete"
+                       size="small"
+                       type="danger"
+                       @click="remove(scope.row._id)">
+            </el-button>
+          </el-button-group>
+        </template>
+      </el-table-column>
+    </el-table>
+  </el-container>
 </template>
 
 <script lang="ts">
@@ -16,10 +37,11 @@ import { defineComponent, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { FeederProduct } from '@/types';
 import feederProductStore from '@/store/feeders-products';
+import { Edit, Delete } from '@element-plus/icons-vue';
 
 export default defineComponent({
   name: 'FeederProductList',
-  emits: ['edit'],
+  emits: ['edit', 'add'],
   setup(props, { emit }) {
     const store = feederProductStore();
     const { all } = storeToRefs(store);
@@ -30,9 +52,25 @@ export default defineComponent({
       selectedFeederProduct,
       all,
       remove: (id: string) => store.remove(id),
+      add: () => { emit('add'); },
       edit: (feederProduct: FeederProduct) => { emit('edit', feederProduct); },
       cancel: () => { selectedFeederProduct.value = null; },
+      Edit,
+      Delete,
     };
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.feeders-products-options {
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  width: 100%;
+}
+h2 {
+  font-size: 1.4em;
+}
+</style>

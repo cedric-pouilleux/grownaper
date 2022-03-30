@@ -36,11 +36,11 @@ interface FeederProduct {
   _id: string,
   title: string,
   slug: string,
-  description: string | null,
-  picture: string | null,
-  link: string | null,
+  description?: string,
+  picture?: File,
+  link?: string,
   // eslint-disable-next-line no-use-before-define
-  feeder: string | null
+  feeder?: Feeder
 }
 
 interface Feeder {

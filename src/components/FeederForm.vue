@@ -1,66 +1,52 @@
 <template>
-  <div class="admin-component feeders-form">
-
-    <header class="admin-component__header">
-      <h2>{{ edition ? 'Edit' : 'Add'}} feeder</h2>
-      <button class="admin-component__header-options btn btn-danger"
-              v-if="edition"
-              @click="cancel"> Cancel
-      </button>
-    </header>
-
-    <form class="vertical-form"
-          v-on="{ submit: (edition) ? edit : add }"
-          enctype="multipart/form-data">
-
-      <label for="feederForm_title">
-        Title
-        <input type="text"
-               required
-               class="input"
-               name="title"
-               id="feederForm_title"
-               v-model="title" />
-      </label>
-
-      <label for="feederForm_link">
-        Link
-        <input type="text"
-               class="input"
-               name="link"
-               id="feederForm_link"
-               v-model="link" />
-      </label>
-
-      <label for="feederForm_link">
-        Description
-        <input type="text"
-               class="input"
-               name="description"
-               id="feederForm_description"
-               v-model="description" />
-      </label>
-
-      <label for="breeder-form_picture">
-        Picture
-        <input type="file"
-               class="input"
-               name="picture"
-               id="breeder-form_picture"
-               @change="change" />
-      </label>
-
-      <button class="btn" type="submit">{{ edition ? 'Edit' : 'New'}}</button>
-    </form>
-  </div>
+  <el-drawer v-model="drawer" :before-close="handleClose" direction="ltr">
+    <template #title>
+      <h2>{{ selected ? 'Edit' : 'Add'}} feeder</h2>
+    </template>
+    <template #default>
+      <el-form>
+        <el-form-item label="Title">
+          <el-input v-model="title" />
+        </el-form-item>
+        <el-form-item label="Link">
+          <el-input v-model="link" />
+        </el-form-item>
+        <el-form-item label="Description">
+          <el-input v-model="description" />
+        </el-form-item>
+        <el-form-item label="Picture">
+          <el-upload type="file"
+                     ref="upload"
+                     :auto-upload="false"
+                     :limit="1"
+                     class="upload-demo"
+                     name="picture"
+                     v-model="picture"
+                     @change="change">
+            <template #trigger>
+              <el-button type="primary">Select file</el-button>
+            </template>
+          </el-upload>
+        </el-form-item>
+      </el-form>
+    </template>
+    <template #footer>
+      <div style="flex: auto">
+        <el-button size="large" type="primary" @click="action">
+          {{ selected ? 'Save' : 'Add'}}
+        </el-button>
+      </div>
+    </template>
+  </el-drawer>
 </template>
 
 <script lang="ts">
 import {
-  computed, defineComponent, PropType, reactive, toRefs, watch,
+  computed, defineComponent, PropType, reactive, ref, toRefs, watch,
 } from 'vue';
 import FeederStore from '@/store/feeders';
 import { Feeder } from '@/types';
+import { ElNotification } from 'element-plus';
 
 export default defineComponent({
   name: 'FeederForm',
@@ -70,10 +56,17 @@ export default defineComponent({
       type: Object as PropType<Feeder>,
       required: false,
     },
+    opened: {
+      type: Boolean,
+      default: false,
+    },
   },
+
+  emits: ['close'],
 
   setup(props, { emit }) {
     const feederStore = FeederStore();
+    const drawer = ref<boolean>(false);
 
     const initialFeeder = {
       title: '',
@@ -88,12 +81,11 @@ export default defineComponent({
 
     watch(() => props.selected, (value) => {
       Object.assign(feeder, value || initialFeeder);
-    });
+    }, { immediate: true });
 
-    async function add(e: Event) {
-      e.preventDefault();
-      feederStore.add(feeder);
-    }
+    watch(() => props.opened, () => {
+      drawer.value = props.opened;
+    }, { immediate: true });
 
     function change(event: Event) {
       const target = event.target as HTMLInputElement;
@@ -103,18 +95,38 @@ export default defineComponent({
       }
     }
 
-    function edit(e: Event) {
-      e.preventDefault();
-      feederStore.edit(feeder);
+    async function action(): Promise<void> {
+      if (props.selected) {
+        const edited = await feederStore.edit(feeder);
+        if (edited) {
+          ElNotification.success({
+            message: `ID : ${feeder.title} has been edited`,
+            offset: 100,
+          });
+        }
+      } else {
+        const added = await feederStore.add(feeder);
+        if (added) {
+          ElNotification.success({
+            message: `ID : ${feeder.title} has been added`,
+            offset: 100,
+          });
+        }
+      }
+      emit('close');
+    }
+
+    function handleClose() {
+      emit('close');
     }
 
     return {
+      drawer,
       ...toRefs(feeder),
       edition: computed(() => !!props.selected),
-      cancel: () => emit('cancel'),
-      add,
-      edit,
+      action,
       change,
+      handleClose,
     };
   },
 });
