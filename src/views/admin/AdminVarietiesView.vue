@@ -16,11 +16,11 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import VarietiesList from '@/components/VarietiesList.vue';
-import BreedersList from '@/components/BreedersList.vue';
+import VarietiesList from '@/components/admin/list/VarietiesList.vue';
+import BreedersList from '@/components/admin/list/BreedersList.vue';
 import { Breeder, Variety } from '@/types';
-import VarietyForm from '@/components/VarietyForm.vue';
-import BreederForm from '@/components/BreederForm.vue';
+import VarietyForm from '@/components/admin/form/VarietyForm.vue';
+import BreederForm from '@/components/admin/form/BreederForm.vue';
 import AdminUiNavigation from '@/components/admin/ui/Navigation.vue';
 
 export default defineComponent({
