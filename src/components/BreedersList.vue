@@ -34,9 +34,9 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import breederStore from '@/store/breeders';
-import axios from 'axios';
 import { Breeder } from '@/types';
 import { Edit, Delete } from '@element-plus/icons-vue';
+import { ElNotification } from 'element-plus';
 
 export default defineComponent({
   name: 'BreedersList',
@@ -49,12 +49,17 @@ export default defineComponent({
     const selectedBreeder = ref<Breeder | null>(null);
 
     async function remove(id: string): Promise<void> {
-      try {
-        await axios.delete(`${process.env.VUE_APP_SERVER_ADDRESS}/breeder/delete/${id}`);
-        // add visual action for delete success
-        await breeders.fetch();
-      } catch (err) {
-        console.log(err);
+      const removed = await breeders.remove(id);
+      if (removed) {
+        ElNotification.success({
+          message: `ID : ${id} has been delete`,
+          offset: 100,
+        });
+      } else {
+        ElNotification.error({
+          message: `Problem with remove : ${id}`,
+          offset: 100,
+        });
       }
     }
 

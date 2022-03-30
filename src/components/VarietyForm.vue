@@ -50,11 +50,10 @@
 import {
   defineComponent, watch, computed, PropType, ref, reactive, toRefs,
 } from 'vue';
-import axios from 'axios';
 import VarietyStore from '@/store/varieties';
 import BreederStore from '@/store/breeders';
 import { Breeder, Variety } from '@/types';
-import { ElMessageBox, ElNotification } from 'element-plus';
+import { ElMessageBox } from 'element-plus';
 
 export default defineComponent({
   name: 'VarietyForm',
@@ -95,7 +94,7 @@ export default defineComponent({
       Object.assign(variety, value || empty);
     }, { immediate: true });
 
-    watch(() => props.opened, (value) => {
+    watch(() => props.opened, () => {
       drawer.value = props.opened;
     }, { immediate: true });
 

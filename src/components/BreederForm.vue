@@ -44,9 +44,9 @@
 import {
   defineComponent, PropType, toRefs, reactive, computed, watch, ref,
 } from 'vue';
-import axios from 'axios';
 import BreederStore from '@/store/breeders';
 import { Breeder } from '@/types';
+import { ElNotification } from 'element-plus';
 
 export default defineComponent({
   name: 'BreederForm',
@@ -88,47 +88,36 @@ export default defineComponent({
       drawer.value = props.opened;
     }, { immediate: true });
 
-    async function add(e: Event) {
-      e.preventDefault();
-      const formData = new FormData();
-      formData.append('title', breeder.title || '');
-      formData.append('country', breeder.country || '');
-      formData.append('picture', breeder.picture || '');
-      formData.append('link', breeder.link || '');
-      console.log('add');
-      try {
-        await axios.post(`${process.env.VUE_APP_SERVER_ADDRESS}/breeder/add`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
+    async function add() {
+      const added = await breederStore.add(breeder);
+      if (added) {
+        ElNotification.success({
+          message: `Title : ${breeder.title} has been added`,
+          offset: 100,
         });
-        await breederStore.fetch();
-      } catch (err) {
-        console.log(err);
+      } else {
+        ElNotification.error({
+          message: `Problem with add : ${breeder.title}`,
+          offset: 100,
+        });
       }
+      drawer.value = false;
     }
 
-    async function edit(e: Event) {
-      e.preventDefault();
-      if (!breeder._id) {
-        throw new Error('Breeder id is required');
-      }
-      const formData = new FormData();
-      formData.append('_id', breeder._id || '');
-      formData.append('title', breeder.title || '');
-      formData.append('country', breeder.country || '');
-      formData.append('picture', breeder.picture || '');
-      formData.append('link', breeder.link || '');
-      try {
-        await axios.put(`${process.env.VUE_APP_SERVER_ADDRESS}/breeder/edit`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
+    async function edit() {
+      const edited = await breederStore.edit(breeder);
+      if (edited) {
+        ElNotification.success({
+          message: `ID : ${breeder._id} has been edited`,
+          offset: 100,
         });
-        await breederStore.fetch();
-      } catch (err) {
-        console.log(err);
+      } else {
+        ElNotification.error({
+          message: `Problem with edition : ${breeder._id}`,
+          offset: 100,
+        });
       }
+      drawer.value = false;
     }
 
     function change(event: Event) {

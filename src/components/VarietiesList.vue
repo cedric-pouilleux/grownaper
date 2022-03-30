@@ -36,20 +36,24 @@ import { Edit, Delete } from '@element-plus/icons-vue';
 import { ElNotification } from 'element-plus';
 
 export default defineComponent({
+
   name: 'VarietiesList',
   emits: ['edit', 'add'],
 
   setup(params, { emit }) {
     const varieties = varietiesStore();
-
     const selected = ref<Variety | null>(null);
 
     async function remove(variety: Variety): Promise<void> {
       const removed = await varieties.remove(variety._id);
       if (removed) {
         ElNotification.success({
-          title: 'Success',
-          message: `${variety._id} has been delete`,
+          message: `ID : ${variety._id} has been delete`,
+          offset: 100,
+        });
+      } else {
+        ElNotification.error({
+          message: `Problem with remove : ${variety._id}`,
           offset: 100,
         });
       }

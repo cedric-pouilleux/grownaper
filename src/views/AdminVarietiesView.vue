@@ -60,7 +60,7 @@ export default defineComponent({
       selectedBreeder.value = breeder;
     }
 
-    function addVariety(variety: Variety) {
+    function addVariety() {
       formOpened.value = true;
     }
 
