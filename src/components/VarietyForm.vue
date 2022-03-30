@@ -54,7 +54,7 @@ import axios from 'axios';
 import VarietyStore from '@/store/varieties';
 import BreederStore from '@/store/breeders';
 import { Breeder, Variety } from '@/types';
-import { ElMessageBox } from 'element-plus';
+import { ElMessageBox, ElNotification } from 'element-plus';
 
 export default defineComponent({
   name: 'VarietyForm',
@@ -99,24 +99,12 @@ export default defineComponent({
       drawer.value = props.opened;
     }, { immediate: true });
 
-    async function add(e: Event) {
-      e.preventDefault();
-      try {
-        await axios.post(`${process.env.VUE_APP_SERVER_ADDRESS}/variety/add`, variety);
-        await varietyStore.fetch();
-      } catch (err) {
-        console.log(err);
-      }
+    function add() {
+      varietyStore.add(variety);
     }
 
-    async function edit(e: Event) : Promise<void> {
-      e.preventDefault();
-      try {
-        await axios.put(`${process.env.VUE_APP_SERVER_ADDRESS}/variety/edit`, variety);
-        await varietyStore.fetch();
-      } catch (err) {
-        console.log(err);
-      }
+    function edit() {
+      varietyStore.edit(variety);
     }
 
     function confirmClick() {

@@ -2,7 +2,7 @@
   <div class="common-layout">
     <el-container>
       <el-header>
-        <el-menu router class="el-menu-demo" mode="horizontal">
+        <el-menu router mode="horizontal">
           <el-menu-item :index="{ name: 'Plants' }">Plants</el-menu-item>
           <el-menu-item :index="{ name: 'Admin' }">Admin</el-menu-item>
         </el-menu>

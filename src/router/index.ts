@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
+import AdminFeedersView from '../views/AdminFeedersView.vue';
+import AdminVarietiesView from '../views/AdminVarietiesView.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -16,7 +18,12 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/admin/varieties',
     name: 'AdminVarieties',
-    component: () => import(/* webpackChunkName: "about" */ '../views/AdminVarietiesView.vue'),
+    component: AdminVarietiesView,
+  },
+  {
+    path: '/admin/feeders',
+    name: 'AdminFeeders',
+    component: AdminFeedersView,
   },
 ];
 

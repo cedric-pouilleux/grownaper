@@ -31,9 +31,9 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import varietiesStore from '@/store/varieties';
-import axios from 'axios';
 import { Variety } from '@/types';
 import { Edit, Delete } from '@element-plus/icons-vue';
+import { ElNotification } from 'element-plus';
 
 export default defineComponent({
   name: 'VarietiesList',
@@ -45,11 +45,13 @@ export default defineComponent({
     const selected = ref<Variety | null>(null);
 
     async function remove(variety: Variety): Promise<void> {
-      try {
-        await axios.delete(`${process.env.VUE_APP_SERVER_ADDRESS}/variety/delete/${variety._id}`);
-        await varieties.fetch();
-      } catch (err) {
-        console.log(err);
+      const removed = await varieties.remove(variety._id);
+      if (removed) {
+        ElNotification.success({
+          title: 'Success',
+          message: `${variety._id} has been delete`,
+          offset: 100,
+        });
       }
     }
 

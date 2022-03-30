@@ -2,12 +2,12 @@
   <el-container>
     <el-header class="breeders-options">
       <h2>Breeders</h2>
-      <el-button round size="small">New breeder</el-button>
+      <el-button round size="small" @click="add">New breeder</el-button>
     </el-header>
     <el-table :data="breeders.all" style="width: 100%">
-      <el-table-column prop="picture" width="65">
+      <el-table-column prop="picture" width="40">
         <template #default="scope">
-          <el-avatar :src="scope.row.picture"/>
+          <el-avatar size="small" :src="scope.row.picture"/>
         </template>
       </el-table-column>
       <el-table-column prop="title" label="Title" />
@@ -22,7 +22,7 @@
             <el-button :icon="Delete"
                        size="small"
                        type="danger"
-                       @click="remove(scope.row)">
+                       @click="remove(scope.row._id)">
             </el-button>
           </el-button-group>
         </template>
@@ -41,7 +41,7 @@ import { Edit, Delete } from '@element-plus/icons-vue';
 export default defineComponent({
   name: 'BreedersList',
 
-  emits: ['edit'],
+  emits: ['edit', 'add'],
 
   setup(params, { emit }) {
     const breeders = breederStore();
@@ -62,6 +62,7 @@ export default defineComponent({
       remove,
       cancel: () => { selectedBreeder.value = null; },
       edit: (breeder: Breeder) => { emit('edit', breeder); },
+      add: () => { emit('add'); },
       breeders,
       selectedBreeder,
       Edit,

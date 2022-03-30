@@ -1,63 +1,48 @@
 <template>
-  <div class="admin-component breeders-form">
 
-    <header class="admin-component__header">
-      <h2>{{ edition ? 'Edit' : 'Add'}} breeder</h2>
-      <button class="admin-component__header-options btn btn-danger"
-              v-if="edition"
-              @click="cancel"> Cancel
-      </button>
-    </header>
-
-    <form class="vertical-form"
-          v-on="{ submit: (edition) ? edit : add }"
-          enctype="multipart/form-data">
-
-      <label for="breederForm_title">
-        Title
-        <input type="text"
-               required
-               class="input"
-               name="title"
-               id="breederForm_title"
-               v-model="title" />
-      </label>
-
-      <label for="breederForm_link">
-        Link
-        <input type="text"
-               class="input"
-               name="link"
-               id="breederForm_link"
-               v-model="link" />
-      </label>
-
-      <label for="breederForm_country">
-        Country
-        <input type="text"
-               class="input"
-               name="country"
-               id="breederForm_country"
-               v-model="country" />
-      </label>
-
-      <label for="breeder-form_picture">
-        Picture
-        <input type="file"
-               class="input"
-               name="picture"
-               id="breeder-form_picture"
-               @change="change" />
-      </label>
-
-      <button class="btn" type="submit">{{ edition ? 'Edit' : 'New'}}</button>
-    </form>
-  </div>
+  <el-drawer v-model="drawer" direction="ltr">
+    <template #title>
+      <h2>{{ selected ? 'Edit' : 'Add' }} breeder</h2>
+    </template>
+    <template #default>
+      <el-form>
+        <el-form-item label="Title">
+          <el-input v-model="title" />
+        </el-form-item>
+        <el-form-item label="Website Link">
+          <el-input v-model="link" />
+        </el-form-item>
+        <el-form-item label="Country">
+          <el-input v-model="country" />
+        </el-form-item>
+        <el-form-item label="Picture">
+          <el-upload type="file"
+                     ref="upload"
+                     :auto-upload="false"
+                     :limit="1"
+                     class="upload-demo"
+                     name="picture"
+                     v-model="picture"
+                     @change="change">
+            <template #trigger>
+              <el-button type="primary">Select file</el-button>
+            </template>
+          </el-upload>
+        </el-form-item>
+      </el-form>
+    </template>
+    <template #footer>
+      <div style="flex: auto">
+        <el-button v-if="selected" size="large" type="primary" @click="edit">Save</el-button>
+        <el-button v-else size="large" type="primary" @click="add">Add</el-button>
+      </div>
+    </template>
+  </el-drawer>
 </template>
 
 <script lang="ts">
 import {
-  defineComponent, PropType, toRefs, reactive, computed, watch,
+  defineComponent, PropType, toRefs, reactive, computed, watch, ref,
 } from 'vue';
 import axios from 'axios';
 import BreederStore from '@/store/breeders';
@@ -71,12 +56,18 @@ export default defineComponent({
       type: Object as PropType<Breeder>,
       required: false,
     },
+
+    opened: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   emits: ['cancel'],
 
   setup(props, { emit }) {
     const breederStore = BreederStore();
+    const drawer = ref<boolean>(false);
 
     const initialBreeder = {
       link: '',
@@ -91,7 +82,11 @@ export default defineComponent({
 
     watch(() => props.selected, (value) => {
       Object.assign(breeder, value || initialBreeder);
-    });
+    }, { immediate: true });
+
+    watch(() => props.opened, () => {
+      drawer.value = props.opened;
+    }, { immediate: true });
 
     async function add(e: Event) {
       e.preventDefault();
@@ -100,6 +95,7 @@ export default defineComponent({
       formData.append('country', breeder.country || '');
       formData.append('picture', breeder.picture || '');
       formData.append('link', breeder.link || '');
+      console.log('add');
       try {
         await axios.post(`${process.env.VUE_APP_SERVER_ADDRESS}/breeder/add`, formData, {
           headers: {
@@ -150,6 +146,7 @@ export default defineComponent({
       add,
       edit,
       change,
+      drawer,
     };
   },
 });
