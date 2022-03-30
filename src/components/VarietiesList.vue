@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <el-header class="breeders-options">
+    <el-header class="admin-header-options">
       <h2>Varieties</h2>
       <el-button round size="small" @click="add">New variety</el-button>
     </el-header>
@@ -71,18 +71,4 @@ export default defineComponent({
   },
 
 });
-
 </script>
-
-<style lang="scss" scoped>
-.breeders-options {
-  padding: 12px;
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  width: 100%;
-}
-h2 {
-  font-size: 1.4em;
-}
-</style>

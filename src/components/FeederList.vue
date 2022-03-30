@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <el-header class="feeders-options">
+    <el-header class="admin-header-options">
       <h2>Feeders</h2>
       <el-button round size="small" @click="add">New feeder</el-button>
     </el-header>
@@ -64,16 +64,3 @@ export default defineComponent({
 
 });
 </script>
-
-<style lang="scss" scoped>
-.feeders-options {
-  padding: 12px;
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  width: 100%;
-}
-h2 {
-  font-size: 1.4em;
-}
-</style>
