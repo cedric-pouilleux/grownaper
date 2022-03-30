@@ -1,4 +1,18 @@
 <template>
+
+  <el-menu
+    router
+    class="el-menu-demo"
+    mode="horizontal"
+    background-color="#333"
+    text-color="#fff"
+    active-text-color="#ff0000"
+  >
+    <el-menu-item index="/admin/varieties">Varieties & Breeders</el-menu-item>
+    <el-menu-item index="/admin/feeders">Feeders & Products</el-menu-item>
+  </el-menu>
+
+  <VarietiesList @edit="editVariety"/>
   <div class="grid">
     <div>
       <BreederForm :selected="selectedBreeder" @cancel="cancelBreederSelection"/>

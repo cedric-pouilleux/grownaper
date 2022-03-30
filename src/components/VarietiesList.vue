@@ -1,39 +1,48 @@
 <template>
-  <div class="admin-component varieties-list">
-    <h2>Varieties</h2>
-    <el-table :data="varieties.all" style="width: 100%">
-      <el-table-column prop="title" label="title" width="180" />
+  <el-container>
+    <el-header class="breeders-options">
+      <h2>Varieties</h2>
+      <el-button round size="small" @click="add">New variety</el-button>
+    </el-header>
+    <el-table :data="varieties.all">
+      <el-table-column prop="title" label="title" width="180"  />
       <el-table-column prop="feminized" label="feminized" />
       <el-table-column prop="automatic" label="automatic" />
       <el-table-column prop="phenotype" label="phenotype" />
       <el-table-column prop="floTime" label="floTime" />
       <el-table-column prop="breeder.title" label="breeder" />
-      <el-table-column label="Operations">
+      <el-table-column width="100" >
         <template #default="scope">
-          <el-button size="small"
-                     @click="edit(scope.row)">Edit</el-button>
-          <el-button size="small"
-                     type="danger"
-                     @click="remove(scope.row)">Delete</el-button>
+          <el-button-group class="ml-4">
+            <el-button :icon="Edit"
+                       size="small"
+                       @click="edit(scope.row)"/>
+            <el-button :icon="Delete"
+                       size="small"
+                       type="danger"
+                       @click="remove(scope.row)"/>
+          </el-button-group>
         </template>
       </el-table-column>
     </el-table>
-  </div>
+  </el-container>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import varietiesStore from '@/store/varieties';
 import axios from 'axios';
 import { Variety } from '@/types';
+import { Edit, Delete } from '@element-plus/icons-vue';
 
 export default defineComponent({
   name: 'VarietiesList',
-
-  emits: ['edit'],
+  emits: ['edit', 'add'],
 
   setup(params, { emit }) {
     const varieties = varietiesStore();
+
+    const selected = ref<Variety | null>(null);
 
     async function remove(variety: Variety): Promise<void> {
       try {
@@ -46,8 +55,12 @@ export default defineComponent({
 
     return {
       edit: (variety: Variety) => { emit('edit', variety); },
+      add: () => { emit('add'); },
       remove,
       varieties,
+      selected,
+      Edit,
+      Delete,
     };
   },
 
@@ -56,4 +69,14 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.breeders-options {
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  width: 100%;
+}
+h2 {
+  font-size: 1.4em;
+}
 </style>

@@ -1,11 +1,14 @@
 <template>
-  <div>
-    <nav class="top-nabvar">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/admin">Admin</router-link>
-    </nav>
-    <el-button>I am ElButton</el-button>
-    <router-view/>
+  <div class="common-layout">
+    <el-container>
+      <el-header>
+        <el-menu router class="el-menu-demo" mode="horizontal">
+          <el-menu-item :index="{ name: 'Plants' }">Plants</el-menu-item>
+          <el-menu-item :index="{ name: 'Admin' }">Admin</el-menu-item>
+        </el-menu>
+      </el-header>
+      <router-view/>
+    </el-container>
   </div>
 </template>
 

@@ -1,20 +1,34 @@
 <template>
-  <div class="admin-component breeders-list">
-    <header class="admin-component__header">
+  <el-container>
+    <el-header class="breeders-options">
       <h2>Breeders</h2>
-    </header>
-    <ul class="row-list">
-      <li class="row-list__item" v-for="breeder in breeders.all" :key="breeder._id">
-        <img class="rounded" :src="breeder.picture" alt="" width="40" />
-        <a v-if="breeder.link" :href="breeder.link">{{breeder.title}}</a>
-        <p v-else>{{breeder.title}}</p>
-        <div class="row-list__actions">
-          <button class="btn" @click="edit(breeder)">Edit</button>
-          <button class="btn btn-danger" @click="remove(breeder._id)">Remove</button>
-        </div>
-      </li>
-    </ul>
-  </div>
+      <el-button round size="small">New breeder</el-button>
+    </el-header>
+    <el-table :data="breeders.all" style="width: 100%">
+      <el-table-column prop="picture" width="65">
+        <template #default="scope">
+          <el-avatar :src="scope.row.picture"/>
+        </template>
+      </el-table-column>
+      <el-table-column prop="title" label="Title" />
+      <el-table-column prop="country" label="Country" />
+      <el-table-column width="100" >
+        <template #default="scope">
+          <el-button-group class="ml-4">
+            <el-button :icon="Edit"
+                       size="small"
+                       @click="edit(scope.row)"></el-button>
+
+            <el-button :icon="Delete"
+                       size="small"
+                       type="danger"
+                       @click="remove(scope.row)">
+            </el-button>
+          </el-button-group>
+        </template>
+      </el-table-column>
+    </el-table>
+  </el-container>
 </template>
 
 <script lang="ts">
@@ -22,6 +36,7 @@ import { defineComponent, ref } from 'vue';
 import breederStore from '@/store/breeders';
 import axios from 'axios';
 import { Breeder } from '@/types';
+import { Edit, Delete } from '@element-plus/icons-vue';
 
 export default defineComponent({
   name: 'BreedersList',
@@ -49,14 +64,22 @@ export default defineComponent({
       edit: (breeder: Breeder) => { emit('edit', breeder); },
       breeders,
       selectedBreeder,
+      Edit,
+      Delete,
     };
   },
 });
 </script>
 
 <style lang="scss" scoped>
-.rounded {
-  border-radius: 100%;
-  border:1px solid #000;
+.breeders-options {
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  width: 100%;
+}
+h2 {
+  font-size: 1.4em;
 }
 </style>

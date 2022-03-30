@@ -1,74 +1,36 @@
 <template>
-
-  <div class="admin-component">
-
-    <header class="admin-component__header">
-      <h2>
-        <button v-if="edition" @click="cancel">Cancel</button>
-        <template v-if="edition">Edit</template>
-        <template v-else>Add</template> variety
-      </h2>
-    </header>
-
-    <form class="vertical-form" v-on="{ submit: (edition) ? edit : add }">
-
-      <label for="variety-title">
-        Title
-        <input class="input"
-               type="text"
-               name="title"
-               required
-               id="variety-title"
-               v-model="title" />
-      </label>
-
-      <label for="plant-phenotype">
-        Phenotype
-        <input type="number" v-model="phenotype" id="plant-phenotype" />
-      </label>
-
-      <label for="variety-feminized">
-        Feminized
-        <input class="input"
-               type="checkbox"
-               name="feminized"
-               id="variety-feminized"
-               v-model="feminized" />
-      </label>
-
-      <label for="variety-automatic">
-        Automatic
-        <input class="input"
-               type="checkbox"
-               id="variety-automatic"
-               name="automatic"
-               v-model="automatic" />
-      </label>
-
-      <label class="plant-form__label" for="breeder-select">
-        Breeder :
-        <select v-model="breeder" id="breeder-select">
-          <option v-for="optionBreeder in breederStore.all"
+  <el-form>
+    <el-form-item label="Title">
+      <el-input v-model="title" />
+    </el-form-item>
+    <el-form-item label="Breeders">
+      <el-col :span="12">
+        <el-select v-model="breeder" placeholder="please select breeder">
+          <el-option v-for="optionBreeder in breederStore.all"
                   :key="optionBreeder._id"
-                  :value="optionBreeder">
+                  :value="optionBreeder.title">
             {{optionBreeder.title}}
-          </option>
-        </select>
-      </label>
-
-      <label for="variety-flowering-time">
-        Flowering time
-        <input class="input"
-               type="number"
-               name="floTime"
-               id="variety-flowering-time"
-               v-model="floTime" />
-      </label>
-
-      <button type="submit">{{ edition ? 'Edit' : 'New' }}</button>
-    </form>
-  </div>
-
+          </el-option>
+        </el-select>
+      </el-col>
+      <el-col :span="12">
+        <el-form-item label="Phenotype">
+          <el-input v-model="phenotype" />
+        </el-form-item>
+      </el-col>
+    </el-form-item>
+    <el-form-item>
+      <el-col :span="12">
+          <el-checkbox v-model="feminized" label="Feminized" name="feminized" />
+          <el-checkbox v-model="automatic" label="Automatic" name="automatic" />
+      </el-col>
+      <el-col :span="12">
+        <el-form-item label="Flowering time">
+          <el-input v-model="floTime" />
+        </el-form-item>
+      </el-col>
+    </el-form-item>
+  </el-form>
 </template>
 
 <script lang="ts">
@@ -112,7 +74,7 @@ export default defineComponent({
 
     watch(() => props.selected, (value) => {
       Object.assign(variety, value || empty);
-    });
+    }, { immediate: true });
 
     async function add(e: Event) {
       e.preventDefault();
