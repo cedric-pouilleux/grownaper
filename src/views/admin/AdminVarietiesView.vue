@@ -3,7 +3,7 @@
   <BreederForm :selected="selectedBreeder" :opened="formBreederOpened" @close="closeBreederForm"/>
   <admin-ui-navigation/>
   <el-container>
-    <el-aside width="400px">
+    <el-aside width="600px">
       <el-main>
         <BreedersList @edit="editBreeder" @add="addBreeder"/>
       </el-main>

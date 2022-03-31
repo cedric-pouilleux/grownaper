@@ -2,7 +2,7 @@
   <el-container>
     <el-header class="admin-header-options">
       <h2>Products</h2>
-      <el-button round size="small" @click="add">New product</el-button>
+      <el-button round type="primary" @click="add" :icon="Plus">New</el-button>
     </el-header>
     <el-table :data="all" style="width: 100%">
       <el-table-column prop="picture" width="40">
@@ -40,7 +40,7 @@ import { defineComponent, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { FeederProduct } from '@/types';
 import feederProductStore from '@/store/feeders-products';
-import { Edit, Delete } from '@element-plus/icons-vue';
+import { Edit, Delete, Plus } from '@element-plus/icons-vue';
 
 export default defineComponent({
   name: 'FeederProductList',
@@ -60,6 +60,7 @@ export default defineComponent({
       cancel: () => { selectedFeederProduct.value = null; },
       Edit,
       Delete,
+      Plus,
     };
   },
 });

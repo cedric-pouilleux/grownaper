@@ -2,14 +2,22 @@
   <el-container>
     <el-header class="admin-header-options">
       <h2>Varieties</h2>
-      <el-button round size="small" @click="add">New variety</el-button>
+      <el-button round type="primary" @click="add" :icon="Plus">New</el-button>
     </el-header>
     <el-table :data="varieties.all">
       <el-table-column prop="title" label="Title" width="180"  />
       <el-table-column prop="feminized" label="Feminized" />
       <el-table-column prop="automatic" label="Automatic" />
-      <el-table-column prop="phenotype" label="Phenotype" />
-      <el-table-column prop="floTime" label="Flowering time" />
+      <el-table-column prop="phenotype" label="Phenotype">
+        <template #default="scope">
+          # {{ scope.row.phenotype}}
+        </template>
+      </el-table-column>
+      <el-table-column prop="floTime" label="Flowering">
+        <template #default="scope">
+          {{ scope.row.floTime}} days
+        </template>
+      </el-table-column>
       <el-table-column prop="breeder.title" label="Breeder" />
       <el-table-column width="100" >
         <template #default="scope">
@@ -37,7 +45,7 @@
 import { defineComponent, ref } from 'vue';
 import varietiesStore from '@/store/varieties';
 import { Variety } from '@/types';
-import { Edit, Delete } from '@element-plus/icons-vue';
+import { Edit, Delete, Plus } from '@element-plus/icons-vue';
 import { ElNotification } from 'element-plus';
 
 export default defineComponent({
@@ -72,6 +80,7 @@ export default defineComponent({
       selected,
       Edit,
       Delete,
+      Plus,
     };
   },
 

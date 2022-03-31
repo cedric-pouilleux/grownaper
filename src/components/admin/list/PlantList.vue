@@ -1,48 +1,70 @@
 <template>
   <div class="plants-list">
-    <h2>Plants list</h2>
     <PlantForm :selected="selectedPlant" @cancel="cancel"/>
-    <ul>
-      <li v-for="plant in all" :key="plant._id" :data-id="plant._id">
-        <header>
-          <h3 v-if="plant.name">{{ plant.name }}</h3>
-          <p v-if="plant.variety">{{ plant.variety?.title }}</p>
-          <div class="plants-list__createdAt">
-            {{ inputDateFormat(plant.createdAt) }}
+    <el-table :data="all" style="width: 100%">
+      <el-table-column prop="name" label="Name" />
+      <el-table-column prop="variety" label="Varieties">
+        <template #default="scope">
+          <div v-if="scope.row.variety">
+            <!-- eslint-disable max-len -->
+            <div class="plants-list__cell-icons">
+              <el-icon v-if="scope.row.variety?.feminized">
+                <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-ba633cb8="">
+                  <path fill="currentColor" d="M512 640a256 256 0 1 0 0-512 256 256 0 0 0 0 512zm0 64a320 320 0 1 1 0-640 320 320 0 0 1 0 640z"></path>
+                  <path fill="currentColor" d="M512 640q32 0 32 32v256q0 32-32 32t-32-32V672q0-32 32-32z"></path>
+                  <path fill="currentColor" d="M352 800h320q32 0 32 32t-32 32H352q-32 0-32-32t32-32z"></path>
+                </svg>
+              </el-icon>
+              <el-icon v-if="scope.row.variety?.automatic">
+                <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-ba633cb8="">
+                  <path fill="currentColor" d="M512 896a320 320 0 1 0 0-640 320 320 0 0 0 0 640zm0 64a384 384 0 1 1 0-768 384 384 0 0 1 0 768z"></path>
+                  <path fill="currentColor" d="M512 320a32 32 0 0 1 32 32l-.512 224a32 32 0 1 1-64 0L480 352a32 32 0 0 1 32-32z"></path>
+                  <path fill="currentColor" d="M448 576a64 64 0 1 0 128 0 64 64 0 1 0-128 0zm96-448v128h-64V128h-96a32 32 0 0 1 0-64h256a32 32 0 1 1 0 64h-96z"></path>
+                </svg>
+              </el-icon>
+            </div>
+            <!-- eslint-enable max-len -->
+            <el-tag class="ml-2" effect="plain" v-if="scope.row.variety?.phenotype">
+              #{{scope.row.variety?.phenotype}} -
+              {{scope.row.variety?.title}}
+              ({{scope.row.variety?.breeder.title}})
+            </el-tag>
           </div>
-        </header>
-        <qrcode-vue :value="plant.qrcode" :size="140" level="H" />
-        {{plant.notes}}
-        <PlantNote :id="plant._id" />
-        <button class="btn"
-                :class="{ 'btn-warning' : requiredAction(plant) }"
-                @click="edit(plant)">
-          Edit
-        </button>
-        <button class="btn" @click="remove(plant._id)">
-          Remove
-        </button>
-      </li>
-    </ul>
+          <div v-else>
+            <el-tag type="danger">No variety, please select one</el-tag>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column width="100" >
+        <template #default="scope">
+          <el-button-group class="ml-4">
+            <el-button :icon="InfoFilled"
+                       size="small"
+                       @click="edit(scope.row)"></el-button>
+          </el-button-group>
+        </template>
+      </el-table-column>
+    </el-table>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import PlantForm from '@/components/PlantForm.vue';
-import PlantNote from '@/components/PlantNote.vue';
 import plantStore from '@/store/plants';
-import QrcodeVue from 'qrcode.vue';
+// import QrcodeVue from 'qrcode.vue';
 import { Plant } from '@/types';
 import moment from 'moment';
 import { storeToRefs } from 'pinia';
+import {
+  Male, Female, Timer, InfoFilled,
+} from '@element-plus/icons-vue';
 
 export default defineComponent({
   name: 'PlantList',
 
   components: {
-    QrcodeVue,
-    PlantNote,
+    // QrcodeVue,
     PlantForm,
   },
 
@@ -63,6 +85,10 @@ export default defineComponent({
       inputDateFormat: (date: Date | string): string => moment(date).format('YYYY-MM-DD'),
       requiredAction: (plant: Plant): boolean => !(plant.breeder && plant.variety),
       moment,
+      Male,
+      Female,
+      Timer,
+      InfoFilled,
     };
   },
 
@@ -73,6 +99,11 @@ export default defineComponent({
 <style lang="scss">
 
   .plants-list {
+
+    &__cell-icons {
+      float: left;
+      margin: 4px 8px 0 0;
+    }
 
     &__createdAt   {
       margin-top: 6px;

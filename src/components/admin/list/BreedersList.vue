@@ -2,7 +2,7 @@
   <el-container>
     <el-header class="admin-header-options">
       <h2>Breeders</h2>
-      <el-button round size="small" @click="add">New breeder</el-button>
+      <el-button round type="primary" @click="add" :icon="Plus">New</el-button>
     </el-header>
     <el-table :data="breeders.all" style="width: 100%">
       <el-table-column prop="picture" width="40">
@@ -11,6 +11,11 @@
         </template>
       </el-table-column>
       <el-table-column prop="title" label="Title" />
+      <el-table-column prop="varieties" label="Varieties">
+        <template #default="scope">
+          {{ scope.row.varieties.length }}
+        </template>
+      </el-table-column>
       <el-table-column prop="country" label="Country" />
       <el-table-column width="100" >
         <template #default="scope">
@@ -37,7 +42,7 @@
 import { defineComponent, ref } from 'vue';
 import breederStore from '@/store/breeders';
 import { Breeder } from '@/types';
-import { Edit, Delete } from '@element-plus/icons-vue';
+import { Edit, Delete, Plus } from '@element-plus/icons-vue';
 import { ElNotification } from 'element-plus';
 
 export default defineComponent({
@@ -74,6 +79,7 @@ export default defineComponent({
       selectedBreeder,
       Edit,
       Delete,
+      Plus,
     };
   },
 });
