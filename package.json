@@ -19,6 +19,7 @@
     "pinia": "^2.0.12",
     "qrcode.vue": "^3.3.3",
     "serverless-http": "^2.7.0",
+    "unique-names-generator": "^4.7.1",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
     "vuex": "^4.0.0"

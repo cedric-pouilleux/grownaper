@@ -43,6 +43,9 @@ import VarietyStore from '@/store/varieties';
 import PlantStore from '@/store/plants';
 import moment from 'moment';
 import { Plant } from '@/types';
+import {
+  uniqueNamesGenerator, adjectives, colors, animals, Config,
+} from 'unique-names-generator';
 
 export default defineComponent({
   name: 'PlantForm',
@@ -61,8 +64,15 @@ export default defineComponent({
     const breeders = BreederStore();
     const varieties = VarietyStore();
 
+    const customConfig: Config = {
+      dictionaries: [adjectives, colors],
+      separator: ' ',
+      style: 'capital',
+      length: 2,
+    };
+
     const defaultPlant = {
-      name: '',
+      name: uniqueNamesGenerator(customConfig),
       createdAt: moment().format('YYYY-MM-D'),
       qrcode: '',
       feminized: false,
