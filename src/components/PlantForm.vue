@@ -44,7 +44,7 @@ import PlantStore from '@/store/plants';
 import moment from 'moment';
 import { Plant } from '@/types';
 import {
-  uniqueNamesGenerator, adjectives, colors, animals, Config,
+  uniqueNamesGenerator, adjectives, colors, Config,
 } from 'unique-names-generator';
 
 export default defineComponent({

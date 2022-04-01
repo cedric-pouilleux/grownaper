@@ -1,6 +1,5 @@
 <template>
   <div class="plants-list">
-    <PlantForm :selected="selectedPlant" @cancel="cancel"/>
     <el-table :data="all" style="width: 100%">
       <el-table-column prop="name" label="Name" />
       <el-table-column prop="variety" label="Varieties">
@@ -40,7 +39,7 @@
           <el-button-group class="ml-4">
             <el-button :icon="InfoFilled"
                        size="small"
-                       @click="edit(scope.row)"></el-button>
+                       @click="open(scope.row)"></el-button>
           </el-button-group>
         </template>
       </el-table-column>
@@ -50,9 +49,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import PlantForm from '@/components/PlantForm.vue';
 import plantStore from '@/store/plants';
-// import QrcodeVue from 'qrcode.vue';
 import { Plant } from '@/types';
 import moment from 'moment';
 import { storeToRefs } from 'pinia';
@@ -63,12 +60,13 @@ import {
 export default defineComponent({
   name: 'PlantList',
 
+  emits: ['select'],
+
   components: {
     // QrcodeVue,
-    PlantForm,
   },
 
-  setup() {
+  setup(props, { emit }) {
     const store = plantStore();
     const { all } = storeToRefs(store);
 
@@ -80,7 +78,7 @@ export default defineComponent({
       selectedPlant,
       note,
       all,
-      edit: (plant: Plant) => { selectedPlant.value = plant; },
+      open: (plant: Plant) => { emit('select', plant); },
       cancel: () => { selectedPlant.value = null; },
       inputDateFormat: (date: Date | string): string => moment(date).format('YYYY-MM-DD'),
       requiredAction: (plant: Plant): boolean => !(plant.breeder && plant.variety),

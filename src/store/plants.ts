@@ -7,12 +7,14 @@ const plantStore = defineStore('plant', () => {
   const SERVER = process.env.VUE_APP_SERVER_ADDRESS;
   const all = ref<Plant[]>([]);
 
-  async function fetch(): Promise<void> {
+  async function fetch(): Promise<Plant[] | []> {
     try {
       const result = await axios.get(`${SERVER}/plants`);
       all.value = result.data;
+      return all.value;
     } catch (err) {
       console.error('Data not found');
+      return [];
     }
   }
 
@@ -54,10 +56,6 @@ const plantStore = defineStore('plant', () => {
       console.error(err);
     }
   }
-
-  fetch().then(
-    () => console.info('Plants data fetch success'),
-  );
 
   return {
     addNote,
