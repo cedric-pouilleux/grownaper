@@ -22,14 +22,22 @@ interface Note {
   content: string
 }
 
+type HistoryType = 'ADD' | 'EDIT';
+
+type History = {
+  date: Date,
+  type: HistoryType,
+  message: string
+}
+
 interface Plant {
   _id: string,
   name: string,
   createdAt: string,
   qrcode: string,
   variety?: Variety,
-  breeder?: Breeder
-  notes: Note[]
+  notes: Note[],
+  history: History[]
 }
 
 interface FeederProduct {
@@ -60,4 +68,6 @@ export {
   Feeder,
   Note,
   FeederProduct,
+  History,
+  HistoryType,
 };

@@ -1,6 +1,6 @@
 <template>
 
-  <add-plant :opened="isPlantFormOpened" />
+  <add-plant :opened="isPlantFormOpened" @close="closeForm"/>
 
   <el-container style="height: 60px;">
     <el-aside class="section-header" width="600px">
@@ -13,13 +13,14 @@
     </el-aside>
     <el-container class="section-header">
       <h2>{{ selectedPlant?.name || 'Selected plant' }}</h2>
-      <el-button type="primary">Edit</el-button>
+      <el-button type="primary">Actions</el-button>
     </el-container>
-    <el-aside style="background-color: #333">
-        test
+    <el-aside class="section-header">
+      <h2> History</h2>
     </el-aside>
   </el-container>
 
+  <!-- container flex -->
   <el-container style="height: calc(100vh - 60px - 59px);">
     <el-aside width="600px" style="background-color: #333">
       <el-scrollbar>
@@ -33,13 +34,19 @@
         </div>
       </el-header>
     </el-container>
-    <el-aside style="background-color: #333">
+    <el-aside>
       <el-scrollbar>
-        <el-header>
-          <div class="toolbar">
-            <h2>Agenda</h2>
-          </div>
-        </el-header>
+        <div class="history">
+          <el-timeline v-if="selectedPlant?.history">
+            <el-timeline-item
+              v-for="(activity, index) in selectedPlant?.history"
+              :key="index"
+              type="primary"
+              :timestamp="activity.date">
+              {{ activity.message }}
+            </el-timeline-item>
+          </el-timeline>
+        </div>
       </el-scrollbar>
     </el-aside>
   </el-container>
@@ -78,18 +85,27 @@ export default defineComponent({
       isPlantFormOpened.value = true;
     }
 
+    function closeForm(): void {
+      isPlantFormOpened.value = false;
+    }
+
     return {
       count,
       isPlantFormOpened,
       selectedPlant,
       selectPlant,
       openForm,
+      closeForm,
     };
   },
 });
 </script>
 
 <style lang="scss" scoped>
+.history {
+  margin: 20px;
+}
+
 .section-header {
   padding: 14px;
   display: flex;

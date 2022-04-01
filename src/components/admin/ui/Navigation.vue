@@ -4,8 +4,8 @@
            background-color="#333"
            text-color="#fff"
            active-text-color="#ff0000">
-    <el-menu-item :index="{ name: 'AdminVarieties' }">Varieties & Breeders</el-menu-item>
-    <el-menu-item :index="{ name: 'AdminFeeders' }">Feeders & Products</el-menu-item>
+    <el-menu-item index="/admin/varieties">Varieties & Breeders</el-menu-item>
+    <el-menu-item index="/admin/feeders">Feeders & Products</el-menu-item>
   </el-menu>
 </template>
 

@@ -18,13 +18,13 @@ const plantStore = defineStore('plant', () => {
     }
   }
 
-  async function add(plant: Partial<Plant>): Promise<void> {
-    try {
-      await axios.post(`${SERVER}/plant/add`, plant);
+  async function add(plant: Partial<Plant>): Promise<boolean> {
+    const result = await axios.post(`${SERVER}/plant/add`, plant);
+    if (result.status === 201) {
       await fetch();
-    } catch (err) {
-      console.error(err);
+      return true;
     }
+    return false;
   }
 
   async function addNote(plantId: string, noteContent: string): Promise<void> {

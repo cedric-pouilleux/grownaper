@@ -1,7 +1,5 @@
 <template>
-  <el-drawer v-model="drawer"
-             direction="ltr"
-             :before-close="handleClose">
+  <el-drawer v-model="drawer" direction="ltr" :before-close="handleClose">
     <template #title>
       <h2>Add plant</h2>
     </template>
@@ -11,7 +9,7 @@
           <el-input v-model="name" />
         </el-form-item>
         <el-form-item label="Variety">
-          <el-select v-model="variety" :placeholder="variety?.title || 'Your breeder'">
+          <el-select v-model="variety" :placeholder="variety?.title || 'Your plant'">
             <el-option v-for="optVariety in varietyStore.all"
                        :key="optVariety._id"
                        :value="optVariety">
@@ -23,9 +21,7 @@
     </template>
     <template #footer>
       <div style="flex: auto">
-        <el-button size="large" type="primary" @click="action">
-          Add
-        </el-button>
+        <el-button size="large" type="primary" @click="action">Add</el-button>
       </div>
     </template>
   </el-drawer>
@@ -36,8 +32,9 @@ import {
   defineComponent, reactive, ref, toRefs, watch,
 } from 'vue';
 import { Plant } from '@/types';
-import Moment from 'moment';
 import VarietyStore from '@/store/varieties';
+import PlantStore from '@/store/plants';
+import { ElNotification } from 'element-plus';
 
 export default defineComponent({
   name: 'AddPlant',
@@ -51,10 +48,11 @@ export default defineComponent({
   setup(props, { emit }) {
     const drawer = ref<boolean>(false);
     const varietyStore = VarietyStore();
+    const plantStore = PlantStore();
+
     const initial = {
       name: '',
       variety: undefined,
-      createdAt: Moment(),
     };
 
     const plant = reactive<Partial<Plant>>({
@@ -65,10 +63,21 @@ export default defineComponent({
       drawer.value = props.opened;
     }, { immediate: true });
 
+    async function action() {
+      const added = await plantStore.add(plant);
+      if (added) {
+        ElNotification.success({
+          message: `Plant : ${plant.name} has been added`,
+          offset: 100,
+        });
+      }
+    }
+
     return {
       drawer,
       ...toRefs(plant),
       varietyStore,
+      action,
       handleClose: () => emit('close'),
     };
   },
