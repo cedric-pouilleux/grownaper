@@ -62,10 +62,6 @@ export default defineComponent({
 
   emits: ['select'],
 
-  components: {
-    // QrcodeVue,
-  },
-
   setup(props, { emit }) {
     const store = plantStore();
     const { all } = storeToRefs(store);
@@ -81,7 +77,6 @@ export default defineComponent({
       open: (plant: Plant) => { emit('select', plant); },
       cancel: () => { selectedPlant.value = null; },
       inputDateFormat: (date: Date | string): string => moment(date).format('YYYY-MM-DD'),
-      requiredAction: (plant: Plant): boolean => !(plant.breeder && plant.variety),
       moment,
       Male,
       Female,

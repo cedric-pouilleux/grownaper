@@ -1,10 +1,7 @@
 <template>
-
   <button v-if="edition" @click="cancel">cancel</button>
   <h2>{{ edition ? 'Edit' : 'Add' }} plant</h2>
-
   <form @submit.prevent="action" class="plant-form">
-
     <label class="plant-form__label" for="plant-created-at">
       Created at :
       <input type="date"
@@ -12,12 +9,10 @@
              :value="inputDateFormat"
              @input="dateChange" />
     </label>
-
     <label class="plant-form__label" for="plant-name">
       Name :
       <input type="text" id="plant-name" v-model="name" />
     </label>
-
     <label class="plant-form__label" for="variety-select">
       Variety :
       <select v-model="variety" id="variety-select">
@@ -28,10 +23,8 @@
         </option>
       </select>
     </label>
-
     <button type="submit">{{ edition ? 'Edit' : 'New' }}</button>
   </form>
-
 </template>
 
 <script lang="ts">
