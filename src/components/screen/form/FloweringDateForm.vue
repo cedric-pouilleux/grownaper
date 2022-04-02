@@ -20,7 +20,9 @@
                       placeholder="Pick a day" />
     </el-form-item>
     <el-form-item>
-      <el-button @click="save" v-if="visibleButton">Save</el-button>
+      <el-button type="primary"
+                 @click="save"
+                 v-if="visibleButton">Save</el-button>
     </el-form-item>
   </el-form>
 </template>

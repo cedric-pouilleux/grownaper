@@ -26,7 +26,7 @@ type HistoryType = 'ADD' | 'EDIT' | 'START_FLO';
 
 type History = {
   date: Date,
-  type: HistoryType,
+  action: HistoryType,
   message: string
 }
 

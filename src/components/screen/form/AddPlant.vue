@@ -40,6 +40,9 @@ import { Plant } from '@/common/types';
 import VarietyStore from '@/store/varieties';
 import PlantStore from '@/store/plants';
 import { ElNotification } from 'element-plus';
+import {
+  uniqueNamesGenerator, adjectives, colors, Config,
+} from 'unique-names-generator';
 
 export default defineComponent({
   name: 'AddPlant',
@@ -55,8 +58,15 @@ export default defineComponent({
     const varietyStore = VarietyStore();
     const plantStore = PlantStore();
 
+    const customConfig: Config = {
+      dictionaries: [adjectives, colors],
+      separator: ' ',
+      style: 'capital',
+      length: 2,
+    };
+
     const initial = {
-      name: '',
+      name: uniqueNamesGenerator(customConfig),
       startFloweringDate: new Date(),
       variety: undefined,
     };
