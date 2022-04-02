@@ -50,10 +50,7 @@ const plantStore = defineStore('plant', () => {
 
   async function edit(
     plantId: string,
-    data: {
-      startFloweringDate: Date | null,
-      variety: Variety| null
-    },
+    data: { startFloweringDate?: Date | null, variety?: Variety| null },
   ): Promise<boolean> {
     const result = await axios.put(`${SERVER}/plant/edit/${plantId}`, data);
     if (result.status === 201) {

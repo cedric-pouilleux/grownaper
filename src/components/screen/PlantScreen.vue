@@ -9,7 +9,8 @@
           <flowering-date-form :date="selectedPlant.startFloweringDate"
                                :variety="selectedPlant.variety"
                                @change="startFloweringDateChange"
-                               @save="editStartFloweringDate "/>
+                               @save="editStartFloweringDate"
+                               :visible-button="!sameVariety || !sameDate"/>
         </el-col>
       </el-row>
     </header>
@@ -34,7 +35,7 @@
 <script lang="ts">
 import {
   computed,
-  defineComponent, PropType, ref, watch, toRef, reactive,
+  defineComponent, PropType, ref, reactive,
 } from 'vue';
 import { Plant, Variety } from '@/common/types';
 import { Plus } from '@element-plus/icons-vue';
@@ -47,6 +48,7 @@ import { ElNotification } from 'element-plus';
 import FloweringDateForm from '@/components/screen/form/FloweringDateForm.vue';
 import Moment from 'moment';
 import { READABLE_DATE } from '@/common/DateFormatConfig';
+import { isEqual } from '@/common/utils';
 
 export default defineComponent({
   name: 'PlantScreen',
@@ -71,24 +73,23 @@ export default defineComponent({
     const initial: Partial<Plant> = {};
     Object.assign(initial, props.plant);
 
-    const plant = toRef(props, 'plant');
-
     const selectedPlant = reactive<Plant>({ ...props.plant });
 
+    const sameDate = computed(() => Moment(initial.startFloweringDate).isSame(selectedPlant.startFloweringDate, 'day'));
+
+    const sameVariety = computed(() => isEqual(initial.variety, selectedPlant.variety));
+
     async function editStartFloweringDate(): Promise<boolean> {
-      // eslint-disable-next-line max-len
-      const isEqual = (...objects: any) => objects.every((obj: any) => JSON.stringify(obj) === JSON.stringify(objects[0]));
-      const isVarietyEqual = isEqual(initial.variety, selectedPlant.variety);
-      const isFloweringDateEqual = Moment(initial.startFloweringDate).isSame(selectedPlant.startFloweringDate, 'day');
-      if (isVarietyEqual && isFloweringDateEqual) {
+      if (sameDate.value && sameVariety.value) {
         return false;
       }
-      const edited = await plantStore.edit(props.plant._id, {
-        startFloweringDate: selectedPlant.startFloweringDate || null,
-        variety: selectedPlant.variety || null,
-      });
-      Object.assign(initial, selectedPlant);
+      const params = {
+        ...(!sameDate.value) && { startFloweringDate: selectedPlant.startFloweringDate },
+        ...(!sameVariety.value) && { variety: selectedPlant.variety },
+      };
+      const edited = await plantStore.edit(props.plant._id, params);
       if (edited) {
+        Object.assign(initial, selectedPlant);
         ElNotification.success({
           message: `Plant(${props.plant._id}) start flowering date has been edited`,
         });
@@ -109,6 +110,8 @@ export default defineComponent({
       readableCreatedAt: computed(() => Moment(props.plant.createdAt).format(READABLE_DATE)),
       startFloweringDateChange,
       editStartFloweringDate,
+      sameDate,
+      sameVariety,
     };
   },
 });

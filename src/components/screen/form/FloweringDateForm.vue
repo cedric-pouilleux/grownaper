@@ -20,7 +20,7 @@
                       placeholder="Pick a day" />
     </el-form-item>
     <el-form-item>
-      <el-button @click="save">Save</el-button>
+      <el-button @click="save" v-if="visibleButton">Save</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -37,6 +37,7 @@ export default defineComponent({
   props: {
     date: Date,
     variety: Object as PropType<Variety>,
+    visibleButton: Boolean,
   },
   emits: ['change', 'save'],
   setup(props, { emit }) {
