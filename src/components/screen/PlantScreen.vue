@@ -1,5 +1,5 @@
 <template>
-  <el-tabs class="demo-tabs" v-model="activeName">
+  <el-tabs class="demo-tabs" v-model="activeName" type="card">
     <el-tab-pane label="Timing" name="timing">
       <plant-timing-resume :plant="plant" />
     </el-tab-pane>

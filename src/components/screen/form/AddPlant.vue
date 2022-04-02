@@ -8,6 +8,11 @@
         <el-form-item label="Title">
           <el-input v-model="name" />
         </el-form-item>
+        <el-form-item label="Start flowering">
+          <el-date-picker v-model="startFloweringDate"
+                          type="date"
+                          placeholder="Pick a start flowering date" />
+        </el-form-item>
         <el-form-item label="Variety">
           <el-select v-model="variety" :placeholder="variety?.title || 'Your plant'">
             <el-option v-for="optVariety in varietyStore.all"
@@ -52,6 +57,7 @@ export default defineComponent({
 
     const initial = {
       name: '',
+      startFloweringDate: new Date(),
       variety: undefined,
     };
 

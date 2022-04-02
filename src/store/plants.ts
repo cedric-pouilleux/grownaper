@@ -57,12 +57,22 @@ const plantStore = defineStore('plant', () => {
     }
   }
 
+  async function editFloweringDate(plantId: string, date: Date): Promise<boolean> {
+    const result = await axios.put(`${SERVER}/plant/flowering-date/edit/${plantId}`, { date });
+    if (result.status === 201) {
+      await fetch();
+      return true;
+    }
+    return false;
+  }
+
   return {
     addNote,
     fetch,
     add,
     edit,
     remove,
+    editFloweringDate,
     all,
   };
 });

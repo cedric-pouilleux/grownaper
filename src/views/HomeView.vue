@@ -13,7 +13,10 @@
     </el-aside>
     <el-container class="section-header">
       <h2>{{ selectedPlant?.name || 'Selected plant' }}</h2>
-      <el-button type="primary">Actions</el-button>
+      <div v-if="selectedPlant">
+        <el-button type="primary">Actions</el-button>
+        <el-button type="danger" @click="removePlant">Remove</el-button>
+      </div>
     </el-container>
     <el-aside class="section-header">
       <h2> History</h2>
@@ -36,17 +39,7 @@
     </el-container>
     <el-aside>
       <el-scrollbar>
-        <div class="history">
-          <el-timeline v-if="selectedPlant?.history">
-            <el-timeline-item
-              v-for="(activity, index) in selectedPlant?.history"
-              :key="index"
-              type="primary"
-              :timestamp="activity.date">
-              {{ activity.message }}
-            </el-timeline-item>
-          </el-timeline>
-        </div>
+        <plant-history-resume :history="selectedPlant?.history" />
       </el-scrollbar>
     </el-aside>
   </el-container>
@@ -59,10 +52,12 @@ import PlantStore from '@/store/plants';
 import PlantScreen from '@/components/screen/PlantScreen.vue';
 import { Plant } from '@/types';
 import AddPlant from '@/components/screen/form/AddPlant.vue';
+import PlantHistoryResume from '@/components/screen/ui/PlantHistoryResume.vue';
 
 export default defineComponent({
   name: 'HomePage',
   components: {
+    PlantHistoryResume,
     AddPlant,
     PlantScreen,
     PlantList,
@@ -89,6 +84,14 @@ export default defineComponent({
       isPlantFormOpened.value = false;
     }
 
+    async function removePlant(): Promise<void> {
+      if (selectedPlant.value) {
+        console.log(selectedPlant.value);
+        const deleted = await plantStore.remove(selectedPlant.value._id);
+        console.log(deleted);
+      }
+    }
+
     return {
       count,
       isPlantFormOpened,
@@ -96,16 +99,13 @@ export default defineComponent({
       selectPlant,
       openForm,
       closeForm,
+      removePlant,
     };
   },
 });
 </script>
 
 <style lang="scss" scoped>
-.history {
-  margin: 20px;
-}
-
 .section-header {
   padding: 14px;
   display: flex;

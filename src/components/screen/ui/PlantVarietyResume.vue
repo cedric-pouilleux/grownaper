@@ -21,9 +21,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent, PropType, ref, toRefs,
-} from 'vue';
+import { defineComponent, PropType } from 'vue';
 import { Variety } from '@/types';
 
 export default defineComponent({

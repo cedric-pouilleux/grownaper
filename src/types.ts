@@ -22,7 +22,7 @@ interface Note {
   content: string
 }
 
-type HistoryType = 'ADD' | 'EDIT';
+type HistoryType = 'ADD' | 'EDIT' | 'START_FLO';
 
 type History = {
   date: Date,
@@ -35,6 +35,7 @@ interface Plant {
   name: string,
   createdAt: string,
   qrcode: string,
+  startFloweringDate?: Date,
   variety?: Variety,
   notes: Note[],
   history: History[]
