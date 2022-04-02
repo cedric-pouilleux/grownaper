@@ -50,7 +50,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import plantStore from '@/store/plants';
-import { Plant } from '@/types';
+import { Plant } from '@/common/types';
 import moment from 'moment';
 import { storeToRefs } from 'pinia';
 import {

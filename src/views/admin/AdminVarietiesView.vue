@@ -18,7 +18,7 @@
 import { defineComponent, ref } from 'vue';
 import VarietiesList from '@/components/admin/list/VarietiesList.vue';
 import BreedersList from '@/components/admin/list/BreedersList.vue';
-import { Breeder, Variety } from '@/types';
+import { Breeder, Variety } from '@/common/types';
 import VarietyForm from '@/components/admin/form/VarietyForm.vue';
 import BreederForm from '@/components/admin/form/BreederForm.vue';
 import AdminUiNavigation from '@/components/admin/ui/Navigation.vue';

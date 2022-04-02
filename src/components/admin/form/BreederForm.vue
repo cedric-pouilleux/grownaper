@@ -46,7 +46,7 @@ import {
   defineComponent, PropType, toRefs, reactive, computed, watch, ref,
 } from 'vue';
 import BreederStore from '@/store/breeders';
-import { Breeder } from '@/types';
+import { Breeder } from '@/common/types';
 import { ElNotification } from 'element-plus';
 
 export default defineComponent({

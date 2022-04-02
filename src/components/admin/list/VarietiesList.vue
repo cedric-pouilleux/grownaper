@@ -44,7 +44,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import varietiesStore from '@/store/varieties';
-import { Variety } from '@/types';
+import { Variety } from '@/common/types';
 import { Edit, Delete, Plus } from '@element-plus/icons-vue';
 import { ElNotification } from 'element-plus';
 

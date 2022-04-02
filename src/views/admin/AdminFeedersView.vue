@@ -22,7 +22,7 @@
 import { defineComponent, ref } from 'vue';
 import FeederList from '@/components/admin/list/FeederList.vue';
 import FeederProductList from '@/components/admin/list/FeedersProductsList.vue';
-import { Feeder, FeederProduct } from '@/types';
+import { Feeder, FeederProduct } from '@/common/types';
 import FeederProductForm from '@/components/admin/form/FeederProductForm.vue';
 import FeederForm from '@/components/admin/form/FeederForm.vue';
 import AdminUiNavigation from '@/components/admin/ui/Navigation.vue';

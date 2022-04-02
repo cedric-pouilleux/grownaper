@@ -53,7 +53,7 @@ import {
 } from 'vue';
 import VarietyStore from '@/store/varieties';
 import BreederStore from '@/store/breeders';
-import { Breeder, Variety } from '@/types';
+import { Breeder, Variety } from '@/common/types';
 import { ElNotification } from 'element-plus';
 
 export default defineComponent({

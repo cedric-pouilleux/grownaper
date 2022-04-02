@@ -38,7 +38,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { storeToRefs } from 'pinia';
-import { FeederProduct } from '@/types';
+import { FeederProduct } from '@/common/types';
 import feederProductStore from '@/store/feeders-products';
 import { Edit, Delete, Plus } from '@element-plus/icons-vue';
 

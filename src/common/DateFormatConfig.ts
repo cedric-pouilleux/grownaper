@@ -1,0 +1,11 @@
+const SIMPLE_DATE = 'MM/DD/YYYY';
+const SIMPLE_DATETIME = 'MM/DD/YYYY mm:hh';
+const READABLE_DATE = 'dddd, MMMM Do YYYY';
+const READABLE_DATETIME = 'dddd, MMMM Do YYYY, hh:mm';
+
+export {
+  SIMPLE_DATE,
+  SIMPLE_DATETIME,
+  READABLE_DATE,
+  READABLE_DATETIME,
+};

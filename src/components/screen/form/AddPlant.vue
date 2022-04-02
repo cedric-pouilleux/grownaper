@@ -36,7 +36,7 @@
 import {
   defineComponent, reactive, ref, toRefs, watch,
 } from 'vue';
-import { Plant } from '@/types';
+import { Plant } from '@/common/types';
 import VarietyStore from '@/store/varieties';
 import PlantStore from '@/store/plants';
 import { ElNotification } from 'element-plus';

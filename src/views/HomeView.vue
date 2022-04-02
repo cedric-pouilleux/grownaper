@@ -50,9 +50,10 @@ import { defineComponent, ref } from 'vue';
 import PlantList from '@/components/PlantList.vue';
 import PlantStore from '@/store/plants';
 import PlantScreen from '@/components/screen/PlantScreen.vue';
-import { Plant } from '@/types';
+import { Plant } from '@/common/types';
 import AddPlant from '@/components/screen/form/AddPlant.vue';
 import PlantHistoryResume from '@/components/screen/ui/PlantHistoryResume.vue';
+import { Plus } from '@element-plus/icons-vue';
 
 export default defineComponent({
   name: 'HomePage',
@@ -86,9 +87,7 @@ export default defineComponent({
 
     async function removePlant(): Promise<void> {
       if (selectedPlant.value) {
-        console.log(selectedPlant.value);
-        const deleted = await plantStore.remove(selectedPlant.value._id);
-        console.log(deleted);
+        await plantStore.remove(selectedPlant.value._id);
       }
     }
 
@@ -100,6 +99,7 @@ export default defineComponent({
       openForm,
       closeForm,
       removePlant,
+      Plus,
     };
   },
 });

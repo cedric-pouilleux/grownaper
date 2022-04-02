@@ -22,7 +22,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { Variety } from '@/types';
+import { Variety } from '@/common/types';
 
 export default defineComponent({
   name: 'PlantVariety',

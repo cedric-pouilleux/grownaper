@@ -41,7 +41,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import breederStore from '@/store/breeders';
-import { Breeder } from '@/types';
+import { Breeder } from '@/common/types';
 import { Edit, Delete, Plus } from '@element-plus/icons-vue';
 import { ElNotification } from 'element-plus';
 

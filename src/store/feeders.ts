@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import axios from 'axios';
-import { Feeder } from '@/types';
+import { Feeder } from '@/common/types';
 
 const feederStore = defineStore('feeder', () => {
   const SERVER = process.env.VUE_APP_SERVER_ADDRESS;

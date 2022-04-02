@@ -42,7 +42,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { Feeder } from '@/types';
+import { Feeder } from '@/common/types';
 import feederStore from '@/store/feeders';
 import { Edit, Delete, Plus } from '@element-plus/icons-vue';
 import { storeToRefs } from 'pinia';

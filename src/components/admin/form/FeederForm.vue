@@ -45,7 +45,7 @@ import {
   computed, defineComponent, PropType, reactive, ref, toRefs, watch,
 } from 'vue';
 import FeederStore from '@/store/feeders';
-import { Feeder } from '@/types';
+import { Feeder } from '@/common/types';
 import { ElNotification } from 'element-plus';
 
 export default defineComponent({

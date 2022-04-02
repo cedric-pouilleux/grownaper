@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import axios from 'axios';
-import { Variety } from '@/types';
+import { Variety } from '@/common/types';
 
 const varietyStore = defineStore('variety', () => {
   const SERVER = process.env.VUE_APP_SERVER_ADDRESS;

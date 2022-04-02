@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import axios from 'axios';
-import { FeederProduct } from '@/types';
+import { FeederProduct } from '@/common/types';
 
 function generateFormData(feederProduct: Partial<FeederProduct>): FormData {
   const formData = new FormData();

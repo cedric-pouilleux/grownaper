@@ -35,7 +35,7 @@ import BreederStore from '@/store/breeders';
 import VarietyStore from '@/store/varieties';
 import PlantStore from '@/store/plants';
 import moment from 'moment';
-import { Plant } from '@/types';
+import { Plant } from '@/common/types';
 import {
   uniqueNamesGenerator, adjectives, colors, Config,
 } from 'unique-names-generator';

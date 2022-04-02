@@ -5,7 +5,7 @@
         v-for="(activity, index) in history"
         :key="index"
         type="primary"
-        :timestamp="activity.date">
+        :timestamp="readableDate(activity.date)">
         {{ activity.message }}
       </el-timeline-item>
     </el-timeline>
@@ -14,7 +14,8 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { History } from '@/types';
+import { History } from '@/common/types';
+import Moment from 'moment';
 
 export default defineComponent({
   name: 'PlantHistoryResume',
@@ -22,6 +23,11 @@ export default defineComponent({
     history: {
       type: Array as PropType<History[]>,
     },
+  },
+  setup() {
+    return {
+      readableDate: (date: Date) => Moment(date).format('dddd, MMMM Do YYYY, hh:mm'),
+    };
   },
 });
 </script>

@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import axios from 'axios';
-import { Plant } from '@/types';
+import { Plant } from '@/common/types';
 
 const plantStore = defineStore('plant', () => {
   const SERVER = process.env.VUE_APP_SERVER_ADDRESS;
@@ -57,8 +57,8 @@ const plantStore = defineStore('plant', () => {
     }
   }
 
-  async function editFloweringDate(plantId: string, date: Date): Promise<boolean> {
-    const result = await axios.put(`${SERVER}/plant/flowering-date/edit/${plantId}`, { date });
+  async function editFloweringDate(plantId: string, startFloweringDate: Date): Promise<boolean> {
+    const result = await axios.put(`${SERVER}/plant/flowering-date/edit/${plantId}`, { startFloweringDate });
     if (result.status === 201) {
       await fetch();
       return true;

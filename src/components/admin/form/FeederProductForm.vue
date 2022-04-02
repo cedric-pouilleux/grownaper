@@ -53,7 +53,7 @@ import {
   computed,
   defineComponent, PropType, reactive, ref, toRefs, watch,
 } from 'vue';
-import { FeederProduct } from '@/types';
+import { FeederProduct } from '@/common/types';
 import FeederProductStore from '@/store/feeders-products';
 import FeederStore from '@/store/feeders';
 import { ElNotification } from 'element-plus';
