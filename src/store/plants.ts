@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import axios from 'axios';
-import { Plant } from '@/common/types';
+import { Plant, Variety } from '@/common/types';
 
 const plantStore = defineStore('plant', () => {
   const SERVER = process.env.VUE_APP_SERVER_ADDRESS;
@@ -39,15 +39,6 @@ const plantStore = defineStore('plant', () => {
     }
   }
 
-  async function edit(plant: Partial<Plant>): Promise<void> {
-    try {
-      await axios.put(`${SERVER}/plant/edit`, plant);
-      await fetch();
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
   async function remove(id: string): Promise<void> {
     try {
       await axios.delete(`${SERVER}/plant/delete/${id}`);
@@ -57,8 +48,14 @@ const plantStore = defineStore('plant', () => {
     }
   }
 
-  async function editFloweringDate(plantId: string, startFloweringDate: Date): Promise<boolean> {
-    const result = await axios.put(`${SERVER}/plant/flowering-date/edit/${plantId}`, { startFloweringDate });
+  async function edit(
+    plantId: string,
+    data: {
+      startFloweringDate: Date | null,
+      variety: Variety| null
+    },
+  ): Promise<boolean> {
+    const result = await axios.put(`${SERVER}/plant/edit/${plantId}`, data);
     if (result.status === 201) {
       await fetch();
       return true;
@@ -72,7 +69,6 @@ const plantStore = defineStore('plant', () => {
     add,
     edit,
     remove,
-    editFloweringDate,
     all,
   };
 });

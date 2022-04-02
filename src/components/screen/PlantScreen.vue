@@ -65,33 +65,38 @@ export default defineComponent({
   },
   setup(props) {
     const activeName = ref('timing');
-
     const startFloweringDate = ref<Date | null>(null);
+    const selectedVariety = ref<Variety | null>(null);
     const floTime = ref<number | null>(null);
-
     const plantStore = PlantStore();
 
     watch(() => props.plant, (value) => {
       startFloweringDate.value = value.startFloweringDate || null;
       floTime.value = value.variety?.floTime || null;
+      selectedVariety.value = value.variety || null;
     }, { immediate: true });
 
-    async function editStartFloweringDate() {
-      const id = props.plant?._id;
-      if (id && startFloweringDate.value) {
-        const edited = await plantStore.editFloweringDate(id, startFloweringDate.value);
-        if (edited) {
-          ElNotification.success({
-            message: `Plant(${id}) start flowering date has been edited`,
-            offset: 100,
-          });
-        }
+    async function editStartFloweringDate(): Promise<void> {
+      const isDifferentFloweringDate = startFloweringDate.value !== props.plant.startFloweringDate;
+      const isDifferentVariety = selectedVariety.value !== props.plant.variety;
+      if (!isDifferentFloweringDate && !isDifferentVariety) {
+        return;
+      }
+      const edited = await plantStore.edit(props.plant._id, {
+        startFloweringDate: isDifferentFloweringDate ? startFloweringDate.value : null,
+        variety: isDifferentVariety ? selectedVariety.value : null,
+      });
+      if (edited) {
+        ElNotification.success({
+          message: `Plant(${props.plant._id}) start flowering date has been edited`,
+        });
       }
     }
 
     function startFloweringDateChange(data: { date: Date, variety: Variety}): void {
       startFloweringDate.value = data.date;
       floTime.value = data.variety.floTime;
+      selectedVariety.value = data.variety;
     }
 
     return {

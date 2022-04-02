@@ -88,12 +88,8 @@ export default defineComponent({
     }
 
     function action() {
-      if (props.selected) {
-        plantStore.edit(plant);
-      } else {
-        plant.createdAt = moment(plant.createdAt).format();
-        plantStore.add(plant);
-      }
+      plant.createdAt = moment(plant.createdAt).format();
+      plantStore.add(plant);
     }
 
     return {
