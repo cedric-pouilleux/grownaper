@@ -33,7 +33,7 @@
     <el-container>
       <el-header>
         <div class="toolbar">
-          <plant-screen v-if="selectedPlant" :plant="selectedPlant" />
+          <plant-screen v-if="selectedPlant._id" :plant="selectedPlant" @change="changePlant"/>
         </div>
       </el-header>
     </el-container>
@@ -46,11 +46,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, reactive, ref } from 'vue';
 import PlantList from '@/components/PlantList.vue';
 import PlantStore from '@/store/plants';
 import PlantScreen from '@/components/screen/PlantScreen.vue';
-import { Plant } from '@/common/types';
+import { Plant, Variety } from '@/common/types';
 import AddPlant from '@/components/screen/form/AddPlant.vue';
 import PlantHistoryResume from '@/components/screen/ui/PlantHistoryResume.vue';
 import { Plus } from '@element-plus/icons-vue';
@@ -66,7 +66,7 @@ export default defineComponent({
   setup() {
     const count = ref<number>(0);
     const plantStore = PlantStore();
-    const selectedPlant = ref<Plant | null>(null);
+    const selectedPlant = reactive<Partial<Plant>>({});
     const isPlantFormOpened = ref<boolean>(false);
 
     plantStore.fetch().then((result: Plant[]) => {
@@ -74,7 +74,7 @@ export default defineComponent({
     });
 
     function selectPlant(plant: Plant): void {
-      selectedPlant.value = plant;
+      Object.assign(selectedPlant, plant);
     }
 
     function openForm(): void {
@@ -86,8 +86,15 @@ export default defineComponent({
     }
 
     async function removePlant(): Promise<void> {
-      if (selectedPlant.value) {
-        await plantStore.remove(selectedPlant.value._id);
+      if (selectedPlant._id) {
+        await plantStore.remove(selectedPlant._id);
+      }
+    }
+
+    function changePlant(data:{ startFloweringDate: Date, variety: Variety }) {
+      if (selectedPlant) {
+        selectedPlant.startFloweringDate = data.startFloweringDate;
+        selectedPlant.variety = data.variety;
       }
     }
 
@@ -99,6 +106,7 @@ export default defineComponent({
       openForm,
       closeForm,
       removePlant,
+      changePlant,
       Plus,
     };
   },

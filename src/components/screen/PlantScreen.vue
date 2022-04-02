@@ -6,8 +6,8 @@
           <h3>Created at : {{ readableCreatedAt }}</h3>
         </el-col>
         <el-col :span="18">
-          <flowering-date-form :date="startFloweringDate"
-                               :variety="plant.variety"
+          <flowering-date-form :date="selectedPlant.startFloweringDate"
+                               :variety="selectedPlant.variety"
                                @change="startFloweringDateChange"
                                @save="editStartFloweringDate "/>
         </el-col>
@@ -15,8 +15,8 @@
     </header>
     <el-tabs class="demo-tabs" v-model="activeName" type="card">
       <el-tab-pane label="Timing" name="timing">
-        <plant-timing-resume :floTime="floTime"
-                             :startFloweringDate="startFloweringDate"/>
+        <plant-timing-resume :floTime="selectedPlant.variety?.floTime"
+                             :startFloweringDate="selectedPlant.startFloweringDate"/>
       </el-tab-pane>
       <el-tab-pane label="Variety" name="variety">
         <plant-variety-resume :variety="plant.variety" />
@@ -34,7 +34,7 @@
 <script lang="ts">
 import {
   computed,
-  defineComponent, PropType, ref, watch,
+  defineComponent, PropType, ref, watch, toRef, reactive,
 } from 'vue';
 import { Plant, Variety } from '@/common/types';
 import { Plus } from '@element-plus/icons-vue';
@@ -63,47 +63,49 @@ export default defineComponent({
       required: true,
     },
   },
+  emits: ['change'],
   setup(props) {
     const activeName = ref('timing');
-    const startFloweringDate = ref<Date | null>(null);
-    const selectedVariety = ref<Variety | null>(null);
-    const floTime = ref<number | null>(null);
     const plantStore = PlantStore();
 
-    watch(() => props.plant, (value) => {
-      startFloweringDate.value = value.startFloweringDate || null;
-      floTime.value = value.variety?.floTime || null;
-      selectedVariety.value = value.variety || null;
-    }, { immediate: true });
+    const initial: Partial<Plant> = {};
+    Object.assign(initial, props.plant);
 
-    async function editStartFloweringDate(): Promise<void> {
-      const isDifferentFloweringDate = startFloweringDate.value !== props.plant.startFloweringDate;
-      const isDifferentVariety = selectedVariety.value !== props.plant.variety;
-      if (!isDifferentFloweringDate && !isDifferentVariety) {
-        return;
+    const plant = toRef(props, 'plant');
+
+    const selectedPlant = reactive<Plant>({ ...props.plant });
+
+    async function editStartFloweringDate(): Promise<boolean> {
+      // eslint-disable-next-line max-len
+      const isEqual = (...objects: any) => objects.every((obj: any) => JSON.stringify(obj) === JSON.stringify(objects[0]));
+      const isVarietyEqual = isEqual(initial.variety, selectedPlant.variety);
+      const isFloweringDateEqual = Moment(initial.startFloweringDate).isSame(selectedPlant.startFloweringDate, 'day');
+      if (isVarietyEqual && isFloweringDateEqual) {
+        return false;
       }
       const edited = await plantStore.edit(props.plant._id, {
-        startFloweringDate: isDifferentFloweringDate ? startFloweringDate.value : null,
-        variety: isDifferentVariety ? selectedVariety.value : null,
+        startFloweringDate: selectedPlant.startFloweringDate || null,
+        variety: selectedPlant.variety || null,
       });
+      Object.assign(initial, selectedPlant);
       if (edited) {
         ElNotification.success({
           message: `Plant(${props.plant._id}) start flowering date has been edited`,
         });
       }
+      return true;
     }
 
     function startFloweringDateChange(data: { date: Date, variety: Variety}): void {
-      startFloweringDate.value = data.date;
-      floTime.value = data.variety.floTime;
-      selectedVariety.value = data.variety;
+      selectedPlant.startFloweringDate = data.date;
+      selectedPlant.variety = data.variety;
     }
 
     return {
       Plus,
+      selectedPlant,
       activeName,
-      startFloweringDate,
-      floTime,
+      initial,
       readableCreatedAt: computed(() => Moment(props.plant.createdAt).format(READABLE_DATE)),
       startFloweringDateChange,
       editStartFloweringDate,
