@@ -51,14 +51,18 @@ const plantStore = defineStore('plant', () => {
   async function edit(
     plantId: string,
     data: { startFloweringDate?: Date | null, variety?: Variety| null },
-  ): Promise<boolean> {
+  ): Promise<Plant | null> {
     const result = await axios.put(`${SERVER}/plant/edit/${plantId}`, data);
     if (result.status === 201) {
       await fetch();
-      return true;
+      return result.data;
     }
-    return false;
+    return null;
   }
+
+  fetch().then(() => {
+    console.info('All plants feetch');
+  });
 
   return {
     addNote,

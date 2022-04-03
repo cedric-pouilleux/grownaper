@@ -74,7 +74,8 @@ export default defineComponent({
           message: `Plant(${propsPlant.value._id}) start flowering date has been edited`,
         });
       }
-      emit('change', selectedPlant);
+      console.log(edited);
+      emit('change', edited);
       return true;
     }
 

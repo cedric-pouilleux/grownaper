@@ -2,7 +2,7 @@
   <el-scrollbar>
     <div class="plants-list">
       <el-table size="small"
-                :data="all"
+                :data="plants"
                 style="width: 100%"
                 highlight-current-row
                 @current-change="open"
@@ -48,11 +48,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
-import plantStore from '@/store/plants';
+import { defineComponent, PropType, ref } from 'vue';
 import { Plant } from '@/common/types';
-import moment from 'moment';
-import { storeToRefs } from 'pinia';
 import {
   Male, Female, Timer, InfoFilled,
 } from '@element-plus/icons-vue';
@@ -62,22 +59,13 @@ export default defineComponent({
 
   emits: ['select'],
 
+  props: {
+    plants: Array as PropType<Plant[]>,
+  },
+
   setup(props, { emit }) {
-    const store = plantStore();
-    const { all } = storeToRefs(store);
-
-    const selectedPlant = ref<Plant | null>(null);
-    const note = ref<string | null>(null);
-
     return {
-      remove: (id: string) => store.remove(id),
-      selectedPlant,
-      note,
-      all,
       open: (plant: Plant) => { emit('select', plant); },
-      cancel: () => { selectedPlant.value = null; },
-      inputDateFormat: (date: Date | string): string => moment(date).format('YYYY-MM-DD'),
-      moment,
       Male,
       Female,
       Timer,

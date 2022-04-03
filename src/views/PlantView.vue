@@ -7,8 +7,8 @@
     <!-- Plant list -->
     <el-container style="min-width: 450px; max-width: 500px;"
                   direction="vertical">
-      <plant-list-header :count="count" @new-plant="openNewPlantForm" />
-      <plant-list @select="selectPlant"/>
+      <plant-list-header :count="all.length" @new-plant="openNewPlantForm" />
+      <plant-list :plants="all" @select="selectPlant"/>
     </el-container>
 
     <!-- Selected plant infos -->
@@ -57,6 +57,7 @@ import PlantListHeader from '@/components/screen/ui/PlantListHeader.vue';
 import PlantSelectionHeader from '@/components/screen/ui/PlantSelectionHeader.vue';
 import PlantHistoryHeader from '@/components/screen/ui/PlantHistoryHeader.vue';
 import PlantIdentificationResume from '@/components/screen/ui/PlantIdentificationResume.vue';
+import { storeToRefs } from 'pinia';
 
 export default defineComponent({
   name: 'HomePage',
@@ -72,16 +73,13 @@ export default defineComponent({
     PlantIdentificationResume,
   },
   setup() {
-    const count = ref<number>(0);
     const plantStore = PlantStore();
     const selectedPlant = reactive<Partial<Plant>>({});
     const isPlantFormOpened = ref<boolean>(false);
 
     const history = toRef(selectedPlant, 'history');
 
-    plantStore.fetch().then((result: Plant[]) => {
-      count.value = result.length;
-    });
+    const { all } = storeToRefs(plantStore);
 
     function openNewPlantForm() {
       isPlantFormOpened.value = true;
@@ -106,10 +104,9 @@ export default defineComponent({
     }
 
     return {
-      count,
       isPlantFormOpened,
       openNewPlantForm,
-      plantStore,
+      all,
       selectedPlant,
       selectPlant,
       closeForm,
