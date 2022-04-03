@@ -33,9 +33,10 @@ type History = {
 interface Plant {
   _id: string,
   name: string,
-  createdAt: string,
+  createdAt: Date,
   qrcode: string,
   startFloweringDate?: Date,
+  floweringStarted: boolean,
   variety?: Variety,
   notes: Note[],
   history: History[]

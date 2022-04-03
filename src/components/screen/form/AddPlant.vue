@@ -34,16 +34,13 @@
 
 <script lang="ts">
 import {
-  computed,
   defineComponent, reactive, ref, toRefs, watch,
 } from 'vue';
 import { Plant } from '@/common/types';
 import VarietyStore from '@/store/varieties';
 import PlantStore from '@/store/plants';
 import { ElNotification } from 'element-plus';
-import {
-  uniqueNamesGenerator, adjectives, colors, Config,
-} from 'unique-names-generator';
+import NameGenerator from '@/common/NameGenerator';
 
 export default defineComponent({
   name: 'AddPlant',
@@ -53,22 +50,15 @@ export default defineComponent({
       default: false,
     },
   },
-  emits: ['close'],
+  emits: ['close', 'add'],
   setup(props, { emit }) {
     const drawer = ref<boolean>(false);
     const varietyStore = VarietyStore();
     const plantStore = PlantStore();
 
-    const customConfig: Config = {
-      dictionaries: [adjectives, colors],
-      separator: ' ',
-      style: 'capital',
-      length: 2,
-    };
-
     function generateInitial() {
       return {
-        name: uniqueNamesGenerator(customConfig),
+        name: NameGenerator.generateName(),
         startFloweringDate: new Date(),
         variety: undefined,
       };
@@ -82,14 +72,14 @@ export default defineComponent({
 
     async function action() {
       const added = await plantStore.add(plant);
-      Object.assign(plant, generateInitial());
       if (added) {
-        emit('close');
+        emit('add', added);
         ElNotification.success({
           message: `Plant : ${plant.name} has been added`,
           offset: 100,
         });
       }
+      Object.assign(plant, generateInitial());
     }
 
     return {

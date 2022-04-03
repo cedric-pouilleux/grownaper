@@ -1,38 +1,48 @@
 <template>
-  <el-form label-width="120px">
-    <el-form-item label="Variety">
-      <el-select v-model="pickedVariety"
-                 :placeholder="pickedVariety?.title || 'Your plant'"
-                 @change="change">
-        <el-option v-for="optVariety in varietyStore.all"
-                   :key="optVariety._id"
-                   :value="optVariety">
-          {{optVariety.title}}
-        </el-option>
-      </el-select>
-    </el-form-item>
-    <el-form-item label="Flowering date">
-      <el-date-picker v-model="pickedDate"
-                      type="date"
-                      format="YYYY/MM/DD"
-                      value-format="YYYY-MM-DD"
-                      placeholder="Pick a day"
-                      @change="change"/>
-    </el-form-item>
-    <el-form-item>
-      <el-button type="primary"
-                 @click="save"
-                 v-if="visibleButton">Save</el-button>
-    </el-form-item>
-  </el-form>
+  <div class="edit-plant-form">
+    <el-form size="small" class="edit-plant-form" inline>
+      <el-form-item label="Name">
+        <el-input type="text" v-model="selectedName" clearable @input="change">
+          <template #append>
+            <el-button :icon="Refresh" type="primary" @click="refreshName"/>
+          </template>
+        </el-input>
+      </el-form-item>
+      <el-form-item label="Variety">
+        <el-select v-model="selectedVariety"
+                   :placeholder="selectedVariety?.title || 'Your plant'"
+                   @change="change">
+          <el-option v-for="optVariety in varietyStore.all"
+                     :key="optVariety._id"
+                     :value="optVariety">
+            {{optVariety.title}}
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="Flowering date">
+        <el-date-picker v-model="selectedDate"
+                        type="date"
+                        format="YYYY/MM/DD"
+                        value-format="YYYY-MM-DD"
+                        placeholder="Pick a day"
+                        @change="change"/>
+        <el-button style="margin-left: 12px"
+                   type="primary"
+                   @click="handleSave"
+                   v-if="canSave">Save</el-button>
+      </el-form-item>
+    </el-form>
+  </div>
 </template>
 
 <script lang="ts">
 import {
-  defineComponent, PropType, ref, watch, toRef, computed,
+  defineComponent, PropType, ref, watch,
 } from 'vue';
 import VarietyStore from '@/store/varieties';
+import { Refresh } from '@element-plus/icons-vue';
 import { Plant, Variety } from '@/common/types';
+import NameGenerator from '@/common/NameGenerator';
 
 export default defineComponent({
   name: 'FloweringDateForm',
@@ -41,40 +51,61 @@ export default defineComponent({
       type: Object as PropType<Plant>,
       required: true,
     },
-    visibleButton: Boolean,
+    canSave: Boolean,
   },
   emits: ['change', 'save'],
   setup(props, { emit }) {
-    const pickedDate = ref<Date | null>(props.plant.startFloweringDate || null);
-    const pickedVariety = ref<Variety | null>(props.plant.variety || null);
-
     const varietyStore = VarietyStore();
 
-    watch((props.plant), (value) => {
-      pickedDate.value = value.startFloweringDate || pickedDate.value;
-      pickedVariety.value = value.variety || pickedVariety.value;
+    const selectedDate = ref<Date | null>(props.plant.startFloweringDate || null);
+    const selectedVariety = ref<Variety | null>(props.plant.variety || null);
+    const selectedName = ref<string | null>(props.plant.name || null);
+
+    watch(props.plant, (plant: Plant): void => {
+      selectedDate.value = plant.startFloweringDate || selectedDate.value;
+      selectedVariety.value = plant.variety || selectedVariety.value;
+      selectedName.value = plant.name || selectedName.value;
     });
 
-    function change(e: Event) {
+    function change() {
       emit('change', {
-        ...props.plant,
-        startFloweringDate: pickedDate.value,
-        variety: pickedVariety.value,
+        startFloweringDate: selectedDate.value,
+        variety: selectedVariety.value,
+        name: selectedName.value,
+      });
+    }
+
+    function refreshName() {
+      selectedName.value = NameGenerator.generateName();
+      change();
+    }
+
+    async function handleSave() {
+      emit('save', {
+        startFloweringDate: selectedDate.value,
+        variety: selectedVariety.value,
+        name: selectedName.value,
       });
     }
 
     return {
-      pickedDate,
-      pickedVariety,
+      selectedDate,
+      selectedVariety,
+      selectedName,
       varietyStore,
-      getStartFloweringDate: computed(() => props.plant.startFloweringDate),
-      getVariety: computed(() => props.plant.variety),
       change,
-      save: () => {
-        emit('save', {
-        });
-      },
+      handleSave,
+      refreshName,
+      Refresh,
     };
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.edit-plant-form {
+  background-color: #ebebeb;
+  padding: 10px 0 0 6px;
+  margin: 0 12px;
+}
+</style>

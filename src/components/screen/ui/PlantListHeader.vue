@@ -2,6 +2,7 @@
   <el-header class="view-header">
     <h2>Plants ({{count}})</h2>
     <el-button type="primary"
+               size="small"
                :icon="Plus"
                @click="newPlant">
       New

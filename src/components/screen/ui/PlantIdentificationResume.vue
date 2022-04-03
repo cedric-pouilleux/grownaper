@@ -2,10 +2,10 @@
   <div class="plant-identification-resume">
     <plant-variety-resume :variety="variety" />
     <el-row :gutter="20" v-if="qrcode && databaseId">
-      <el-col :span="6">
-        <qrcode-vue :value="qrcode" style="width: 100%; height: auto;" size="450"/>
+      <el-col :span="8">
+        <qrcode-vue :value="qrcode" style="width: 100%; height: auto;" :size="450"/>
       </el-col>
-      <el-col :span="18">
+      <el-col :span="16">
         <h3>Created at : {{ readableCreatedAt }}</h3>
         <p style="font-size: 11px">{{ databaseId }}</p>
         <hr/>

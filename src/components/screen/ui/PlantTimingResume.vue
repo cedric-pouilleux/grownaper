@@ -37,7 +37,7 @@ export default defineComponent({
   name: 'PlantTimingResume',
   props: {
     startFloweringDate: {
-      type: Date,
+      type: String,
       required: true,
     },
     floTime: {

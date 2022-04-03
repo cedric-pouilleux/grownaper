@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 import axios from 'axios';
-import { Plant, Variety, History } from '@/common/types';
+import { Plant, Variety } from '@/common/types';
 
 const plantStore = defineStore('plant', () => {
   const SERVER = process.env.VUE_APP_SERVER_ADDRESS;
@@ -18,13 +18,13 @@ const plantStore = defineStore('plant', () => {
     }
   }
 
-  async function add(plant: Partial<Plant>): Promise<boolean> {
+  async function add(plant: Partial<Plant>): Promise<Plant | null> {
     const result = await axios.post(`${SERVER}/plant/add`, plant);
     if (result.status === 201) {
       await fetch();
-      return true;
+      return result.data;
     }
-    return false;
+    return null;
   }
 
   async function addNote(plantId: string, noteContent: string): Promise<void> {

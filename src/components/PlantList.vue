@@ -8,6 +8,15 @@
                 @current-change="open"
       >
         <el-table-column prop="name" label="Name" />
+        <el-table-column>
+          <template #default="scope">
+            <el-progress v-if="isFloweringStarted(scope.row)"
+                         :text-inside="true"
+                         :percentage="percent(scope.row)">
+              <span></span>
+            </el-progress>
+          </template>
+        </el-table-column>
         <el-table-column prop="variety" label="Varieties" width="200">
           <template #default="scope">
             <div v-if="scope.row.variety">
@@ -48,11 +57,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref } from 'vue';
+import { defineComponent, PropType } from 'vue';
 import { Plant } from '@/common/types';
 import {
   Male, Female, Timer, InfoFilled,
 } from '@element-plus/icons-vue';
+import Moment from 'moment';
 
 export default defineComponent({
   name: 'PlantList',
@@ -64,12 +74,30 @@ export default defineComponent({
   },
 
   setup(props, { emit }) {
+    function percent(plant: Plant): number | null {
+      if (plant.variety) {
+        const { floTime } = plant.variety;
+        const { startFloweringDate } = plant;
+        const leaveDay = Moment(startFloweringDate)
+          .add(floTime, 'd')
+          .diff(Moment(), 'days');
+        return Math.round(100 - (leaveDay / floTime) * 100);
+      }
+      return null;
+    }
+
+    function isFloweringStarted(plant: Plant): boolean {
+      return Moment().isAfter(plant.startFloweringDate);
+    }
+
     return {
       open: (plant: Plant) => { emit('select', plant); },
+      isFloweringStarted,
       Male,
       Female,
       Timer,
       InfoFilled,
+      percent,
     };
   },
 
