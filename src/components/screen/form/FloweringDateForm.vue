@@ -13,11 +13,11 @@
     </el-form-item>
     <el-form-item label="Flowering date">
       <el-date-picker v-model="pickedDate"
-                      @change="change"
                       type="date"
                       format="YYYY/MM/DD"
                       value-format="YYYY-MM-DD"
-                      placeholder="Pick a day" />
+                      placeholder="Pick a day"
+                      @change="change"/>
     </el-form-item>
     <el-form-item>
       <el-button type="primary"
@@ -29,42 +29,51 @@
 
 <script lang="ts">
 import {
-  defineComponent, PropType, ref, watch,
+  defineComponent, PropType, ref, watch, toRef, computed,
 } from 'vue';
 import VarietyStore from '@/store/varieties';
-import { Variety } from '@/common/types';
+import { Plant, Variety } from '@/common/types';
 
 export default defineComponent({
   name: 'FloweringDateForm',
   props: {
-    date: Date,
-    variety: Object as PropType<Variety>,
+    plant: {
+      type: Object as PropType<Plant>,
+      required: true,
+    },
     visibleButton: Boolean,
   },
   emits: ['change', 'save'],
   setup(props, { emit }) {
-    const pickedDate = ref<Date | null>(props.date || null);
-    const pickedVariety = ref<Variety | null>(props.variety || null);
+    const pickedDate = ref<Date | null>(props.plant.startFloweringDate || null);
+    const pickedVariety = ref<Variety | null>(props.plant.variety || null);
 
     const varietyStore = VarietyStore();
 
-    watch(() => props.date, (date) => {
-      pickedDate.value = date || null;
-    }, { immediate: true });
+    watch((props.plant), (value) => {
+      pickedDate.value = value.startFloweringDate || pickedDate.value;
+      pickedVariety.value = value.variety || pickedVariety.value;
+    });
 
-    function change() {
+    function change(e: Event) {
       emit('change', {
-        date: pickedDate.value,
+        ...props.plant,
+        startFloweringDate: pickedDate.value,
         variety: pickedVariety.value,
       });
     }
 
     return {
       pickedDate,
-      varietyStore,
       pickedVariety,
+      varietyStore,
+      getStartFloweringDate: computed(() => props.plant.startFloweringDate),
+      getVariety: computed(() => props.plant.variety),
       change,
-      save: () => { emit('save', pickedDate.value); },
+      save: () => {
+        emit('save', {
+        });
+      },
     };
   },
 });

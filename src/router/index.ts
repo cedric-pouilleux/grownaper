@@ -1,13 +1,19 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
+import PlantView from '../views/PlantView.vue';
 import AdminFeedersView from '../views/admin/AdminFeedersView.vue';
 import AdminVarietiesView from '../views/admin/AdminVarietiesView.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'Plants',
+    name: 'Home',
     component: HomeView,
+  },
+  {
+    path: '/plants',
+    name: 'Plants',
+    component: PlantView,
   },
   {
     path: '/admin',

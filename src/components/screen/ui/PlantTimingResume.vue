@@ -1,21 +1,29 @@
 <template>
   <div class="plant-timing-resume">
-    <el-row>
-      <el-col :span="12">
-        <div class="plant-timing-resume__flowering">
-          <el-tag size="large" type="success">{{leaveDay}} Day leave</el-tag>
-          <div class="plant-timing-resume__flowering-details">
-            <p><span class="underline">Start flowering</span> {{ readableStartFloweringDate }}</p>
-            <p><span class="underline">Cut date</span> {{cutDate}}</p>
-            <p><span class="underline">Cut date average</span> {{averageCutDate}}</p>
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="12">
-        <el-progress v-if="percent > 0" :percentage="percent" />
-        <el-alert v-else title="Not start flowering" type="error" :closable="false"/>
-      </el-col>
-    </el-row>
+    <div class="plant-timing-resume__flowering">
+      <el-row v-if="percent > 0" justify="center" align="middle" :gutter="40">
+        <el-col :span="8">
+          <el-tag effect="plain" size="large">
+            {{floTime - leaveDay}} / {{floTime}} days
+          </el-tag>
+        </el-col>
+        <el-col :span="16">
+          <el-progress :percentage="percent" />
+        </el-col>
+      </el-row>
+      <el-alert v-else title="Not start flowering" type="error" :closable="false"/>
+      <br/>
+      <div v-if="startFloweringDate" class="plant-timing-resume__flowering-details">
+        <p v-if="percent > 0">
+          <span class="underline"> Breeding estimate flowering days</span> {{floTime}},
+          {{leaveDay}} <span class="underline"> left</span>
+        </p>
+        <p><span class="underline">Start flowering</span> {{ readableStartFloweringDate }}</p>
+        <p><span class="underline">Cut date</span> {{cutDate}}</p>
+        <p><span class="underline">Cut date average</span> {{averageCutDate}}</p>
+      </div>
+      <el-alert v-else title="Not chose flowering starting day" type="error" :closable="false"/>
+    </div>
   </div>
 
 </template>

@@ -34,6 +34,7 @@
 
 <script lang="ts">
 import {
+  computed,
   defineComponent, reactive, ref, toRefs, watch,
 } from 'vue';
 import { Plant } from '@/common/types';
@@ -65,15 +66,15 @@ export default defineComponent({
       length: 2,
     };
 
-    const initial = {
-      name: uniqueNamesGenerator(customConfig),
-      startFloweringDate: new Date(),
-      variety: undefined,
-    };
+    function generateInitial() {
+      return {
+        name: uniqueNamesGenerator(customConfig),
+        startFloweringDate: new Date(),
+        variety: undefined,
+      };
+    }
 
-    const plant = reactive<Partial<Plant>>({
-      ...initial,
-    });
+    const plant = reactive<Partial<Plant>>(generateInitial());
 
     watch(() => props.opened, () => {
       drawer.value = props.opened;
@@ -81,7 +82,9 @@ export default defineComponent({
 
     async function action() {
       const added = await plantStore.add(plant);
+      Object.assign(plant, generateInitial());
       if (added) {
+        emit('close');
         ElNotification.success({
           message: `Plant : ${plant.name} has been added`,
           offset: 100,

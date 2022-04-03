@@ -1,19 +1,21 @@
 <template>
-  <div class="history" v-if="history">
-    <el-timeline>
-      <el-timeline-item
-        center
-        :size="getSize(activity.action)"
-        v-for="(activity, index) in history"
-        :key="index"
-        :type="getType(activity.action)"
-        :icon="getIcon(activity.action)"
-        :hollow="getHollow(activity.action)"
-        :timestamp="readableDate(activity.date)">
-        {{ activity.message }}
-      </el-timeline-item>
-    </el-timeline>
-  </div>
+  <el-scrollbar>
+    <div class="history" v-if="history">
+      <el-timeline>
+        <el-timeline-item
+          center
+          v-for="(activity, index) in history"
+          :key="index"
+          :size="getSize(activity.action)"
+          :type="getType(activity.action)"
+          :icon="getIcon(activity.action)"
+          :hollow="getHollow(activity.action)"
+          :timestamp="readableDate(activity.date)">
+          {{ activity.message }}
+        </el-timeline-item>
+      </el-timeline>
+    </div>
+  </el-scrollbar>
 </template>
 
 <script lang="ts">
@@ -23,7 +25,7 @@ import Moment from 'moment';
 import { READABLE_DATETIME } from '@/common/DateFormatConfig';
 import { Plus, Sunny } from '@element-plus/icons-vue';
 
-const typeDef = {
+const actionHistoryType = {
   ADD: {
     color: 'primary',
     size: 'normal',
@@ -54,10 +56,10 @@ export default defineComponent({
   setup() {
     return {
       readableDate: (date: Date): string => Moment(date).format(READABLE_DATETIME),
-      getType: (type: HistoryType): string => typeDef[type].color,
-      getSize: (type: HistoryType): string => typeDef[type].size,
-      getHollow: (type: HistoryType): boolean => typeDef[type].hollow,
-      getIcon: (type: HistoryType) => typeDef[type].icon,
+      getType: (hType: HistoryType): string => actionHistoryType[hType].color,
+      getSize: (hType: HistoryType): string => actionHistoryType[hType].size,
+      getHollow: (hType: HistoryType): boolean => actionHistoryType[hType].hollow,
+      getIcon: (hType: HistoryType) => actionHistoryType[hType].icon,
     };
   },
 });

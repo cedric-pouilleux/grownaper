@@ -6,7 +6,8 @@
              background-color="#ebebeb"
              text-color="#333"
              active-text-color="#ff0000">
-      <el-menu-item index="/">Plants</el-menu-item>
+      <el-menu-item index="/">Home</el-menu-item>
+      <el-menu-item index="/plants">Plants</el-menu-item>
       <el-menu-item index="/admin">Admin</el-menu-item>
     </el-menu>
     <router-view/>

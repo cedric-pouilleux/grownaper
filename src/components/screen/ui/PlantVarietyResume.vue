@@ -1,19 +1,15 @@
 <template>
   <div class="plant-variety-resume" v-if="variety">
-    <h2>Variety : {{ variety.title }}</h2>
-    <p>Database ID : {{ variety._id }}</p>
-    <p>unique slug : {{ variety.slug }}</p>
-    <hr/>
-    <p>Breeder : {{ variety.breeder.title }}
-      <el-tag>{{ variety.breeder._id}}</el-tag>
-    </p>
-    <hr/>
-    <p v-if="variety.feminized">Feminized</p>
-    <p v-if="variety.automatic">Automatic</p>
-    <p>Flowering time : {{ variety.floTime}}</p>
-    <p>Phenotype : #{{ variety.phenotype}}</p>
-    <p>Country : {{ variety.country}}</p>
-    <p>Link : {{ variety.link }}</p>
+    <h2>
+      <a v-if="variety.link" :href="variety.link">
+        #{{ variety.phenotype}} {{ variety.title }} from {{ variety.breeder.title }}
+        {{ variety.feminized && '- Feminized' }}
+        {{ variety.automatic && '- Automatic' }}
+      </a>
+      <template v-else>
+        #{{ variety.phenotype}} {{ variety.title }} from {{ variety.breeder.title }}
+      </template>
+    </h2>
   </div>
   <div v-else>
     No variety for this plant
@@ -34,3 +30,10 @@ export default defineComponent({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+h2 {
+  font-size: 1.2em;
+  margin-bottom: 20px;
+}
+</style>
