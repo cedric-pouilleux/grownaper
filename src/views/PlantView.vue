@@ -4,15 +4,13 @@
              @close="togglePlantForm"
              @add="addPlant"/>
   <el-container :offset="10" style="height: calc(100vh - 59px);">
-
     <!-- Plant list -->
     <el-container style="min-width: 600px; max-width: 600px;" direction="vertical">
       <plant-list-header :count="all.length" @new-plant="togglePlantForm" />
       <plant-list :plants="all" @select="selectPlant"/>
     </el-container>
-
+    <!-- Selected plant infos -->
     <template v-if="selectedPlant._id">
-      <!-- Selected plant infos -->
       <el-container direction="vertical">
         <plant-selection-header :name="selectedPlant.name"
                                 :variety="selectedPlant.variety"
@@ -42,14 +40,12 @@
           </el-row>
         </el-main>
       </el-container>
-
       <!-- Selected plant history -->
       <el-container style="max-width: 280px; min-width: 280px" direction="vertical">
         <plant-history-header />
         <plant-history-resume :history="selectedPlant.history" />
       </el-container>
     </template>
-
   </el-container>
 </template>
 
