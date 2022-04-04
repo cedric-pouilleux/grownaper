@@ -2,6 +2,7 @@
   <el-header class="view-header">
     <h2>
       {{ name }}
+      {{flowering}}
       <plant-variety-resume :variety="variety" />
     </h2>
     <div class="view-header__tools">
@@ -13,23 +14,26 @@
           <el-button type="warning"
                      effect="plain"
                      size="small"
-                     round
-                     plain>
+                     round plain>
             Collect
           </el-button>
         </template>
       </el-popconfirm>
-
       <el-button v-if="collected"
                  disabled
                  type="success"
                  size="small"
                  @click="cutPlant"
-                 round
-                 plain>
+                 round plain>
         Collected
       </el-button>
-
+      <el-button v-if="!flowering && !collected"
+                 type="success"
+                 size="small"
+                 @click="startFlowering"
+                 round plain>
+        Start flowering
+      </el-button>
       <el-popconfirm title="Are you sure to delete this ?" @confirm="removePlant">
         <template #reference>
           <el-button size="small" type="danger" round>
@@ -37,7 +41,6 @@
           </el-button>
         </template>
       </el-popconfirm>
-
     </div>
   </el-header>
 </template>
@@ -60,12 +63,17 @@ export default defineComponent({
       type: [String, Boolean],
       default: null,
     },
+    flowering: {
+      type: Boolean,
+      default: false,
+    },
   },
-  emits: ['remove', 'cut-plant'],
+  emits: ['remove', 'cut-plant', 'start-flowering'],
   setup(props, { emit }) {
     return {
       removePlant: () => emit('remove'),
       cutPlant: () => emit('cut-plant'),
+      startFlowering: () => emit('start-flowering'),
       displayCollectBtn: computed(
         () => props.collected !== false && props.collected === null,
       ),

@@ -17,7 +17,9 @@
         <plant-selection-header :name="selectedPlant.name"
                                 :variety="selectedPlant.variety"
                                 :collected="selectedPlant.floweringStarted && selectedPlant.collected"
+                                :flowering="selectedPlant.floweringStarted"
                                 @remove="removePlant"
+                                @start-flowering="startFlowering"
                                 @cut-plant="cutPlant"/>
         <flowering-date-form v-if="!selectedPlant.collected"
                              :plant="selectedPlant"
@@ -173,6 +175,19 @@ export default defineComponent({
       }
     }
 
+    async function startFlowering() {
+      if (selectedPlant._id) {
+        const edited = await plantStore.startFlowering(selectedPlant._id);
+        if (edited) {
+          Object.assign(selectedPlant, edited);
+          ElNotification.success({
+            message: `Plant ${edited.name} start flowering`,
+            offset: 100,
+          });
+        }
+      }
+    }
+
     return {
       isPlantFormOpened,
       all,
@@ -184,6 +199,7 @@ export default defineComponent({
       savePlant,
       editPlant,
       togglePlantForm: (): void => { isPlantFormOpened.value = !isPlantFormOpened.value; },
+      startFlowering,
       removePlant,
       Plus,
     };
