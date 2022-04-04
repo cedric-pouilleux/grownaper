@@ -87,6 +87,7 @@ export default defineComponent({
   },
   setup() {
     const initial = {
+      _id: null,
       name: null,
       variety: null,
       createdAt: null,

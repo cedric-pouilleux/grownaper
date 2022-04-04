@@ -4,7 +4,8 @@
     <el-button type="primary"
                size="small"
                :icon="Plus"
-               @click="newPlant">
+               @click="newPlant"
+    round>
       New
     </el-button>
   </el-header>

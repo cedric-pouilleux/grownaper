@@ -6,10 +6,11 @@
     </h2>
     <div class="view-header__tools">
 
-      <el-popconfirm title="Are you sure to collect this plant ?" @confirm="cutPlant">
+      <el-popconfirm v-if="displayCollectBtn"
+                     title="Are you sure to collect this plant ?"
+                     @confirm="cutPlant">
         <template #reference>
-          <el-button v-if="displayCollectBtn"
-                     type="warning"
+          <el-button type="warning"
                      effect="plain"
                      size="small"
                      round
@@ -36,6 +37,7 @@
           </el-button>
         </template>
       </el-popconfirm>
+
     </div>
   </el-header>
 </template>
@@ -55,7 +57,7 @@ export default defineComponent({
     },
     variety: Object as PropType<Variety>,
     collected: {
-      type: [Date, Boolean],
+      type: [String, Boolean],
       default: null,
     },
   },

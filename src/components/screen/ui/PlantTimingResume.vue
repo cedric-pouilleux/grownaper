@@ -12,14 +12,14 @@
             <p><span class="underline">Cut date</span> {{cutDate}}</p>
             <p><span class="underline">Cut date average</span> {{averageCutDate}}</p>
           </div>
-          <div v-if="collected">
+          <template v-if="collected">
             <p><span class="underline">Collected since</span> {{readableCollected}}</p>
-          </div>
+          </template>
           <el-alert v-if="!startFloweringDate" title="Not chose flowering starting day" type="error" :closable="false"/>
         </el-col>
         <el-col :span="8">
           <el-progress type="circle"
-                       width="90"
+                       :width="90"
                        :percentage="percent"
                        :status="collected && 'success'">
             {{ percentText }}
@@ -50,12 +50,17 @@ export default defineComponent({
       required: true,
     },
     collected: {
-      type: Date,
+      type: [String, Boolean],
       default: null,
     },
   },
   setup(props) {
-    const readableCollected = computed(() => Moment(props.collected).format(READABLE_DATE));
+    const readableCollected = computed(() => {
+      if (typeof props.collected === 'string') {
+        return Moment(props.collected).format(READABLE_DATE);
+      }
+      return null;
+    });
 
     const cutDate = computed(
       () => Moment(props.startFloweringDate)
