@@ -1,28 +1,33 @@
 <template>
   <div class="plant-timing-resume">
     <div class="plant-timing-resume__flowering">
-      <el-row v-if="percent > 0" justify="center" align="middle" :gutter="40">
-        <el-col :span="8">
-          <el-tag effect="plain" size="large">
-            {{floTime - leaveDay}} / {{floTime}} days
-          </el-tag>
-        </el-col>
+      <el-row v-if="percent > 0" :gutter="40">
         <el-col :span="16">
-          <el-progress :percentage="percent" />
+          <div v-if="startFloweringDate && !collected" class="plant-timing-resume__flowering-details">
+            <p v-if="leaveDay > 0">{{leaveDay}} <span class="underline">days left</span></p>
+            <p v-if="leaveDay < 0">{{-leaveDay}} <span class="underline"> Ripe days</span></p>
+            <p v-if="percent > 0"><span class="underline"> Breeding flowering days</span> {{floTime}}</p>
+            <br/>
+            <p><span class="underline">Start flowering</span> {{ readableStartFloweringDate }}</p>
+            <p><span class="underline">Cut date</span> {{cutDate}}</p>
+            <p><span class="underline">Cut date average</span> {{averageCutDate}}</p>
+          </div>
+          <div v-if="collected">
+            <p><span class="underline">Collected since</span> {{readableCollected}}</p>
+          </div>
+          <el-alert v-if="!startFloweringDate" title="Not chose flowering starting day" type="error" :closable="false"/>
+        </el-col>
+        <el-col :span="8">
+          <el-progress type="circle"
+                       width="90"
+                       :percentage="percent"
+                       :status="collected && 'success'">
+            {{ percentText }}
+          </el-progress>
         </el-col>
       </el-row>
       <el-alert v-else title="Not start flowering" type="error" :closable="false"/>
       <br/>
-      <div v-if="startFloweringDate" class="plant-timing-resume__flowering-details">
-        <p v-if="percent > 0">
-          <span class="underline"> Breeding estimate flowering days</span> {{floTime}},
-          {{leaveDay}} <span class="underline"> left</span>
-        </p>
-        <p><span class="underline">Start flowering</span> {{ readableStartFloweringDate }}</p>
-        <p><span class="underline">Cut date</span> {{cutDate}}</p>
-        <p><span class="underline">Cut date average</span> {{averageCutDate}}</p>
-      </div>
-      <el-alert v-else title="Not chose flowering starting day" type="error" :closable="false"/>
     </div>
   </div>
 
@@ -31,7 +36,7 @@
 <script lang="ts">
 import { computed, defineComponent } from 'vue';
 import Moment from 'moment';
-import { SIMPLE_DATE, READABLE_DATE } from '@/common/DateFormatConfig';
+import { READABLE_DATE, SIMPLE_DATE } from '@/common/DateFormatConfig';
 
 export default defineComponent({
   name: 'PlantTimingResume',
@@ -44,8 +49,14 @@ export default defineComponent({
       type: Number,
       required: true,
     },
+    collected: {
+      type: Date,
+      default: null,
+    },
   },
   setup(props) {
+    const readableCollected = computed(() => Moment(props.collected).format(READABLE_DATE));
+
     const cutDate = computed(
       () => Moment(props.startFloweringDate)
         .add(props.floTime, 'd')
@@ -64,22 +75,36 @@ export default defineComponent({
         .diff(Moment(), 'days'),
     );
 
-    const percent = computed(
-      () => Math.round(100 - (leaveDay.value / props.floTime) * 100),
-    );
+    const percent = computed(() => {
+      if (props.collected) {
+        return 100;
+      }
+      return Math.round(100 - (leaveDay.value / props.floTime) * 100);
+    });
+
+    const collectedSince = computed(() => '');
 
     const readableStartFloweringDate = computed(
       () => Moment(props.startFloweringDate)
-        .format(READABLE_DATE),
+        .format(SIMPLE_DATE),
     );
+
+    const percentText = computed(() => {
+      if (leaveDay.value <= 0 || props.collected) {
+        return 'Collected';
+      }
+      return `${props.floTime - leaveDay.value} / ${props.floTime} days`;
+    });
 
     return {
       averageCutDate,
       cutDate,
       percent,
       readableStartFloweringDate,
+      readableCollected,
+      collectedSince,
       leaveDay,
-      Moment,
+      percentText,
     };
   },
 });
@@ -89,14 +114,9 @@ export default defineComponent({
 .plant-timing-resume {
 
   &__flowering {
-    margin: 20px 0 20px 0;
-
-    &-details {
-      margin-top: 12px;
-    }
 
     p {
-      font-size: .9em;
+      font-size: .8em;
       line-height: 26px;
     }
   }

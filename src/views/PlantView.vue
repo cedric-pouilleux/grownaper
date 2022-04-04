@@ -14,21 +14,27 @@
     <template v-if="selectedPlant._id">
       <!-- Selected plant infos -->
       <el-container direction="vertical">
-        <plant-selection-header :name="selectedPlant.name" @remove="removePlant" />
-        <flowering-date-form :plant="selectedPlant"
+        <plant-selection-header :name="selectedPlant.name"
+                                :variety="selectedPlant.variety"
+                                :collected="selectedPlant.floweringStarted && selectedPlant.collected"
+                                @remove="removePlant"
+                                @cut-plant="cutPlant"/>
+        <flowering-date-form v-if="!selectedPlant.collected"
+                             :plant="selectedPlant"
                              :can-save="!canSave"
                              @change="editPlant"
                              @save="savePlant"/>
         <el-main>
           <el-row :gutter="40">
-            <el-col :span="24" :lg="12" :xl="12">
+            <el-col :span="24" :md="24" :lg="10" :xl="10">
               <plant-identification-resume :variety="selectedPlant.variety"
                                            :qrcode="selectedPlant.qrcode"
                                            :database-id="selectedPlant._id" />
             </el-col>
-            <el-col :span="24" :lg="12" :xl="12">
+            <el-col :span="24" :md="24" :lg="14" :xl="14">
               <plant-timing-resume :floTime="selectedPlant.variety?.floTime"
                                    :startFloweringDate="selectedPlant.startFloweringDate"
+                                   :collected="selectedPlant.collected"
                                    @change="selectPlant"/>
             </el-col>
           </el-row>
@@ -153,11 +159,25 @@ export default defineComponent({
       }
     }
 
+    async function cutPlant(): Promise<void> {
+      if (selectedPlant._id) {
+        const edited = await plantStore.cut(selectedPlant._id);
+        if (edited) {
+          Object.assign(selectedPlant, edited);
+          ElNotification.success({
+            message: `Plant ${edited.name} has been cut`,
+            offset: 100,
+          });
+        }
+      }
+    }
+
     return {
       isPlantFormOpened,
       all,
       selectedPlant,
       canSave,
+      cutPlant,
       addPlant,
       selectPlant,
       savePlant,

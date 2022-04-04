@@ -12,6 +12,7 @@
           <template #default="scope">
             <el-progress v-if="isFloweringStarted(scope.row)"
                          :text-inside="true"
+                         :status="scope.row.collected && 'success'"
                          :percentage="percent(scope.row)">
               <span></span>
             </el-progress>
@@ -75,6 +76,9 @@ export default defineComponent({
 
   setup(props, { emit }) {
     function percent(plant: Plant): number | null {
+      if (plant.collected) {
+        return 100;
+      }
       if (plant.variety) {
         const { floTime } = plant.variety;
         const { startFloweringDate } = plant;

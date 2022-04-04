@@ -37,6 +37,7 @@ interface Plant {
   qrcode: string,
   startFloweringDate?: Date,
   floweringStarted: boolean,
+  collected?: Date,
   variety?: Variety,
   notes: Note[],
   history: History[]

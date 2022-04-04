@@ -1,14 +1,38 @@
 <template>
   <el-header class="view-header">
-    <h2>{{ name || 'Selected plant' }}</h2>
+    <h2>
+      {{ name }}
+      <plant-variety-resume :variety="variety" />
+    </h2>
     <div class="view-header__tools">
-      <el-popconfirm title="Are you sure to delete this ?"
-                     @confirm="removePlant">
+
+      <el-popconfirm title="Are you sure to collect this plant ?" @confirm="cutPlant">
         <template #reference>
-          <el-button size="small"
-                     type="danger"
-                     style="width: 100%;">
-            Remove plant
+          <el-button v-if="displayCollectBtn"
+                     type="warning"
+                     effect="plain"
+                     size="small"
+                     round
+                     plain>
+            Collect
+          </el-button>
+        </template>
+      </el-popconfirm>
+
+      <el-button v-if="collected"
+                 disabled
+                 type="success"
+                 size="small"
+                 @click="cutPlant"
+                 round
+                 plain>
+        Collected
+      </el-button>
+
+      <el-popconfirm title="Are you sure to delete this ?" @confirm="removePlant">
+        <template #reference>
+          <el-button size="small" type="danger" round>
+            Remove
           </el-button>
         </template>
       </el-popconfirm>
@@ -17,19 +41,32 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent, PropType } from 'vue';
+import PlantVarietyResume from '@/components/screen/ui/PlantVarietyResume.vue';
+import { Variety } from '@/common/types';
 
 export default defineComponent({
   name: 'PlantSelectionHeader',
+  components: { PlantVarietyResume },
   props: {
     name: {
       type: String,
       require: true,
     },
+    variety: Object as PropType<Variety>,
+    collected: {
+      type: [Date, Boolean],
+      default: null,
+    },
   },
+  emits: ['remove', 'cut-plant'],
   setup(props, { emit }) {
     return {
       removePlant: () => emit('remove'),
+      cutPlant: () => emit('cut-plant'),
+      displayCollectBtn: computed(
+        () => props.collected !== false && props.collected === null,
+      ),
     };
   },
 });

@@ -39,6 +39,11 @@ const actionHistoryType = {
     size: 'large',
     hollow: false,
   },
+  COLLECT: {
+    color: 'warning',
+    size: 'large',
+    hollow: false,
+  },
 };
 
 export default defineComponent({

@@ -1,6 +1,5 @@
 <template>
   <div class="plant-identification-resume">
-    <plant-variety-resume :variety="variety" />
     <el-row :gutter="20" v-if="qrcode && databaseId">
       <el-col :span="8">
         <qrcode-vue :value="qrcode" style="width: 100%; height: auto;" :size="450"/>
@@ -23,14 +22,12 @@ import { computed, defineComponent, PropType } from 'vue';
 import QrcodeVue from 'qrcode.vue';
 import Moment from 'moment';
 import { READABLE_DATE } from '@/common/DateFormatConfig';
-import PlantVarietyResume from '@/components/screen/ui/PlantVarietyResume.vue';
 import { Variety } from '@/common/types';
 
 export default defineComponent({
   name: 'PlantIdentification',
   components: {
     QrcodeVue,
-    PlantVarietyResume,
   },
   props: {
     qrcode: String,
@@ -48,6 +45,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .plant-identification-resume {
+  padding: 10px;
   h2 {
     font-size: 1.2em;
     text-align: center;

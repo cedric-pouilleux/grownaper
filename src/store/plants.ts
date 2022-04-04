@@ -60,6 +60,15 @@ const plantStore = defineStore('plant', () => {
     return null;
   }
 
+  async function cut(id: string): Promise<Plant | null> {
+    const result = await axios.put(`${SERVER}/plant/cut/${id}`);
+    if (result.status === 201) {
+      await fetch();
+      return result.data;
+    }
+    return null;
+  }
+
   fetch().then(() => {
     console.info('All plants feetch');
   });
@@ -70,6 +79,7 @@ const plantStore = defineStore('plant', () => {
     add,
     edit,
     remove,
+    cut,
     all,
   };
 });
