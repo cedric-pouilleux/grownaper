@@ -42,20 +42,17 @@ export default defineComponent({
   name: 'PlantTimingResume',
   props: {
     startFloweringDate: {
-      type: [String, null],
-      required: true,
+      type: String,
     },
     floTime: {
       type: Number,
-      required: true,
     },
     collected: {
       type: [String, Boolean],
-      default: null,
     },
   },
   setup(props) {
-    const readableCollected = computed(() => {
+    const readableCollected = computed((): string | null => {
       if (typeof props.collected === 'string') {
         return Moment(props.collected).format(READABLE_DATE);
       }
@@ -63,7 +60,7 @@ export default defineComponent({
     });
 
     const cutDate = computed((): string | null => {
-      if (!props.startFloweringDate || !props.floTime) {
+      if (props.startFloweringDate == null || props.floTime == null) {
         return null;
       }
       return Moment(props.startFloweringDate)
@@ -72,7 +69,7 @@ export default defineComponent({
     });
 
     const averageCutDate = computed((): string | null => {
-      if (!props.startFloweringDate || !props.floTime) {
+      if (props.startFloweringDate == null || props.floTime == null) {
         return null;
       }
       return Moment(props.startFloweringDate)
@@ -81,7 +78,7 @@ export default defineComponent({
     });
 
     const leaveDay = computed((): number | null => {
-      if (!props.startFloweringDate || !props.floTime) {
+      if (props.startFloweringDate == null || props.floTime == null) {
         return null;
       }
       const days = Moment(props.startFloweringDate)
@@ -94,21 +91,21 @@ export default defineComponent({
       if (props.collected) {
         return 100;
       }
-      if (!leaveDay.value || !props.floTime) {
+      if (leaveDay.value == null || props.floTime == null) {
         return null;
       }
       return Math.round(100 - (leaveDay.value / props.floTime) * 100);
     });
 
     const readableStartFloweringDate = computed((): string | null => {
-      if (!props.startFloweringDate) {
+      if (props.startFloweringDate == null) {
         return null;
       }
       return Moment(props.startFloweringDate).format(SIMPLE_DATE);
     });
 
     const percentText = computed((): string | null => {
-      if (!props.startFloweringDate || !props.floTime) {
+      if (props.startFloweringDate == null || props.floTime == null || leaveDay.value == null) {
         return null;
       }
       if (leaveDay.value <= 0 || props.collected) {

@@ -32,8 +32,8 @@
                                            :database-id="selectedPlant._id" />
             </el-col>
             <el-col :span="24" :md="24" :lg="14" :xl="14">
-              <plant-timing-resume :floTime="selectedPlant.variety?.floTime"
-                                   :startFloweringDate="selectedPlant.startFloweringDate"
+              <plant-timing-resume :floTime="selectedPlant.variety?.floTime || null"
+                                   :startFloweringDate="selectedPlant.startFloweringDate || null"
                                    :collected="selectedPlant.collected"
                                    @change="selectPlant"/>
             </el-col>
