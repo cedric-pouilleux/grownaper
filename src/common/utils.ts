@@ -6,7 +6,14 @@ function isEqual(...objects: any) {
   );
 }
 
+function Percent(a: number, b: number): number {
+  if (a === 0) {
+    return 0;
+  }
+  return Math.round((a / b) * 100);
+}
+
 export {
-  // eslint-disable-next-line import/prefer-default-export
   isEqual,
+  Percent,
 };

@@ -1,17 +1,17 @@
 <template>
   <div class="plant-timing-resume">
-    <div v-if="startFloweringDate && floTime" class="plant-timing-resume__success">
+    <div v-if="plant.startFloweringDate && plant.variety.floTime" class="plant-timing-resume__success">
       <el-row v-if="percent > 0" :gutter="40">
         <el-col :span="6">
           <el-progress type="circle"
                        :width="90"
                        :percentage="percent"
-                       :status="collected ? 'success' : ''">
+                       :status="plant.collected ? 'success' : ''">
             {{ percentText }}
           </el-progress>
         </el-col>
         <el-col :span="16">
-          <div v-if="startFloweringDate && !collected" class="plant-timing-resume__flowering-details">
+          <div v-if="plant.startFloweringDate && !plant.collected" class="plant-timing-resume__flowering-details">
             <p v-if="leaveDay > 0">{{leaveDay}} <span class="underline">days left</span></p>
             <p v-if="leaveDay < 0">{{-leaveDay}} <span class="underline"> Ripe days</span></p>
             <p v-if="percent > 0"><span class="underline"> Breeding flowering days</span> {{floTime}}</p>
@@ -20,10 +20,13 @@
             <p><span class="underline">Cut date</span> {{cutDate}}</p>
             <p><span class="underline">Cut date average</span> {{averageCutDate}}</p>
           </div>
-          <template v-if="collected">
+          <template v-if="plant.collected">
             <p><span class="underline">Collected since</span> {{readableCollected}}</p>
           </template>
-          <el-alert v-if="!startFloweringDate" title="Not chose flowering starting day" type="error" :closable="false"/>
+          <el-alert v-if="!plant.startFloweringDate"
+                    title="Not chose flowering starting day"
+                    type="error"
+                    :closable="false"/>
         </el-col>
       </el-row>
       <el-alert v-else title="Not start flowering" type="error" :closable="false"/>
@@ -38,84 +41,78 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
+import { computed, defineComponent, PropType } from 'vue';
 import Moment from 'moment';
 import { READABLE_DATE, SIMPLE_DATE } from '@/common/DateFormatConfig';
+import { Plant } from '@/common/types';
+import { Percent } from '@/common/utils';
 
 export default defineComponent({
   name: 'PlantTimingResume',
   props: {
-    startFloweringDate: {
-      type: String,
-    },
-    floTime: {
-      type: Number,
-    },
-    collected: {
-      type: [String, Boolean],
-    },
+    plant: Object as PropType<Plant>,
   },
   setup(props) {
     const readableCollected = computed((): string | null => {
-      if (typeof props.collected === 'string') {
-        return Moment(props.collected).format(READABLE_DATE);
+      if (props.plant?.collected) {
+        return Moment(props.plant.collected).format(READABLE_DATE);
       }
       return null;
     });
 
     const cutDate = computed((): string | null => {
-      if (props.startFloweringDate == null || props.floTime == null) {
+      if (!props.plant?.startFloweringDate || !props.plant?.variety?.floTime) {
         return null;
       }
-      return Moment(props.startFloweringDate)
-        .add(props.floTime, 'd')
+      return Moment(props.plant.startFloweringDate)
+        .add(props.plant.variety.floTime, 'd')
         .format(SIMPLE_DATE);
     });
 
     const averageCutDate = computed((): string | null => {
-      if (props.startFloweringDate == null || props.floTime == null) {
+      if (!props.plant?.startFloweringDate || !props.plant?.variety?.floTime) {
         return null;
       }
-      return Moment(props.startFloweringDate)
-        .add(props.floTime + 10, 'd')
+      return Moment(props.plant.startFloweringDate)
+        .add(props.plant.variety.floTime + 10, 'd')
         .format(SIMPLE_DATE);
     });
 
     const leaveDay = computed((): number | null => {
-      if (props.startFloweringDate == null || props.floTime == null) {
+      if (!props.plant?.startFloweringDate || !props.plant?.variety?.floTime) {
         return null;
       }
-      const days = Moment(props.startFloweringDate)
-        .add(props.floTime, 'd')
+      const days = Moment(props.plant.startFloweringDate)
+        .add(props.plant.variety.floTime, 'd')
         .diff(Moment(), 'days');
       return days > 0 ? days : 0;
     });
 
     const percent = computed((): number | null => {
-      if (props.collected) {
+      if (props.plant?.collected) {
         return 100;
       }
-      if (leaveDay.value == null || props.floTime == null) {
+      if (leaveDay.value == null || !props.plant?.variety?.floTime) {
         return null;
       }
-      return Math.round(100 - (leaveDay.value / props.floTime) * 100);
+      return 100 - Percent(leaveDay.value, props.plant.variety.floTime);
     });
 
     const readableStartFloweringDate = computed((): string | null => {
-      if (props.startFloweringDate == null) {
+      if (!props.plant?.startFloweringDate) {
         return null;
       }
-      return Moment(props.startFloweringDate).format(SIMPLE_DATE);
+      return Moment(props.plant.startFloweringDate).format(SIMPLE_DATE);
     });
 
     const percentText = computed((): string | null => {
-      if (props.startFloweringDate == null || props.floTime == null || leaveDay.value == null) {
+      if (props.plant?.startFloweringDate == null || props.plant?.variety?.floTime == null || leaveDay.value == null) {
         return null;
       }
-      if (leaveDay.value <= 0 || props.collected) {
+      if (leaveDay.value <= 0 || props.plant?.collected) {
         return 'Collected';
       }
-      return `${props.floTime - leaveDay.value} / ${props.floTime} days`;
+      return `${props.plant.variety.floTime - leaveDay.value} / ${props.plant.variety.floTime} days`;
     });
 
     return {

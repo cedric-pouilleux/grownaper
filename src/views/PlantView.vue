@@ -35,10 +35,11 @@
           </el-row>
           <el-row :gutter="30">
             <el-col :span="12">
-              <plant-timing-resume :floTime="selectedPlant.variety?.floTime || null"
-                                   :startFloweringDate="selectedPlant.startFloweringDate || null"
-                                   :collected="selectedPlant.collected"
+              <plant-timing-resume v-if="!selectedPlant.collected"
+                                   :plant="selectedPlant"
                                    @change="selectPlant"/>
+              <plant-end-timing-resume v-else
+                                       :plant="selectedPlant"/>
             </el-col>
             <el-col :span="12">
               <plant-pictures />
@@ -70,6 +71,7 @@ import PlantListHeader from '@/components/screen/ui/PlantListHeader.vue';
 import PlantSelectionHeader from '@/components/screen/ui/PlantSelectionHeader.vue';
 import PlantHistoryHeader from '@/components/screen/ui/PlantHistoryHeader.vue';
 import PlantIdentificationResume from '@/components/screen/ui/PlantIdentificationResume.vue';
+import PlantEndTimingResume from '@/components/screen/ui/PlantEndTimingResume.vue';
 import FloweringDateForm from '@/components/screen/form/FloweringDateForm.vue';
 import { storeToRefs } from 'pinia';
 import Moment from 'moment';
@@ -92,6 +94,7 @@ export default defineComponent({
     PlantTimingResume,
     PlantIdentificationResume,
     FloweringDateForm,
+    PlantEndTimingResume,
   },
   setup() {
     const initial = {
