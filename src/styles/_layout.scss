@@ -23,8 +23,18 @@ body {
 
   }
 
+  &__small {
+    height: 34px;
+    padding: 0;
+    margin-bottom: 12px;
+  }
+
   h2 {
     font-size: 1.4em;
+  }
+
+  h3 {
+    font-size: 1em;
   }
 }
 

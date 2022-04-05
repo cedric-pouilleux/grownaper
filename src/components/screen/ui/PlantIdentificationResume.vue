@@ -1,14 +1,26 @@
 <template>
   <div class="plant-identification-resume">
-    <el-row :gutter="20" v-if="qrcode && databaseId">
+    <el-row :gutter="20" v-if="plant.qrcode && plant._id">
       <el-col :span="8">
-        <qrcode-vue :value="qrcode" style="width: 100%; height: auto;" :size="450"/>
+        <qrcode-vue :value="plant.qrcode" style="width: 100%; height: auto;" :size="450"/>
       </el-col>
       <el-col :span="16">
         <h3>Created at : {{ readableCreatedAt }}</h3>
-        <p style="font-size: 11px">{{ databaseId }}</p>
-        <hr/>
-        <p class="plant-identification-resume__qrcode-link">{{ qrcode }}</p>
+        <p style="font-size: 11px">{{ plant._id }}</p>
+        <br/>
+        <el-button size="small"
+                   @click="editPlant"
+                   plain round>
+          Edit
+        </el-button>
+        <el-popconfirm title="Are you sure to delete this ?"
+                       @confirm="removePlant">
+          <template #reference>
+            <el-button size="small" type="danger" plain round>
+              Delete
+            </el-button>
+          </template>
+        </el-popconfirm>
       </el-col>
     </el-row>
     <div v-else>
@@ -21,8 +33,8 @@
 import { computed, defineComponent, PropType } from 'vue';
 import QrcodeVue from 'qrcode.vue';
 import Moment from 'moment';
-import { READABLE_DATE } from '@/common/DateFormatConfig';
-import { Variety } from '@/common/types';
+import { SIMPLE_DATE } from '@/common/DateFormatConfig';
+import { Plant } from '@/common/types';
 
 export default defineComponent({
   name: 'PlantIdentification',
@@ -30,14 +42,21 @@ export default defineComponent({
     QrcodeVue,
   },
   props: {
-    qrcode: String,
-    databaseId: String,
-    createdAt: Date,
-    variety: Object as PropType<Variety>,
+    plant: Object as PropType<Plant>,
   },
-  setup(props) {
+  emits: ['remove-plant', 'edit-plant'],
+  setup(props, { emit }) {
+    const readableCreatedAt = computed((): string | null => {
+      if (props.plant?.createdAt) {
+        return Moment(props.plant.createdAt).format(SIMPLE_DATE);
+      }
+      return null;
+    });
+
     return {
-      readableCreatedAt: computed(() => Moment(props.createdAt).format(READABLE_DATE)),
+      readableCreatedAt,
+      removePlant: () => emit('remove-plant'),
+      editPlant: () => emit('edit-plant'),
     };
   },
 });

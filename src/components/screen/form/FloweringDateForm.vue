@@ -19,8 +19,9 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="Flowering date">
+      <el-form-item :label="!plant.collected && 'Flowering date'">
         <el-date-picker v-model="selectedDate"
+                        v-if="!plant.collected"
                         type="date"
                         format="YYYY/MM/DD"
                         value-format="YYYY-MM-DD"

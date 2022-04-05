@@ -2,6 +2,14 @@
   <div class="plant-timing-resume">
     <div v-if="startFloweringDate && floTime" class="plant-timing-resume__success">
       <el-row v-if="percent > 0" :gutter="40">
+        <el-col :span="6">
+          <el-progress type="circle"
+                       :width="90"
+                       :percentage="percent"
+                       :status="collected ? 'success' : ''">
+            {{ percentText }}
+          </el-progress>
+        </el-col>
         <el-col :span="16">
           <div v-if="startFloweringDate && !collected" class="plant-timing-resume__flowering-details">
             <p v-if="leaveDay > 0">{{leaveDay}} <span class="underline">days left</span></p>
@@ -16,14 +24,6 @@
             <p><span class="underline">Collected since</span> {{readableCollected}}</p>
           </template>
           <el-alert v-if="!startFloweringDate" title="Not chose flowering starting day" type="error" :closable="false"/>
-        </el-col>
-        <el-col :span="8">
-          <el-progress type="circle"
-                       :width="90"
-                       :percentage="percent"
-                       :status="collected ? 'success' : ''">
-            {{ percentText }}
-          </el-progress>
         </el-col>
       </el-row>
       <el-alert v-else title="Not start flowering" type="error" :closable="false"/>

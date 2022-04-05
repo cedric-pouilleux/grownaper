@@ -4,6 +4,7 @@
              @close="togglePlantForm"
              @add="addPlant"/>
   <el-container :offset="10" style="height: calc(100vh - 59px);">
+
     <!-- Plant list -->
     <el-container style="min-width: 600px; max-width: 600px;" direction="vertical">
       <plant-list-header :count="all.length" @new-plant="togglePlantForm" />
@@ -12,30 +13,34 @@
     <!-- Selected plant infos -->
     <template v-if="selectedPlant._id">
       <el-container direction="vertical">
-        <plant-selection-header :name="selectedPlant.name"
-                                :variety="selectedPlant.variety"
-                                :collected="selectedPlant.floweringStarted && selectedPlant.collected"
-                                :flowering="selectedPlant.floweringStarted"
-                                @remove="removePlant"
+        <plant-selection-header :plant="selectedPlant"
                                 @start-flowering="startFlowering"
                                 @cut-plant="cutPlant"/>
-        <flowering-date-form v-if="!selectedPlant.collected"
+        <flowering-date-form v-if="isEditPlantOpen"
                              :plant="selectedPlant"
                              :can-save="!canSave"
                              @change="editPlant"
                              @save="savePlant"/>
         <el-main>
-          <el-row :gutter="40">
-            <el-col :span="24" :md="24" :lg="10" :xl="10">
-              <plant-identification-resume :variety="selectedPlant.variety"
-                                           :qrcode="selectedPlant.qrcode"
-                                           :database-id="selectedPlant._id" />
+          <el-row :gutter="30">
+            <el-col :span="24" :md="24" :lg="12" :xl="12">
+              <plant-identification-resume :plant="selectedPlant"
+                                           @remove-plant="removePlant"
+                                           @edit-plant="openEditPlant"/>
             </el-col>
-            <el-col :span="24" :md="24" :lg="14" :xl="14">
+            <el-col :span="24" :md="24" :lg="12" :xl="12">
+              <plant-note :notes="selectedPlant.notes"/>
+            </el-col>
+          </el-row>
+          <el-row :gutter="30">
+            <el-col :span="12">
               <plant-timing-resume :floTime="selectedPlant.variety?.floTime || null"
                                    :startFloweringDate="selectedPlant.startFloweringDate || null"
                                    :collected="selectedPlant.collected"
                                    @change="selectPlant"/>
+            </el-col>
+            <el-col :span="12">
+              <plant-pictures />
             </el-col>
           </el-row>
         </el-main>
@@ -69,10 +74,14 @@ import { storeToRefs } from 'pinia';
 import Moment from 'moment';
 import { isEqual } from '@/common/utils';
 import { ElNotification } from 'element-plus';
+import PlantNote from '@/components/screen/ui/PlantNote.vue';
+import PlantPictures from '@/components/screen/ui/PlantPictures.vue';
 
 export default defineComponent({
   name: 'HomePage',
   components: {
+    PlantPictures,
+    PlantNote,
     PlantHistoryHeader,
     PlantSelectionHeader,
     PlantListHeader,
@@ -99,7 +108,9 @@ export default defineComponent({
     const selectedPlant = reactive<Partial<Plant>>({});
     const comparePlant = reactive<Partial<Plant>>({});
 
+    const isEditPlantOpen = ref<boolean>(false);
     const isPlantFormOpened = ref<boolean>(false);
+
     const { all } = storeToRefs(plantStore);
 
     async function removePlant(): Promise<void> {
@@ -119,10 +130,6 @@ export default defineComponent({
       isPlantFormOpened.value = false;
     }
 
-    function editPlant(plant: Plant): void {
-      Object.assign(selectedPlant, plant);
-    }
-
     const isSameDate: ComputedRef<boolean> = computed(
       (): boolean => Moment(comparePlant.startFloweringDate).isSame(selectedPlant.startFloweringDate, 'day'),
     );
@@ -138,6 +145,10 @@ export default defineComponent({
     const canSave: ComputedRef<boolean> = computed(
       (): boolean => isSameName.value && isSameVariety.value && isSameDate.value,
     );
+
+    function editPlant(plant: Plant): void {
+      Object.assign(selectedPlant, plant);
+    }
 
     async function savePlant(plant: Plant): Promise<void> {
       const params: Partial<Plant> = {
@@ -184,8 +195,13 @@ export default defineComponent({
       }
     }
 
+    function openEditPlant() {
+      isEditPlantOpen.value = !isEditPlantOpen.value;
+    }
+
     return {
       isPlantFormOpened,
+      isEditPlantOpen,
       all,
       selectedPlant,
       canSave,
@@ -195,6 +211,7 @@ export default defineComponent({
       savePlant,
       editPlant,
       togglePlantForm: (): void => { isPlantFormOpened.value = !isPlantFormOpened.value; },
+      openEditPlant,
       startFlowering,
       removePlant,
       Plus,
