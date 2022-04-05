@@ -25,6 +25,13 @@
                  round plain>
         Collected
       </el-button>
+      <el-button v-if="displayStartCurringBtn"
+                 type="warning"
+                 size="small"
+                 @click="startCurring"
+                 round plain>
+        Start curring
+      </el-button>
       <el-button v-if="displayStartFloweringBtn"
                  type="success"
                  size="small"
@@ -50,13 +57,17 @@ export default defineComponent({
       required: true,
     },
   },
-  emits: ['cut-plant', 'start-flowering'],
+  emits: ['cut-plant', 'start-flowering', 'start-curring'],
   setup(props, { emit }) {
     const displayCollectBtn = computed((): boolean => !props.plant.collected && props.plant.floweringStarted);
     const displayStartFloweringBtn = computed((): boolean => !props.plant.floweringStarted && !props.plant.collected);
+    const displayStartCurringBtn = computed((): boolean => !!props.plant.collected && !props.plant.startCurringDate);
+
     return {
       cutPlant: () => emit('cut-plant'),
       startFlowering: () => emit('start-flowering'),
+      startCurring: () => emit('start-curring'),
+      displayStartCurringBtn,
       displayCollectBtn,
       displayStartFloweringBtn,
     };

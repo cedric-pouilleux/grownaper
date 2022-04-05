@@ -35,12 +35,17 @@ const actionHistoryType = {
     hollow: true,
   },
   START_FLO: {
-    color: 'warning',
+    color: 'danger',
     size: 'large',
     hollow: false,
   },
   COLLECT: {
     color: 'warning',
+    size: 'large',
+    hollow: false,
+  },
+  START_CURRING: {
+    color: 'success',
     size: 'large',
     hollow: false,
   },

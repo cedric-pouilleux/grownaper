@@ -15,6 +15,7 @@
       <el-container direction="vertical">
         <plant-selection-header :plant="selectedPlant"
                                 @start-flowering="startFlowering"
+                                @start-curring="startCurring"
                                 @cut-plant="cutPlant"/>
         <flowering-date-form v-if="isEditPlantOpen"
                              :plant="selectedPlant"
@@ -195,6 +196,19 @@ export default defineComponent({
       }
     }
 
+    async function startCurring() {
+      if (selectedPlant._id) {
+        const edited = await plantStore.startCurring(selectedPlant._id);
+        if (edited) {
+          Object.assign(selectedPlant, edited);
+          ElNotification.success({
+            message: `Plant ${edited.name} start curring`,
+            offset: 100,
+          });
+        }
+      }
+    }
+
     function openEditPlant() {
       isEditPlantOpen.value = !isEditPlantOpen.value;
     }
@@ -213,6 +227,7 @@ export default defineComponent({
       togglePlantForm: (): void => { isPlantFormOpened.value = !isPlantFormOpened.value; },
       openEditPlant,
       startFlowering,
+      startCurring,
       removePlant,
       Plus,
     };
