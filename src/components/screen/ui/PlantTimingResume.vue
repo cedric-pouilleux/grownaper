@@ -1,6 +1,6 @@
 <template>
   <div class="plant-timing-resume">
-    <div class="plant-timing-resume__flowering">
+    <div v-if="startFloweringDate && floTime" class="plant-timing-resume__success">
       <el-row v-if="percent > 0" :gutter="40">
         <el-col :span="16">
           <div v-if="startFloweringDate && !collected" class="plant-timing-resume__flowering-details">
@@ -21,7 +21,7 @@
           <el-progress type="circle"
                        :width="90"
                        :percentage="percent"
-                       :status="collected && 'success'">
+                       :status="collected ? 'success' : ''">
             {{ percentText }}
           </el-progress>
         </el-col>
@@ -29,8 +29,12 @@
       <el-alert v-else title="Not start flowering" type="error" :closable="false"/>
       <br/>
     </div>
+    <div class="plant-timing-resume__props-error" v-else>
+      <el-alert title="Problems with data, this component need startFloweringDate and floTime for work"
+                type="error"
+                :closable="false"/>
+    </div>
   </div>
-
 </template>
 
 <script lang="ts">
@@ -130,7 +134,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 .plant-timing-resume {
 
-  &__flowering {
+  &__success {
 
     p {
       font-size: .8em;

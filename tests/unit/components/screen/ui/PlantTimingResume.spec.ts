@@ -1,26 +1,24 @@
-import { shallowMount } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
 import PlantTimingResume from '@/components/screen/ui/PlantTimingResume.vue';
-import { createTestingPinia } from '@pinia/testing';
 import ElementPlus from 'element-plus';
 
-const globalComponent = {
-  plugins: [
-    createTestingPinia(),
-    ElementPlus,
-  ],
-};
-
-function isNotValid(vm: any) {
-  expect(vm.leaveDay).toBe(null);
-  expect(vm.cutDate).toBe(null);
-  expect(vm.averageCutDate).toBe(null);
-  expect(vm.percent).toBe(null);
-  expect(vm.percentText).toBe(null);
+function isNotValid(wrapper: any) {
+  expect(wrapper.vm.leaveDay).toBeNull();
+  expect(wrapper.vm.cutDate).toBeNull();
+  expect(wrapper.vm.averageCutDate).toBeNull();
+  expect(wrapper.vm.percent).toBeNull();
+  expect(wrapper.vm.percentText).toBeNull();
+  expect(wrapper.find('.plant-timing-resume__props-error').exists()).toBeTruthy();
+  expect(wrapper.find('.plant-timing-resume__success').exists()).toBeFalsy();
+  expect(wrapper.find('el-percent').exists()).toBeFalsy();
+  expect(wrapper.html()).toContain('Problems with data, this component need startFloweringDate and floTime for work');
 }
 
-function getComponent(props: any) {
-  return shallowMount(PlantTimingResume, {
-    global: globalComponent,
+function getComponent(props: any): any {
+  return mount(PlantTimingResume, {
+    global: {
+      plugins: [ElementPlus],
+    },
     props,
   });
 }
@@ -32,8 +30,8 @@ describe('PlantTimingResume.vue', () => {
       floTime: 70,
       collected: false,
     });
-    isNotValid(wrapper.vm);
-    expect(wrapper.vm.readableStartFloweringDate).toBe(null);
+    isNotValid(wrapper);
+    expect(wrapper.vm.readableStartFloweringDate).toBeNull();
   });
 
   it('Computed when plant without flowering time and not collected', () => {
@@ -42,8 +40,9 @@ describe('PlantTimingResume.vue', () => {
       floTime: null,
       collected: false,
     });
-    isNotValid(wrapper.vm);
+    isNotValid(wrapper);
     expect(wrapper.vm.readableStartFloweringDate).toBe('04/04/2022');
+    expect(wrapper.find('.el-progress').exists()).toBeFalsy();
   });
 
   it('Computed behavior in current flowering state without collected', () => {
@@ -58,6 +57,8 @@ describe('PlantTimingResume.vue', () => {
     expect(wrapper.vm.averageCutDate).toBe('06/23/2022');
     expect(wrapper.vm.percent).toBe(1);
     expect(wrapper.vm.percentText).toBe('1 / 70 days');
+    // expect(wrapper.html()).toBe('');
+    expect(wrapper.find('.el-progress').exists()).toBeTruthy();
   });
 
   it('Computed when plant was depassed flowering date and was collected', () => {
@@ -73,5 +74,6 @@ describe('PlantTimingResume.vue', () => {
     expect(wrapper.vm.percent).toBe(100);
     expect(wrapper.vm.percentText).toBe('Collected');
     expect(wrapper.vm.readableCollected).toBe('Friday, March 4th 2022');
+    expect(wrapper.find('.el-progress').exists()).toBeTruthy();
   });
 });
