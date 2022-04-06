@@ -30,9 +30,12 @@
                                            @edit-plant="openEditPlant"/>
             </el-col>
             <el-col :span="24" :md="24" :lg="12" :xl="12">
-              <plant-note :notes="selectedPlant.notes"/>
+              <plant-note :notes="selectedPlant.notes"
+                          @add-note="addNote"/>
             </el-col>
           </el-row>
+
+          <br/>
           <el-row :gutter="30">
             <el-col :span="12">
               <plant-timing-resume v-if="!selectedPlant.collected"
@@ -186,7 +189,7 @@ export default defineComponent({
       }
     }
 
-    async function startFlowering() {
+    async function startFlowering(): Promise<void> {
       if (selectedPlant._id) {
         const edited = await plantStore.startFlowering(selectedPlant._id);
         if (edited) {
@@ -199,7 +202,7 @@ export default defineComponent({
       }
     }
 
-    async function startCurring() {
+    async function startCurring(): Promise<void> {
       if (selectedPlant._id) {
         const edited = await plantStore.startCurring(selectedPlant._id);
         if (edited) {
@@ -212,8 +215,21 @@ export default defineComponent({
       }
     }
 
-    function openEditPlant() {
+    function openEditPlant(): void {
       isEditPlantOpen.value = !isEditPlantOpen.value;
+    }
+
+    async function addNote(content: string): Promise<void> {
+      if (selectedPlant._id) {
+        const edited = await plantStore.addNote(selectedPlant._id, content);
+        if (edited) {
+          Object.assign(selectedPlant, edited);
+          ElNotification.success({
+            message: `Add note to ${edited.name}`,
+            offset: 100,
+          });
+        }
+      }
     }
 
     return {
@@ -232,6 +248,7 @@ export default defineComponent({
       startFlowering,
       startCurring,
       removePlant,
+      addNote,
       Plus,
     };
   },

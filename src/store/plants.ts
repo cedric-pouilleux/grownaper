@@ -27,16 +27,15 @@ const plantStore = defineStore('plant', () => {
     return null;
   }
 
-  async function addNote(plantId: string, noteContent: string): Promise<void> {
-    try {
-      await axios.post(`${SERVER}/plant/notes/add/${plantId}`, {
-        date: new Date(),
-        content: noteContent,
-      });
+  async function addNote(plantId: string, content: string): Promise<Plant | null> {
+    const result = await axios.post(`${SERVER}/plant/notes/add/${plantId}`, {
+      content,
+    });
+    if (result.status === 201) {
       await fetch();
-    } catch (err) {
-      console.error(err);
+      return result.data;
     }
+    return null;
   }
 
   async function remove(id: string): Promise<void> {

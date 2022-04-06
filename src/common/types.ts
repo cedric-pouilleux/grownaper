@@ -18,7 +18,7 @@ interface Variety {
 }
 
 interface Note {
-  date: Date,
+  createdAt: Date,
   content: string
 }
 
