@@ -65,6 +65,8 @@ interface Feeder {
   products?: FeederProduct[]
 }
 
+type historyDisplayMode = 'PER_DAYS' | 'ALL';
+
 export {
   Plant,
   Variety,
@@ -74,4 +76,5 @@ export {
   FeederProduct,
   PlantHistory,
   HistoryType,
+  historyDisplayMode,
 };

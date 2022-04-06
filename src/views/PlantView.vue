@@ -52,8 +52,8 @@
       </el-container>
       <!-- Selected plant history -->
       <el-container style="max-width: 280px; min-width: 280px" direction="vertical">
-        <plant-history-header />
-        <plant-history-resume :history="selectedPlant.history" />
+        <plant-history-header @change-history-mode="changeHistoryMode" />
+        <plant-history-resume :history="selectedPlant.history" :mode="historyMode" />
       </el-container>
     </template>
   </el-container>
@@ -114,6 +114,8 @@ export default defineComponent({
     const plantStore = PlantStore();
     const selectedPlant = reactive<Partial<Plant>>({});
     const comparePlant = reactive<Partial<Plant>>({});
+
+    const historyMode = ref<string>('PER_DAYS');
 
     const isEditPlantOpen = ref<boolean>(false);
     const isPlantFormOpened = ref<boolean>(false);
@@ -233,6 +235,7 @@ export default defineComponent({
     }
 
     return {
+      historyMode,
       isPlantFormOpened,
       isEditPlantOpen,
       all,
@@ -244,6 +247,7 @@ export default defineComponent({
       savePlant,
       editPlant,
       togglePlantForm: (): void => { isPlantFormOpened.value = !isPlantFormOpened.value; },
+      changeHistoryMode: (mode: string): void => { console.log(mode); historyMode.value = mode; },
       openEditPlant,
       startFlowering,
       startCurring,

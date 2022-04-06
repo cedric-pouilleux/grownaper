@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils';
+import { mount, shallowMount } from '@vue/test-utils';
 import PlantHistoryResume from '@/components/screen/ui/PlantHistoryResume.vue';
 import ElementPlus from 'element-plus';
 import {
@@ -9,25 +9,21 @@ import {
   historyTwo,
 } from '../../../../mocks/HistoryPlant';
 
-function getComponent(): any {
-  return mount(PlantHistoryResume, {
-    global: {
-      plugins: [ElementPlus],
-    },
-    props: {
-      history: [
-        historyOne,
-        historyTwo,
-        historyTree,
-        historyFour,
-      ],
-    },
-  });
-}
-
 describe('PlantHistoryResume', () => {
   it('Sorted computed sorted equal to expected result', () => {
-    const wrapper = getComponent();
-    expect(wrapper.vm.sorted).toEqual(expectResult);
+    const wrapper = shallowMount(PlantHistoryResume, {
+      global: {
+        plugins: [ElementPlus],
+      },
+      props: {
+        history: [
+          historyOne,
+          historyTwo,
+          historyTree,
+          historyFour,
+        ],
+      },
+    });
+    expect(wrapper.vm.historiesByDate).toEqual(expectResult);
   });
 });
