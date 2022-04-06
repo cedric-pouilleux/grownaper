@@ -48,20 +48,25 @@ export default defineComponent({
   },
   setup(props) {
     const getFloweringDuration = computed((): number | null => {
-      if (props.plant.collected || props.plant.startFloweringDate) {
+      if (props.plant?.collected || props.plant?.startFloweringDate) {
         return Moment(props.plant.collected).diff(props.plant.startFloweringDate, 'days');
       }
       return null;
     });
 
     const getDryingDuration = computed((): number |null => {
-      if (!props.plant.collected || !props.plant?.startCurringDate) {
-        return null;
+      if (props.plant?.collected || props.plant?.startCurringDate) {
+        return Moment(props.plant.startCurringDate).diff(props.plant.collected, 'days');
       }
-      return Moment(props.plant.startCurringDate).diff(props.plant.collected, 'days');
+      return null;
     });
 
-    const getDryingFromNow = computed((): number | null => Moment().diff(props.plant.startCurringDate, 'days'));
+    const getDryingFromNow = computed((): number | null => {
+      if (props.plant?.startCurringDate) {
+        return Moment().diff(props.plant.startCurringDate, 'days');
+      }
+      return null;
+    });
 
     return {
       getFloweringDuration,

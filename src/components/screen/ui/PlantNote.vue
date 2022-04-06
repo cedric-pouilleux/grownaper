@@ -12,16 +12,24 @@
       </div>
     </el-header>
 
-    <el-form v-if="isNoteFormOpened">
-      <el-form-item>
-        <el-input required placeholder="Your content here" v-model="content" type="textarea" />
+    <el-form v-if="isNoteFormOpened"
+             ref="ruleFormRef"
+             :rules="rules"
+             :model="formData"
+             size="small">
+      <el-form-item prop="content">
+        <el-input placeholder="Your content here"
+                  v-model=formData.content
+                  type="textarea"/>
       </el-form-item>
       <el-form-item>
-        <el-button size="small" @click="addNote" type="primary" plain round>Submit</el-button>
+        <el-button size="small"
+                   @click="addNote(ruleFormRef)"
+                   type="primary" plain round>Submit</el-button>
       </el-form-item>
     </el-form>
 
-    <div class="" v-if="notes.length">
+    <div v-if="notes.length">
       <el-table size="small" :data="notes" style="width: 100%">
         <el-table-column prop="createdAt" label="Date" :width="125">
           <template #default="scope">
@@ -37,10 +45,13 @@
 
 <script lang="ts">
 
-import { defineComponent, PropType, ref } from 'vue';
+import {
+  defineComponent, PropType, reactive, ref,
+} from 'vue';
 import { Note } from '@/common/types';
 import Moment from 'moment';
-import { READABLE_DATETIME, SIMPLE_DATETIME } from '@/common/DateFormatConfig';
+import { SIMPLE_DATETIME } from '@/common/DateFormatConfig';
+import type { FormInstance } from 'element-plus';
 
 export default defineComponent({
   name: 'PlantNote',
@@ -49,6 +60,7 @@ export default defineComponent({
   },
   emits: ['add-note'],
   setup(props, { emit }) {
+    const ruleFormRef = ref<FormInstance>();
     const content = ref<string | null>(null);
     const isNoteFormOpened = ref<boolean>(false);
 
@@ -56,12 +68,45 @@ export default defineComponent({
       isNoteFormOpened.value = !isNoteFormOpened.value;
     }
 
+    const formData = reactive({
+      content: null,
+    });
+
+    const rules = reactive({
+      content: [
+        {
+          required: true,
+          message: 'Please input content field',
+          trigger: 'blur',
+        },
+        {
+          min: 4,
+          max: 255,
+          message: 'Length should be 4 to 255',
+          trigger: 'blur',
+        },
+      ],
+    });
+
+    async function addNote(form: FormInstance | undefined): Promise<void> {
+      if (form) {
+        await form.validate((valid) => {
+          if (valid) {
+            emit('add-note', formData.content);
+          }
+        });
+      }
+    }
+
     return {
       isNoteFormOpened,
       toggleNoteForm,
       content,
-      readableCreatedAt: (date: Date): Date => Moment(date).format(SIMPLE_DATETIME),
-      addNote: () => { emit('add-note', content.value); },
+      readableCreatedAt: (date: Date): string => Moment(date).format(SIMPLE_DATETIME),
+      addNote,
+      rules,
+      ruleFormRef,
+      formData,
     };
   },
 });
