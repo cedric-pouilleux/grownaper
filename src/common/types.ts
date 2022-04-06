@@ -24,8 +24,8 @@ interface Note {
 
 type HistoryType = 'ADD' | 'EDIT' | 'START_FLO';
 
-type History = {
-  date: Date,
+type PlantHistory = {
+  date: Date | string,
   action: HistoryType,
   message: string
 }
@@ -41,7 +41,7 @@ interface Plant {
   collected?: Date,
   variety?: Variety,
   notes: Note[],
-  history: History[]
+  history: PlantHistory[]
 }
 
 interface FeederProduct {
@@ -72,6 +72,6 @@ export {
   Feeder,
   Note,
   FeederProduct,
-  History,
+  PlantHistory,
   HistoryType,
 };

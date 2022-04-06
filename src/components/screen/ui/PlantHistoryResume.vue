@@ -9,6 +9,7 @@
           :size="getSize(activity.action)"
           :type="getType(activity.action)"
           :hollow="getHollow(activity.action)"
+          placement="top"
           :timestamp="readableDate(activity.date)">
           {{ activity.message }}
         </el-timeline-item>
@@ -18,8 +19,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
-import { History, HistoryType } from '@/common/types';
+import { defineComponent, PropType, reactive } from 'vue';
+import { PlantHistory, HistoryType } from '@/common/types';
 import Moment from 'moment';
 import { READABLE_DATETIME } from '@/common/DateFormatConfig';
 
@@ -51,19 +52,49 @@ const actionHistoryType = {
   },
 };
 
+interface SortedHistory {
+  date: Date | string,
+  actions: PlantHistory[]
+}
+
 export default defineComponent({
   name: 'PlantHistoryResume',
   props: {
     history: {
-      type: Array as PropType<History[]>,
+      type: Array as PropType<PlantHistory[]>,
     },
   },
-  setup() {
+  setup(props) {
+    console.log(props.history);
+
+    const sorted = reactive<SortedHistory[]>([]);
+
+    props.history?.forEach((historyItem, index) => {
+      const sortIndex = sorted.findIndex(
+        (sortedItem: SortedHistory): boolean => Moment(historyItem.date).isSame(sortedItem.date, 'days'),
+      );
+      if (sortIndex !== -1) {
+        const res: SortedHistory = sorted[sortIndex];
+        if (!res.actions) {
+          res.actions = [];
+        }
+        res.actions.push(historyItem);
+      } else {
+        const { date } = historyItem;
+        const obj: SortedHistory = {
+          date,
+          actions: [historyItem],
+        };
+        sorted.push(obj);
+      }
+    });
+
     return {
       readableDate: (date: Date): string => Moment(date).format(READABLE_DATETIME),
       getType: (hType: HistoryType): string => actionHistoryType[hType].color,
       getSize: (hType: HistoryType): string => actionHistoryType[hType].size,
       getHollow: (hType: HistoryType): boolean => actionHistoryType[hType].hollow,
+      sorted,
     };
   },
 });
