@@ -22,7 +22,7 @@ interface Note {
   content: string
 }
 
-type HistoryType = 'ADD' | 'EDIT' | 'START_FLO';
+type HistoryType = 'SIMPLE' | 'IMPORTANT' | 'SERVICE';
 
 type PlantHistory = {
   date: Date | string,

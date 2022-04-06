@@ -10,7 +10,8 @@
           :timestamp="readableDate(activity.date)">
           <ul class="action-list">
             <li v-for="(action, index) in activity.actions" :key="index">
-              <span class="date">{{ readableTime(action.date) }}</span> {{action.message}}
+              <span class="date">{{ readableTime(action.date) }}</span>
+              <span :class="action.action">{{action.message}}</span>
             </li>
           </ul>
         </el-timeline-item>
@@ -42,28 +43,18 @@ import {
 } from '@/common/DateFormatConfig';
 
 const actionHistoryType = {
-  ADD: {
+  SIMPLE: {
     color: '',
     size: 'normal',
     hollow: false,
   },
-  EDIT: {
-    color: '',
-    size: 'normal',
-    hollow: true,
-  },
-  START_FLO: {
+  IMPORTANT: {
     color: 'danger',
     size: 'large',
     hollow: false,
   },
-  COLLECT: {
+  SERVICE: {
     color: 'warning',
-    size: 'large',
-    hollow: false,
-  },
-  START_CURRING: {
-    color: 'success',
     size: 'large',
     hollow: false,
   },
@@ -133,6 +124,21 @@ ul.action-list {
       font-weight: 700;
       margin-right: 10px;
     }
+
+    .START_FLO {
+      color: orange;
+      font-weight: 700;
+    }
+
+    .START_CURRING {
+      color: green;
+      font-weight: 700;
+    }
+
+    .ADD, .EDIT {
+      color: #333;
+    }
+
   }
 }
 </style>

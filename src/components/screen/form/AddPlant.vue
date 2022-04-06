@@ -60,6 +60,7 @@ export default defineComponent({
       return {
         name: NameGenerator.generateName(),
         startFloweringDate: new Date(),
+        startCurringDate: undefined,
         variety: undefined,
       };
     }
@@ -79,7 +80,7 @@ export default defineComponent({
           offset: 100,
         });
       }
-      Object.assign(plant, generateInitial());
+      Object.assign(plant, added);
     }
 
     return {

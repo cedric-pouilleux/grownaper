@@ -2,25 +2,25 @@ import { PlantHistory } from '@/common/types';
 
 const historyOne: PlantHistory = {
   date: '2022-04-06T00:14:42.872+00:00',
-  action: 'ADD',
+  action: 'SIMPLE',
   message: 'Message content',
 };
 
 const historyTwo: PlantHistory = {
   date: '2022-04-06T00:14:42.872+00:00',
-  action: 'ADD',
+  action: 'SIMPLE',
   message: 'Message content',
 };
 
 const historyTree: PlantHistory = {
   date: '2022-04-07T00:14:42.872+00:00',
-  action: 'ADD',
+  action: 'SIMPLE',
   message: 'Message content',
 };
 
 const historyFour: PlantHistory = {
   date: '2022-04-08T00:14:42.872+00:00',
-  action: 'ADD',
+  action: 'SIMPLE',
   message: 'Message content',
 };
 
