@@ -70,6 +70,7 @@ export default defineComponent({
 
     function change() {
       emit('change', {
+        ...props.plant,
         startFloweringDate: selectedDate.value,
         variety: selectedVariety.value,
         name: selectedName.value,
@@ -83,6 +84,7 @@ export default defineComponent({
 
     async function handleSave() {
       emit('save', {
+        ...props.plant,
         startFloweringDate: selectedDate.value,
         variety: selectedVariety.value,
         name: selectedName.value,

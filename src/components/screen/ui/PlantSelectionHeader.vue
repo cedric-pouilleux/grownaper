@@ -41,6 +41,8 @@ import {
 } from 'vue';
 import PlantVarietyResume from '@/components/screen/ui/PlantVarietyResume.vue';
 import { Plant } from '@/common/types';
+import PlantStore from '@/store/plants';
+import { ElNotification } from 'element-plus';
 
 export default defineComponent({
   name: 'PlantSelectionHeader',
@@ -51,11 +53,13 @@ export default defineComponent({
       required: true,
     },
   },
-  emits: ['cut-plant', 'start-flowering', 'start-curring'],
+  emits: ['edit'],
   setup(props, { emit }) {
     const displayCollectBtn = computed((): boolean => !props.plant.collected && props.plant.floweringStarted);
     const displayStartFloweringBtn = computed((): boolean => !props.plant.floweringStarted && !props.plant.collected);
     const displayStartCurringBtn = computed((): boolean => !!props.plant.collected && !props.plant.startCurringDate);
+
+    const plantStore = PlantStore();
 
     console.log('collected', props.plant.collected);
     console.log('startCurringDate', props.plant.startCurringDate);
@@ -66,10 +70,43 @@ export default defineComponent({
 
     const weight = ref<number>(0);
 
+    async function startCurring(): Promise<void> {
+      const edited = await plantStore.startCurring(props.plant._id);
+      if (edited) {
+        ElNotification.success({
+          message: `Plant ${edited.name} start curring`,
+          offset: 100,
+        });
+        emit('edit', edited);
+      }
+    }
+
+    async function cutPlant(): Promise<void> {
+      const edited = await plantStore.cut(props.plant._id);
+      if (edited) {
+        ElNotification.success({
+          message: `Plant ${edited.name} has been cut`,
+          offset: 100,
+        });
+        emit('edit', edited);
+      }
+    }
+
+    async function startFlowering(): Promise<void> {
+      const edited = await plantStore.startFlowering(props.plant._id);
+      if (edited) {
+        ElNotification.success({
+          message: `Plant ${edited.name} start flowering`,
+          offset: 100,
+        });
+        emit('edit', edited);
+      }
+    }
+
     return {
-      cutPlant: () => emit('cut-plant'),
-      startFlowering: () => emit('start-flowering'),
-      startCurring: () => emit('start-curring'),
+      cutPlant,
+      startFlowering,
+      startCurring,
       displayStartCurringBtn,
       displayCollectBtn,
       displayStartFloweringBtn,

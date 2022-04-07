@@ -35,6 +35,7 @@ import QrcodeVue from 'qrcode.vue';
 import Moment from 'moment';
 import { SIMPLE_DATE } from '@/common/DateFormatConfig';
 import { Plant } from '@/common/types';
+import PlantStore from '@/store/plants';
 
 export default defineComponent({
   name: 'PlantIdentification',
@@ -42,10 +43,15 @@ export default defineComponent({
     QrcodeVue,
   },
   props: {
-    plant: Object as PropType<Plant>,
+    plant: {
+      type: Object as PropType<Plant>,
+      required: true,
+    },
   },
   emits: ['remove-plant', 'edit-plant'],
   setup(props, { emit }) {
+    const plantStore = PlantStore();
+
     const readableCreatedAt = computed((): string | null => {
       if (props.plant?.createdAt) {
         return Moment(props.plant.createdAt).format(SIMPLE_DATE);
@@ -53,9 +59,14 @@ export default defineComponent({
       return null;
     });
 
+    async function removePlant(): Promise<void> {
+      await plantStore.remove(props.plant._id);
+      emit('remove-plant');
+    }
+
     return {
       readableCreatedAt,
-      removePlant: () => emit('remove-plant'),
+      removePlant,
       editPlant: () => emit('edit-plant'),
     };
   },

@@ -12,12 +12,9 @@
       <plant-list :plants="all" @select="selectPlant"/>
     </el-container>
     <!-- Selected plant infos -->
-    <template v-if="selectedPlant._id">
+    <template v-if="selectedPlant">
       <el-container direction="vertical">
-        <plant-selection-header :plant="selectedPlant"
-                                @start-flowering="startFlowering"
-                                @start-curring="startCurring"
-                                @cut-plant="cutPlant"/>
+        <plant-selection-header :plant="selectedPlant" @edit="selectPlant"/>
         <flowering-date-form v-if="isEditPlantOpen"
                              :plant="selectedPlant"
                              :can-save="!canSave"
@@ -27,11 +24,11 @@
           <el-row :gutter="30">
             <el-col :span="24" :md="24" :lg="12" :xl="12">
               <plant-identification-resume :plant="selectedPlant"
-                                           @remove-plant="removePlant"
+                                           @remove-plant="clearSelectedPlant"
                                            @edit-plant="openEditPlant"/>
             </el-col>
             <el-col :span="24" :md="24" :lg="12" :xl="12">
-              <plant-note :notes="selectedPlant.notes" @add-note="addNote"/>
+              <plant-note :plant="selectedPlant" @add-note="selectPlant"/>
             </el-col>
           </el-row>
 
@@ -58,7 +55,7 @@
 
 <script lang="ts">
 import {
-  defineComponent, reactive, computed, ref, ComputedRef,
+  defineComponent, computed, ref, ComputedRef,
 } from 'vue';
 import PlantTimingResume from '@/components/screen/ui/PlantTimingResume.vue';
 import PlantList from '@/components/PlantList.vue';
@@ -97,21 +94,9 @@ export default defineComponent({
     PlantEndTimingResume,
   },
   setup() {
-    const initial = {
-      _id: null,
-      name: null,
-      variety: null,
-      createdAt: null,
-      qrcode: null,
-      startFloweringDate: null,
-      startCurringDate: null,
-      notes: null,
-      history: null,
-    };
-
     const plantStore = PlantStore();
-    const selectedPlant = ref<Partial<Plant>>({});
-    const comparePlant = ref<Partial<Plant>>({});
+    const selectedPlant = ref<Partial<Plant> | null>(null);
+    const comparePlant = ref<Partial<Plant> | null>(null);
 
     const historyMode = ref<string>('PER_DAYS');
 
@@ -119,13 +104,6 @@ export default defineComponent({
     const isPlantFormOpened = ref<boolean>(false);
 
     const { all } = storeToRefs(plantStore);
-
-    async function removePlant(): Promise<void> {
-      if (selectedPlant.value._id) {
-        await plantStore.remove(selectedPlant.value._id);
-        Object.assign(selectedPlant, initial);
-      }
-    }
 
     function selectPlant(plant: Plant): void {
       selectedPlant.value = plant;
@@ -138,16 +116,16 @@ export default defineComponent({
     }
 
     const isSameDate: ComputedRef<boolean> = computed(
-      (): boolean => Moment(comparePlant.value.startFloweringDate)
-        .isSame(selectedPlant.value.startFloweringDate, 'day'),
+      (): boolean => Moment(comparePlant.value?.startFloweringDate)
+        .isSame(selectedPlant.value?.startFloweringDate, 'day'),
     );
 
     const isSameVariety: ComputedRef<boolean> = computed(
-      (): boolean => isEqual(comparePlant.value.variety, selectedPlant.value.variety),
+      (): boolean => isEqual(comparePlant.value?.variety, selectedPlant.value?.variety),
     );
 
     const isSameName: ComputedRef<boolean> = computed(
-      (): boolean => comparePlant.value.name === selectedPlant.value.name,
+      (): boolean => comparePlant.value?.name === selectedPlant.value?.name,
     );
 
     const canSave: ComputedRef<boolean> = computed(
@@ -155,10 +133,7 @@ export default defineComponent({
     );
 
     function editPlant(plant: Plant): void {
-      selectedPlant.value = {
-        ...selectedPlant.value,
-        ...plant,
-      };
+      selectedPlant.value = plant;
     }
 
     async function savePlant(plant: Plant): Promise<void> {
@@ -167,54 +142,15 @@ export default defineComponent({
         ...!isSameName.value ? { name: plant.name } : {},
         ...!isSameDate.value ? { startFloweringDate: plant.startFloweringDate } : {},
       };
-      if (selectedPlant.value._id) {
-        const edited = await plantStore.edit(selectedPlant.value._id, params);
+      if (plant._id) {
+        const edited = await plantStore.edit(plant._id, params);
         if (edited) {
-          selectedPlant.value = edited;
-          comparePlant.value = edited;
           ElNotification.success({
             message: `Plant ${edited.name} has been edited`,
             offset: 100,
           });
-        }
-      }
-    }
-
-    async function cutPlant(): Promise<void> {
-      if (selectedPlant.value._id) {
-        const edited = await plantStore.cut(selectedPlant.value._id);
-        if (edited) {
           selectedPlant.value = edited;
-          ElNotification.success({
-            message: `Plant ${edited.name} has been cut`,
-            offset: 100,
-          });
-        }
-      }
-    }
-
-    async function startFlowering(): Promise<void> {
-      if (selectedPlant.value._id) {
-        const edited = await plantStore.startFlowering(selectedPlant.value._id);
-        if (edited) {
-          selectedPlant.value = edited;
-          ElNotification.success({
-            message: `Plant ${edited.name} start flowering`,
-            offset: 100,
-          });
-        }
-      }
-    }
-
-    async function startCurring(): Promise<void> {
-      if (selectedPlant.value._id) {
-        const edited = await plantStore.startCurring(selectedPlant.value._id);
-        if (edited) {
-          Object.assign(selectedPlant, edited);
-          ElNotification.success({
-            message: `Plant ${edited.name} start curring`,
-            offset: 100,
-          });
+          comparePlant.value = edited;
         }
       }
     }
@@ -223,27 +159,14 @@ export default defineComponent({
       isEditPlantOpen.value = !isEditPlantOpen.value;
     }
 
-    async function addNote(content: string): Promise<void> {
-      if (selectedPlant.value._id) {
-        const edited = await plantStore.addNote(selectedPlant.value._id, content);
-        if (edited) {
-          Object.assign(selectedPlant, edited);
-          ElNotification.success({
-            message: `Add note to ${edited.name}`,
-            offset: 100,
-          });
-        }
-      }
-    }
-
     return {
       historyMode,
+      clearSelectedPlant: () => { selectedPlant.value = null; },
       isPlantFormOpened,
       isEditPlantOpen,
       all,
       selectedPlant,
       canSave,
-      cutPlant,
       addPlant,
       selectPlant,
       savePlant,
@@ -251,10 +174,6 @@ export default defineComponent({
       togglePlantForm: (): void => { isPlantFormOpened.value = !isPlantFormOpened.value; },
       changeHistoryMode: (mode: string): void => { historyMode.value = mode; },
       openEditPlant,
-      startFlowering,
-      startCurring,
-      removePlant,
-      addNote,
       Plus,
     };
   },

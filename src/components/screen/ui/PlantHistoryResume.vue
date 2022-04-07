@@ -33,14 +33,10 @@
 </template>
 
 <script lang="ts">
-import {
-  computed, defineComponent, PropType, reactive,
-} from 'vue';
+import { computed, defineComponent, PropType } from 'vue';
 import { PlantHistory, HistoryType, historyDisplayMode } from '@/common/types';
 import Moment from 'moment';
-import {
-  ONLY_TIME, READABLE_DATE, READABLE_DATETIME, SIMPLE_DATE,
-} from '@/common/DateFormatConfig';
+import { ONLY_TIME, READABLE_DATE } from '@/common/DateFormatConfig';
 
 const actionHistoryType = {
   SIMPLE: {
