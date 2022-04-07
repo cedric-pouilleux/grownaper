@@ -77,8 +77,8 @@ const plantStore = defineStore('plant', () => {
     return null;
   }
 
-  async function startCurring(id: string): Promise<Plant | null> {
-    const result = await axios.put(`${SERVER}/plant/start-curring/${id}`);
+  async function startCurring(id: string, weight : number): Promise<Plant | null> {
+    const result = await axios.put(`${SERVER}/plant/start-curring/${id}`, { weight });
     if (result.status === 201) {
       await fetch();
       return result.data;

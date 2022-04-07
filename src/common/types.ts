@@ -40,6 +40,7 @@ interface Plant {
   floweringStarted: boolean,
   collected?: Date,
   variety?: Variety,
+  weight?: number,
   notes: Note[],
   history: PlantHistory[]
 }

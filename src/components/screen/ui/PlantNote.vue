@@ -18,7 +18,7 @@
              :model="formData"
              size="small">
       <el-form-item prop="content">
-        <el-input placeholder="Your content here"
+        <el-input placeholder="Your note description here"
                   v-model="formData.content"
                   type="textarea"/>
       </el-form-item>
@@ -36,7 +36,7 @@
             {{readableCreatedAt(scope.row.createdAt)}}
           </template>
         </el-table-column>
-        <el-table-column prop="content" label="Content" />
+        <el-table-column prop="content" />
       </el-table>
     </div>
     <el-alert v-else title="This plant don't have note" :closable="false"/>

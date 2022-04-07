@@ -1,15 +1,13 @@
 <template>
   <div class="plant-identification-resume">
-    <el-row :gutter="20" v-if="plant.qrcode && plant._id">
-      <el-col :span="8">
-        <qrcode-vue :value="plant.qrcode" style="width: 100%; height: auto;" :size="450"/>
-      </el-col>
-      <el-col :span="16">
-        <h3>Created at : {{ readableCreatedAt }}</h3>
-        <p style="font-size: 11px">{{ plant._id }}</p>
-        <br/>
+    <header class="plant-identification-resume__header">
+      <qrcode-vue :value="plant.qrcode" style="width: 60px; height: 60px;" :size="200"/>
+      <div>
+        <h1 :data-plantid="plant._id">{{ plant.name }}</h1>
+        <plant-variety-resume :variety="plant.variety" />
+        <p class="date">Created at : {{ readableCreatedAt }}</p>
         <el-button size="small"
-                   @click="editPlant"
+                   @click="openEditPlant"
                    plain round>
           Edit
         </el-button>
@@ -21,6 +19,14 @@
             </el-button>
           </template>
         </el-popconfirm>
+      </div>
+    </header>
+    <el-row :gutter="20" v-if="plant.qrcode && plant._id">
+      <el-col :span="8">
+          <plant-selection-header :plant="plant" @edit="editStatusPlant"/>
+      </el-col>
+      <el-col :span="16">
+        <br/>
       </el-col>
     </el-row>
     <div v-else>
@@ -36,11 +42,15 @@ import Moment from 'moment';
 import { SIMPLE_DATE } from '@/common/DateFormatConfig';
 import { Plant } from '@/common/types';
 import PlantStore from '@/store/plants';
+import PlantVarietyResume from '@/components/screen/ui/PlantVarietyResume.vue';
+import PlantSelectionHeader from '@/components/screen/ui/PlantSelectionHeader.vue';
 
 export default defineComponent({
   name: 'PlantIdentification',
   components: {
     QrcodeVue,
+    PlantVarietyResume,
+    PlantSelectionHeader,
   },
   props: {
     plant: {
@@ -48,7 +58,7 @@ export default defineComponent({
       required: true,
     },
   },
-  emits: ['remove-plant', 'edit-plant'],
+  emits: ['remove-plant', 'open-edit-plant', 'edit-status-plant'],
   setup(props, { emit }) {
     const plantStore = PlantStore();
 
@@ -64,10 +74,15 @@ export default defineComponent({
       emit('remove-plant');
     }
 
+    function editStatusPlant(plant: Plant) {
+      emit('edit-status-plant', plant);
+    }
+
     return {
       readableCreatedAt,
       removePlant,
-      editPlant: () => emit('edit-plant'),
+      editStatusPlant,
+      openEditPlant: () => emit('open-edit-plant'),
     };
   },
 });
@@ -75,6 +90,24 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .plant-identification-resume {
+
+  &__header {
+    display: flex;
+    canvas {
+      margin-right: 12px;
+    }
+
+    .date {
+      margin: 6px 0;
+      font-size: .7em;
+    }
+  }
+
+  h1 {
+    font-size: 1.4em;
+    margin-bottom: 6px;
+  }
+
   padding: 10px;
   h2 {
     font-size: 1.2em;

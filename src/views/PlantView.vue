@@ -14,7 +14,6 @@
     <!-- Selected plant infos -->
     <template v-if="selectedPlant">
       <el-container direction="vertical">
-        <plant-selection-header :plant="selectedPlant" @edit="selectPlant"/>
         <flowering-date-form v-if="isEditPlantOpen"
                              :plant="selectedPlant"
                              :can-save="!canSave"
@@ -25,20 +24,16 @@
             <el-col :span="24" :md="24" :lg="12" :xl="12">
               <plant-identification-resume :plant="selectedPlant"
                                            @remove-plant="clearSelectedPlant"
-                                           @edit-plant="openEditPlant"/>
-            </el-col>
-            <el-col :span="24" :md="24" :lg="12" :xl="12">
-              <plant-note :plant="selectedPlant" @add-note="selectPlant"/>
-            </el-col>
-          </el-row>
-
-          <br/>
-          <el-row :gutter="30">
-            <el-col :span="12">
+                                           @edit-status-plant="selectPlant"
+                                           @open-edit-plant="openEditPlant"/>
               <plant-timing-resume v-if="!selectedPlant.collected" :plant="selectedPlant" @change="selectPlant"/>
               <plant-end-timing-resume v-else :plant="selectedPlant"/>
             </el-col>
-            <el-col :span="12">
+            <el-col :span="24" :md="24" :lg="12" :xl="12">
+              <plant-finished-resume v-if="selectedPlant.startCurringDate" :plant="selectedPlant" />
+              <br/>
+              <plant-note :plant="selectedPlant" @add-note="selectPlant"/>
+              <br/>
               <plant-pictures />
             </el-col>
           </el-row>
@@ -65,7 +60,6 @@ import AddPlant from '@/components/screen/form/AddPlant.vue';
 import PlantHistoryResume from '@/components/screen/ui/PlantHistoryResume.vue';
 import { Plus } from '@element-plus/icons-vue';
 import PlantListHeader from '@/components/screen/ui/PlantListHeader.vue';
-import PlantSelectionHeader from '@/components/screen/ui/PlantSelectionHeader.vue';
 import PlantHistoryHeader from '@/components/screen/ui/PlantHistoryHeader.vue';
 import PlantIdentificationResume from '@/components/screen/ui/PlantIdentificationResume.vue';
 import PlantEndTimingResume from '@/components/screen/ui/PlantEndTimingResume.vue';
@@ -76,14 +70,15 @@ import { isEqual } from '@/common/utils';
 import { ElNotification } from 'element-plus';
 import PlantNote from '@/components/screen/ui/PlantNote.vue';
 import PlantPictures from '@/components/screen/ui/PlantPictures.vue';
+import PlantFinishedResume from '@/components/screen/ui/PlantFinishedResume.vue';
 
 export default defineComponent({
   name: 'HomePage',
   components: {
+    PlantFinishedResume,
     PlantPictures,
     PlantNote,
     PlantHistoryHeader,
-    PlantSelectionHeader,
     PlantListHeader,
     PlantHistoryResume,
     AddPlant,
@@ -95,14 +90,11 @@ export default defineComponent({
   },
   setup() {
     const plantStore = PlantStore();
-    const selectedPlant = ref<Partial<Plant> | null>(null);
-    const comparePlant = ref<Partial<Plant> | null>(null);
-
+    const selectedPlant = ref<Plant | null>(null);
+    const comparePlant = ref<Plant | null>(null);
     const historyMode = ref<string>('PER_DAYS');
-
     const isEditPlantOpen = ref<boolean>(false);
     const isPlantFormOpened = ref<boolean>(false);
-
     const { all } = storeToRefs(plantStore);
 
     function selectPlant(plant: Plant): void {
