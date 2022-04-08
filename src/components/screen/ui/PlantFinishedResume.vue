@@ -8,14 +8,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
-import { Plant } from '@/common/types';
+import { defineComponent } from 'vue';
+import PlantResource from '@/resources/PlantResource';
 
 export default defineComponent({
   name: 'PlantFinishedResume',
   props: {
     plant: {
-      type: Object as PropType<Plant>,
+      type: PlantResource,
       required: true,
     },
   },

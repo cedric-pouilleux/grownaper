@@ -1,12 +1,12 @@
 <template>
   <span class="plant-variety-resume" v-if="variety">
     <a v-if="variety.link" :href="variety.link">
-      #{{ variety.phenotype}} {{ variety.title }} <br/>from {{ variety.breeder.title }}
+      #{{ variety.phenotype}} {{ variety.title }} from {{ variety.breeder.title }}
       {{ variety.feminized && '- Feminized' }}
       {{ variety.automatic && '- Automatic' }}
     </a>
     <template v-else>
-      #{{ variety.phenotype}} {{ variety.title }} <br/>from {{ variety.breeder.title }}
+      #{{ variety.phenotype}} {{ variety.title }} from {{ variety.breeder.title }}
     </template>
   </span>
   <span v-else>

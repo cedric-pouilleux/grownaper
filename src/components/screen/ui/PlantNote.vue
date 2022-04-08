@@ -45,21 +45,19 @@
 
 <script lang="ts">
 
-import {
-  defineComponent, PropType, reactive, ref,
-} from 'vue';
-import { Plant } from '@/common/types';
+import { defineComponent, reactive, ref } from 'vue';
 import Moment from 'moment';
 import { SIMPLE_DATETIME } from '@/common/DateFormatConfig';
 import type { FormInstance } from 'element-plus';
 import { ElNotification } from 'element-plus';
 import PlantStore from '@/store/plants';
+import PlantResource from '@/resources/PlantResource';
 
 export default defineComponent({
   name: 'PlantNote',
   props: {
     plant: {
-      type: Object as PropType<Plant>,
+      type: PlantResource,
       required: true,
     },
   },
@@ -89,10 +87,11 @@ export default defineComponent({
     });
 
     async function addNote(form: FormInstance | undefined): Promise<void> {
-      if (form && formData.content) {
+      if (form && formData.content && props.plant._id) {
+        const { _id } = props.plant;
         await form.validate(async (valid) => {
           if (valid) {
-            const edited = await plantStore.addNote(props.plant._id, formData.content);
+            const edited = await plantStore.addNote(_id, formData.content);
             if (edited) {
               ElNotification.success({
                 message: `Add note to ${edited.name}`,

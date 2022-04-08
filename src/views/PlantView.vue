@@ -6,7 +6,7 @@
 
   <el-container :offset="10" style="height: calc(100vh - 59px);">
 
-    <!-- Plant list -->
+    <!-- PlantResource list -->
     <el-container style="min-width: 600px; max-width: 600px;" direction="vertical">
       <plant-list-header :count="all.length" @new-plant="togglePlantForm" />
       <plant-list :plants="all" @select="selectPlant"/>
@@ -14,11 +14,6 @@
     <!-- Selected plant infos -->
     <template v-if="selectedPlant">
       <el-container direction="vertical">
-        <flowering-date-form v-if="isEditPlantOpen"
-                             :plant="selectedPlant"
-                             :can-save="!canSave"
-                             @change="editPlant"
-                             @save="savePlant"/>
         <el-main>
           <el-row :gutter="30">
             <el-col :span="24" :md="24" :lg="12" :xl="12">
@@ -26,8 +21,12 @@
                                            @remove-plant="clearSelectedPlant"
                                            @edit-status-plant="selectPlant"
                                            @open-edit-plant="openEditPlant"/>
-              <plant-timing-resume v-if="!selectedPlant.collected" :plant="selectedPlant" @change="selectPlant"/>
-              <plant-end-timing-resume v-else :plant="selectedPlant"/>
+              <flowering-date-form v-if="isEditPlantOpen"
+                                   :plant="selectedPlant"
+                                   :can-save="!canSave"
+                                   @change="editPlant"
+                                   @save="savePlant"/>
+              <plant-end-timing-resume :plant="selectedPlant"/>
             </el-col>
             <el-col :span="24" :md="24" :lg="12" :xl="12">
               <plant-finished-resume v-if="selectedPlant.startCurringDate" :plant="selectedPlant" />
@@ -52,10 +51,10 @@
 import {
   defineComponent, computed, ref, ComputedRef,
 } from 'vue';
-import PlantTimingResume from '@/components/screen/ui/PlantTimingResume.vue';
+// import PlantTimingResume from '@/components/screen/ui/PlantTimingResume.vue';
+
 import PlantList from '@/components/PlantList.vue';
 import PlantStore from '@/store/plants';
-import { Plant } from '@/common/types';
 import AddPlant from '@/components/screen/form/AddPlant.vue';
 import PlantHistoryResume from '@/components/screen/ui/PlantHistoryResume.vue';
 import { Plus } from '@element-plus/icons-vue';
@@ -63,7 +62,7 @@ import PlantListHeader from '@/components/screen/ui/PlantListHeader.vue';
 import PlantHistoryHeader from '@/components/screen/ui/PlantHistoryHeader.vue';
 import PlantIdentificationResume from '@/components/screen/ui/PlantIdentificationResume.vue';
 import PlantEndTimingResume from '@/components/screen/ui/PlantEndTimingResume.vue';
-import FloweringDateForm from '@/components/screen/form/FloweringDateForm.vue';
+import FloweringDateForm from '@/components/screen/form/EditPlant.vue';
 import { storeToRefs } from 'pinia';
 import Moment from 'moment';
 import { isEqual } from '@/common/utils';
@@ -71,6 +70,7 @@ import { ElNotification } from 'element-plus';
 import PlantNote from '@/components/screen/ui/PlantNote.vue';
 import PlantPictures from '@/components/screen/ui/PlantPictures.vue';
 import PlantFinishedResume from '@/components/screen/ui/PlantFinishedResume.vue';
+import PlantResource from '@/resources/PlantResource';
 
 export default defineComponent({
   name: 'HomePage',
@@ -83,26 +83,25 @@ export default defineComponent({
     PlantHistoryResume,
     AddPlant,
     PlantList,
-    PlantTimingResume,
     PlantIdentificationResume,
     FloweringDateForm,
     PlantEndTimingResume,
   },
   setup() {
     const plantStore = PlantStore();
-    const selectedPlant = ref<Plant | null>(null);
-    const comparePlant = ref<Plant | null>(null);
+    const selectedPlant = ref<PlantResource | null>(null);
+    const comparePlant = ref<PlantResource | null>(null);
     const historyMode = ref<string>('PER_DAYS');
     const isEditPlantOpen = ref<boolean>(false);
     const isPlantFormOpened = ref<boolean>(false);
     const { all } = storeToRefs(plantStore);
 
-    function selectPlant(plant: Plant): void {
-      selectedPlant.value = plant;
-      comparePlant.value = plant;
+    function selectPlant(plant: PlantResource): void {
+      selectedPlant.value = new PlantResource(plant);
+      comparePlant.value = new PlantResource(plant);
     }
 
-    function addPlant(plant: Plant): void {
+    function addPlant(plant: PlantResource): void {
       selectPlant(plant);
       isPlantFormOpened.value = false;
     }
@@ -124,12 +123,12 @@ export default defineComponent({
       (): boolean => isSameName.value && isSameVariety.value && isSameDate.value,
     );
 
-    function editPlant(plant: Plant): void {
-      selectedPlant.value = plant;
+    function editPlant(plant: PlantResource): void {
+      selectedPlant.value = new PlantResource(plant);
     }
 
-    async function savePlant(plant: Plant): Promise<void> {
-      const params: Partial<Plant> = {
+    async function savePlant(plant: PlantResource): Promise<void> {
+      const params: Partial<PlantResource> = {
         ...!isSameVariety.value ? { variety: plant.variety } : {},
         ...!isSameName.value ? { name: plant.name } : {},
         ...!isSameDate.value ? { startFloweringDate: plant.startFloweringDate } : {},
@@ -138,11 +137,11 @@ export default defineComponent({
         const edited = await plantStore.edit(plant._id, params);
         if (edited) {
           ElNotification.success({
-            message: `Plant ${edited.name} has been edited`,
+            message: `PlantResource ${edited.name} has been edited`,
             offset: 100,
           });
-          selectedPlant.value = edited;
-          comparePlant.value = edited;
+          selectedPlant.value = new PlantResource(edited);
+          comparePlant.value = new PlantResource(edited);
         }
       }
     }

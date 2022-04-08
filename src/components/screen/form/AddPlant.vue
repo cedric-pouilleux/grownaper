@@ -8,6 +8,11 @@
         <el-form-item label="Title">
           <el-input v-model="name" />
         </el-form-item>
+        <el-form-item label="Start growing">
+          <el-date-picker v-model="startGrowingDate"
+                          type="date"
+                          placeholder="Pick a start growing date" />
+        </el-form-item>
         <el-form-item label="Start flowering">
           <el-date-picker v-model="startFloweringDate"
                           type="date"
@@ -36,11 +41,11 @@
 import {
   defineComponent, reactive, ref, toRefs, watch,
 } from 'vue';
-import { Plant } from '@/common/types';
 import VarietyStore from '@/store/varieties';
 import PlantStore from '@/store/plants';
 import { ElNotification } from 'element-plus';
 import NameGenerator from '@/common/NameGenerator';
+import PlantResource from '@/resources/PlantResource';
 
 export default defineComponent({
   name: 'AddPlant',
@@ -59,13 +64,14 @@ export default defineComponent({
     function generateInitial() {
       return {
         name: NameGenerator.generateName(),
-        startFloweringDate: new Date(),
+        startFloweringDate: undefined,
+        startGrowingDate: undefined,
         startCurringDate: undefined,
         variety: undefined,
       };
     }
 
-    const plant = reactive<Partial<Plant>>(generateInitial());
+    const plant = reactive<Partial<PlantResource>>(generateInitial());
 
     watch(() => props.opened, () => {
       drawer.value = props.opened;
@@ -76,7 +82,7 @@ export default defineComponent({
       if (added) {
         emit('add', added);
         ElNotification.success({
-          message: `Plant : ${plant.name} has been added`,
+          message: `PlantResource : ${plant.name} has been added`,
           offset: 100,
         });
       }

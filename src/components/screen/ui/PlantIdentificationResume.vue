@@ -6,6 +6,7 @@
         <h1 :data-plantid="plant._id">{{ plant.name }}</h1>
         <plant-variety-resume :variety="plant.variety" />
         <p class="date">Created at : {{ readableCreatedAt }}</p>
+        <plant-end-actions :plant="plant" @edit="editStatusPlant"/>
         <el-button size="small"
                    @click="openEditPlant"
                    plain round>
@@ -21,17 +22,6 @@
         </el-popconfirm>
       </div>
     </header>
-    <el-row :gutter="20" v-if="plant.qrcode && plant._id">
-      <el-col :span="8">
-          <plant-selection-header :plant="plant" @edit="editStatusPlant"/>
-      </el-col>
-      <el-col :span="16">
-        <br/>
-      </el-col>
-    </el-row>
-    <div v-else>
-      No identification possible
-    </div>
   </div>
 </template>
 
@@ -40,21 +30,21 @@ import { computed, defineComponent, PropType } from 'vue';
 import QrcodeVue from 'qrcode.vue';
 import Moment from 'moment';
 import { SIMPLE_DATE } from '@/common/DateFormatConfig';
-import { Plant } from '@/common/types';
 import PlantStore from '@/store/plants';
 import PlantVarietyResume from '@/components/screen/ui/PlantVarietyResume.vue';
-import PlantSelectionHeader from '@/components/screen/ui/PlantSelectionHeader.vue';
+import PlantEndActions from '@/components/screen/ui/PlantEndActions.vue';
+import PlantResource from '@/resources/PlantResource';
 
 export default defineComponent({
   name: 'PlantIdentification',
   components: {
     QrcodeVue,
     PlantVarietyResume,
-    PlantSelectionHeader,
+    PlantEndActions,
   },
   props: {
     plant: {
-      type: Object as PropType<Plant>,
+      type: PlantResource,
       required: true,
     },
   },
@@ -70,11 +60,14 @@ export default defineComponent({
     });
 
     async function removePlant(): Promise<void> {
+      if (!props.plant._id) {
+        return;
+      }
       await plantStore.remove(props.plant._id);
       emit('remove-plant');
     }
 
-    function editStatusPlant(plant: Plant) {
+    function editStatusPlant(plant: PlantResource) {
       emit('edit-status-plant', plant);
     }
 
@@ -98,7 +91,7 @@ export default defineComponent({
     }
 
     .date {
-      margin: 6px 0;
+      margin: 6px 0 12px 0;
       font-size: .7em;
     }
   }

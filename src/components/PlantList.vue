@@ -59,11 +59,11 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { Plant } from '@/common/types';
 import {
   Male, Female, Timer, InfoFilled,
 } from '@element-plus/icons-vue';
 import Moment from 'moment';
+import PlantResource from '@/resources/PlantResource';
 
 export default defineComponent({
   name: 'PlantList',
@@ -71,12 +71,12 @@ export default defineComponent({
   emits: ['select'],
 
   props: {
-    plants: Array as PropType<Plant[]>,
+    plants: Array as PropType<PlantResource[]>,
   },
 
   setup(props, { emit }) {
-    function percent(plant: Plant): number | null {
-      if (plant.collected) {
+    function percent(plant: PlantResource): number | null {
+      if (plant.collectedDate) {
         return 100;
       }
       if (plant.variety) {
@@ -90,12 +90,12 @@ export default defineComponent({
       return null;
     }
 
-    function isFloweringStarted(plant: Plant): boolean {
+    function isFloweringStarted(plant: PlantResource): boolean {
       return Moment().isAfter(plant.startFloweringDate);
     }
 
     return {
-      open: (plant: Plant) => { emit('select', plant); },
+      open: (plant: PlantResource) => { emit('select', plant); },
       isFloweringStarted,
       Male,
       Female,

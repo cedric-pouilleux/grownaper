@@ -1,4 +1,5 @@
-import { Breeder, Plant, Variety } from '@/common/types';
+import { Breeder, Variety } from '@/common/types';
+import PlantResource from '@/resources/PlantResource';
 
 const breeder: Breeder = {
   _id: '624600ac67f855c1b7fd439e',
@@ -18,18 +19,20 @@ const variety: Variety = {
   breeder,
 };
 
-const plant: Plant = {
+const plant = new PlantResource({
   _id: '624a51b7f6c46593423c08b0',
   name: 'Living violet',
   createdAt: new Date('2022-04-04T02:02:31.546+00:00'),
   qrcode: 'url/ds23fv2354gbq517h32t',
-  startFloweringDate: new Date('2022-04-12T00:00:00.000+00:00'),
-  floweringStarted: false,
-  collected: undefined,
+  startGrowingDate: new Date('2022-04-12T00:00:00.000+00:00'),
+  startFloweringDate: undefined,
+  collectedDate: undefined,
+  startCurringDate: undefined,
+  weight: undefined,
   variety,
-  notes: [],
-  history: [],
-};
+  notes: undefined,
+  history: undefined,
+});
 
 export {
   breeder as BreederFixture,

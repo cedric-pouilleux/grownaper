@@ -1,3 +1,5 @@
+import Moment from 'moment';
+
 interface Breeder {
   _id: string,
   title: string,
@@ -30,21 +32,6 @@ type PlantHistory = {
   message: string
 }
 
-interface Plant {
-  _id: string,
-  name: string,
-  createdAt: Date,
-  qrcode: string,
-  startFloweringDate?: Date,
-  startCurringDate?: Date,
-  floweringStarted: boolean,
-  collected?: Date,
-  variety?: Variety,
-  weight?: number,
-  notes: Note[],
-  history: PlantHistory[]
-}
-
 interface FeederProduct {
   _id: string,
   title: string,
@@ -69,7 +56,6 @@ interface Feeder {
 type historyDisplayMode = 'PER_DAYS' | 'ALL';
 
 export {
-  Plant,
   Variety,
   Breeder,
   Feeder,

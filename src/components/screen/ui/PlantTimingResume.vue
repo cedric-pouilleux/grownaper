@@ -44,18 +44,18 @@
 import { computed, defineComponent, PropType } from 'vue';
 import Moment from 'moment';
 import { READABLE_DATE, SIMPLE_DATE } from '@/common/DateFormatConfig';
-import { Plant } from '@/common/types';
 import { Percent } from '@/common/utils';
+import PlantResource from '@/resources/PlantResource';
 
 export default defineComponent({
   name: 'PlantTimingResume',
   props: {
-    plant: Object as PropType<Plant>,
+    plant: PlantResource,
   },
   setup(props) {
     const readableCollected = computed((): string | null => {
-      if (props.plant?.collected) {
-        return Moment(props.plant.collected).format(READABLE_DATE);
+      if (props.plant?.collectedDate) {
+        return Moment(props.plant.collectedDate).format(READABLE_DATE);
       }
       return null;
     });
@@ -89,7 +89,7 @@ export default defineComponent({
     });
 
     const percent = computed((): number | null => {
-      if (props.plant?.collected) {
+      if (props.plant?.collectedDate) {
         return 100;
       }
       if (leaveDay.value == null || !props.plant?.variety?.floTime) {
@@ -109,7 +109,7 @@ export default defineComponent({
       if (props.plant?.startFloweringDate == null || props.plant?.variety?.floTime == null || leaveDay.value == null) {
         return null;
       }
-      if (leaveDay.value <= 0 || props.plant?.collected) {
+      if (leaveDay.value <= 0 || props.plant?.collectedDate) {
         return 'Collected';
       }
       return `${props.plant.variety.floTime - leaveDay.value} / ${props.plant.variety.floTime} days`;
