@@ -21,11 +21,20 @@ function prepareMount(plant: PlantResource) {
 }
 
 describe('Plant growing progress', () => {
-  it('Not started plant render', async () => {
+  it('Without selected growing date input', async () => {
     const wrapper = prepareMount(creatingPlantFixture);
     wrapper.vm.currentDate = Moment('2022-04-01');
     await wrapper.vm.$nextTick();
     expect(wrapper.text()).toEqual('Growing date not selected');
+    expect(wrapper.vm.status).toBe('');
+    expect(wrapper.vm.percent).toBe(0);
+  });
+
+  it('With select growing date but not started', async () => {
+    const wrapper = prepareMount(growingPlantFixture);
+    wrapper.vm.currentDate = Moment('2022-01-03');
+    await wrapper.vm.$nextTick();
+    expect(wrapper.text()).toEqual('Growing start in 2 days');
     expect(wrapper.vm.status).toBe('');
     expect(wrapper.vm.percent).toBe(0);
   });
@@ -50,9 +59,9 @@ describe('Plant growing progress', () => {
 
   it('Test flowering plant render', async () => {
     const wrapper = prepareMount(floweringPlantFixture);
-    wrapper.vm.currentDate = Moment('2022-04-01');
+    wrapper.vm.currentDate = Moment('2022-01-10');
     await wrapper.vm.$nextTick();
-    expect(wrapper.text()).toEqual('Growing complete on 5 days');
+    expect(wrapper.text()).toEqual('Growing complete on 4 days');
     expect(wrapper.vm.status).toBe('success');
     expect(wrapper.vm.percent).toBe(100);
   });

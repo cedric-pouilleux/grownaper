@@ -19,35 +19,51 @@ export default defineComponent({
   name: 'GrowingProgress',
 
   props: {
-    plant: object<PlantResource>().isRequired,
+    plant: {
+      type: PlantResource,
+      required: true,
+    },
   },
 
   setup(props) {
     const currentDate = ref(Moment());
 
+    const workingDays: ComputedRef<number> = computed(
+      () => {
+        if (props.plant.startFloweringDate && props.plant.startGrowingDate) {
+          return Moment(props.plant.startFloweringDate).diff(props.plant.startGrowingDate, 'days');
+        }
+        return 0;
+      },
+    );
+
+    const expiredDays: ComputedRef<number> = computed(
+      () => currentDate.value.diff(props.plant?.startGrowingDate, 'days'),
+    );
+
     const text: ComputedRef<string> = computed((): string => {
       if (!props.plant?.startGrowingDate) {
         return 'Growing date not selected';
       }
-      const days = currentDate.value.diff(props.plant?.startGrowingDate, 'days');
       if (props.plant.isGrowing()) {
-        if (days === 0) {
+        if (expiredDays.value === 0) {
           return 'Growing start today';
         }
-        return `Growing start since ${days} days`;
-      }
-      if (props.plant.isFlowering() || props.plant.isCurring() || props.plant.isDrying()) {
-        if (days > 0) {
-          const completeDay = Moment(props.plant?.startFloweringDate).diff(props.plant?.startGrowingDate, 'days');
-          return `Growing complete on ${completeDay} days`;
+        if (expiredDays.value > 0) {
+          return `Growing start since ${expiredDays.value} days`;
         }
-        return `Growing start in ${-days} days`;
       }
-      return `Growing start in ${-days} days`;
+      if (expiredDays.value > 0) {
+        return `Growing complete on ${expiredDays.value} days`;
+      }
+      return `Growing start in ${-expiredDays.value} days`;
     });
 
     const percent: ComputedRef<number> = computed((): number => {
       if (!props.plant?.startGrowingDate) {
+        return 0;
+      }
+      if (expiredDays.value < 0) {
         return 0;
       }
       return 100;

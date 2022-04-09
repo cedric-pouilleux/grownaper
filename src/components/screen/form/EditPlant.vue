@@ -22,8 +22,17 @@
         </el-option>
       </el-select>
     </el-form-item>
-    <el-form-item v-if="!plant.collected"
-                  :label="!plant.collected && 'Flowering date'">
+    <el-form-item v-if="!plant.collectedDate"
+                  :label="!plant.startGrowingDate && 'Growing date'">
+      <el-date-picker v-model="selectedGrowingDate"
+                      type="date"
+                      format="YYYY/MM/DD"
+                      value-format="YYYY-MM-DD"
+                      placeholder="Pick a day"
+                      @change="change"/>
+    </el-form-item>
+    <el-form-item v-if="!plant.collectedDate"
+                  :label="!plant.startFloweringDate && 'Flowering date'">
       <el-date-picker v-model="selectedDate"
                       type="date"
                       format="YYYY/MM/DD"
@@ -60,12 +69,14 @@ export default defineComponent({
   setup(props, { emit }) {
     const varietyStore = VarietyStore();
 
-    const selectedDate = ref<Date | null>(props.plant.startFloweringDate || null);
     const selectedVariety = ref<Variety | null>(props.plant.variety || null);
     const selectedName = ref<string | null>(props.plant.name || null);
+    const selectedDate = ref<Date | null>(props.plant.startFloweringDate || null);
+    const selectedGrowingDate = ref<Date | null>(props.plant.startGrowingDate || null);
 
-    watch(props.plant, (plant: PlantResource): void => {
+    watch(() => props.plant, (plant: PlantResource): void => {
       selectedDate.value = plant.startFloweringDate || selectedDate.value;
+      selectedGrowingDate.value = plant.startGrowingDate || selectedGrowingDate.value;
       selectedVariety.value = plant.variety || selectedVariety.value;
       selectedName.value = plant.name || selectedName.value;
     });
@@ -74,6 +85,7 @@ export default defineComponent({
       emit('change', {
         ...props.plant,
         startFloweringDate: selectedDate.value,
+        startGrowingDate: selectedGrowingDate.value,
         variety: selectedVariety.value,
         name: selectedName.value,
       });
@@ -88,6 +100,7 @@ export default defineComponent({
       emit('save', {
         ...props.plant,
         startFloweringDate: selectedDate.value,
+        startGrowingDate: selectedGrowingDate.value,
         variety: selectedVariety.value,
         name: selectedName.value,
       });
@@ -97,6 +110,7 @@ export default defineComponent({
       selectedDate,
       selectedVariety,
       selectedName,
+      selectedGrowingDate,
       varietyStore,
       change,
       handleSave,

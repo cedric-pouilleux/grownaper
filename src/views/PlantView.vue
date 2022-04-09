@@ -110,6 +110,11 @@ export default defineComponent({
         .isSame(selectedPlant.value?.startFloweringDate, 'day'),
     );
 
+    const isSameGrowingDate: ComputedRef<boolean> = computed(
+      (): boolean => Moment(comparePlant.value?.startGrowingDate)
+        .isSame(selectedPlant.value?.startGrowingDate, 'day'),
+    );
+
     const isSameVariety: ComputedRef<boolean> = computed(
       (): boolean => isEqual(comparePlant.value?.variety, selectedPlant.value?.variety),
     );
@@ -119,7 +124,10 @@ export default defineComponent({
     );
 
     const canSave: ComputedRef<boolean> = computed(
-      (): boolean => isSameName.value && isSameVariety.value && isSameDate.value,
+      (): boolean => isSameName.value
+        && isSameVariety.value
+        && isSameDate.value
+        && isSameGrowingDate.value,
     );
 
     function editPlant(plant: PlantResource): void {
@@ -131,6 +139,7 @@ export default defineComponent({
         ...!isSameVariety.value ? { variety: plant.variety } : {},
         ...!isSameName.value ? { name: plant.name } : {},
         ...!isSameDate.value ? { startFloweringDate: plant.startFloweringDate } : {},
+        ...!isSameDate.value ? { startGrowingDate: plant.startGrowingDate } : {},
       };
       if (plant._id) {
         const edited = await plantStore.edit(plant._id, params);
