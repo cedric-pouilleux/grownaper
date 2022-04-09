@@ -23,7 +23,7 @@
       </el-select>
     </el-form-item>
     <el-form-item v-if="!plant.collectedDate"
-                  :label="!plant.startGrowingDate && 'Growing date'">
+                  label="Growing date">
       <el-date-picker v-model="selectedGrowingDate"
                       type="date"
                       format="YYYY/MM/DD"
@@ -32,7 +32,7 @@
                       @change="change"/>
     </el-form-item>
     <el-form-item v-if="!plant.collectedDate"
-                  :label="!plant.startFloweringDate && 'Flowering date'">
+                  label="Flowering date">
       <el-date-picker v-model="selectedDate"
                       type="date"
                       format="YYYY/MM/DD"
@@ -75,8 +75,8 @@ export default defineComponent({
     const selectedGrowingDate = ref<Date | null>(props.plant.startGrowingDate || null);
 
     watch(() => props.plant, (plant: PlantResource): void => {
-      selectedDate.value = plant.startFloweringDate || selectedDate.value;
-      selectedGrowingDate.value = plant.startGrowingDate || selectedGrowingDate.value;
+      selectedDate.value = plant.startFloweringDate || null;
+      selectedGrowingDate.value = plant.startGrowingDate || null;
       selectedVariety.value = plant.variety || selectedVariety.value;
       selectedName.value = plant.name || selectedName.value;
     });

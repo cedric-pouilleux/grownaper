@@ -69,7 +69,7 @@ import PlantNote from '@/components/screen/ui/PlantNote.vue';
 import PlantPictures from '@/components/screen/ui/PlantPictures.vue';
 import PlantFinishedResume from '@/components/screen/ui/PlantFinishedResume.vue';
 import PlantResource from '@/resources/PlantResource';
-import PlantTimeReading from '@/components/screen/ui/time-reading/PlantTimeReading.vue';
+import PlantTimeReading from '@/components/screen/ui/time-reading/PlantStatusTime.vue';
 
 export default defineComponent({
   name: 'HomePage',
@@ -139,7 +139,7 @@ export default defineComponent({
         ...!isSameVariety.value ? { variety: plant.variety } : {},
         ...!isSameName.value ? { name: plant.name } : {},
         ...!isSameDate.value ? { startFloweringDate: plant.startFloweringDate } : {},
-        ...!isSameDate.value ? { startGrowingDate: plant.startGrowingDate } : {},
+        ...!isSameGrowingDate.value ? { startGrowingDate: plant.startGrowingDate } : {},
       };
       if (plant._id) {
         const edited = await plantStore.edit(plant._id, params);

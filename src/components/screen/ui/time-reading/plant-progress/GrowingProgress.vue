@@ -28,15 +28,6 @@ export default defineComponent({
   setup(props) {
     const currentDate = ref(Moment());
 
-    const workingDays: ComputedRef<number> = computed(
-      () => {
-        if (props.plant.startFloweringDate && props.plant.startGrowingDate) {
-          return Moment(props.plant.startFloweringDate).diff(props.plant.startGrowingDate, 'days');
-        }
-        return 0;
-      },
-    );
-
     const expiredDays: ComputedRef<number> = computed(
       () => currentDate.value.diff(props.plant?.startGrowingDate, 'days'),
     );

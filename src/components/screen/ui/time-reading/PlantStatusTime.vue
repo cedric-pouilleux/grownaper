@@ -24,7 +24,7 @@ import DryingProgress from '@/components/screen/ui/time-reading/plant-progress/D
 import CurringProgress from '@/components/screen/ui/time-reading/plant-progress/CurringProgress.vue';
 
 export default defineComponent({
-  name: 'PlantTimeReading',
+  name: 'PlantStatusTime',
   components: {
     GrowingProgress,
     FloweringProgress,
