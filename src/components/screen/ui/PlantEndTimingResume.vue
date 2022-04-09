@@ -7,20 +7,8 @@
       <el-col :span="24" class="plant-end-timing-resume__progress">
         <growing-progress :plant="plant" />
         <flowering-progress :plant="plant"/>
-        <el-progress :text-inside="true"
-                     :stroke-width="16"
-                     :percentage="Percent(getDryingDuration, 7)"
-                     status="success">
-          {{dryingProgressText}}
-        </el-progress>
-        <el-progress :text-inside="true"
-                     :stroke-width="16"
-                     color="#655551"
-                     :percentage="Percent(getDryingFromNow, 60)"
-                     status="success">
-          Curring
-          {{getDryingFromNow}} / 60
-        </el-progress>
+        <drying-progress :plant="plant"/>
+        <curring-progress :plant="plant"/>
       </el-col>
     </el-row>
   </div>
@@ -34,10 +22,14 @@ import PlantResource from '@/resources/PlantResource';
 import GrowingProgress from '@/components/screen/ui/plant-progress/GrowingProgress.vue';
 import FloweringProgress from '@/components/screen/ui/plant-progress/FloweringProgress.vue';
 import { object } from 'vue-types';
+import DryingProgress from '@/components/screen/ui/plant-progress/DryingProgress.vue';
+import CurringProgress from '@/components/screen/ui/plant-progress/CurringProgress.vue';
 
 export default defineComponent({
   name: 'PlantEndTimingResume',
-  components: { FloweringProgress, GrowingProgress },
+  components: {
+    CurringProgress, DryingProgress, FloweringProgress, GrowingProgress,
+  },
   props: {
     plant: object<PlantResource>().isRequired,
   },

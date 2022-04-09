@@ -38,7 +38,8 @@ export default defineComponent({
       }
       if (props.plant.isFlowering() || props.plant.isCurring() || props.plant.isDrying()) {
         if (days > 0) {
-          return `Growing complete, total ${days} days`;
+          const completeDay = Moment(props.plant?.startFloweringDate).diff(props.plant?.startGrowingDate, 'days');
+          return `Growing complete, total ${completeDay} days`;
         }
         return `Growing start in ${-days} days`;
       }
