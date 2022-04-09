@@ -13,7 +13,6 @@ import {
 } from 'vue';
 import Moment from 'moment';
 import PlantResource from '@/resources/PlantResource';
-import { object } from 'vue-types';
 
 export default defineComponent({
   name: 'GrowingProgress',

@@ -1,5 +1,6 @@
 <template>
-  <el-progress :text-inside="true"
+  <el-progress v-if="plant.collectedDate"
+               :text-inside="true"
                :percentage="percent"
                :stroke-width="16"
                :status="status">
@@ -48,28 +49,6 @@ export default defineComponent({
         return `Drying ${days} days`;
       }
       return 'Drying not started';
-      /*
-      const { variety, startFloweringDate, collectedDate } = props.plant;
-      if (!variety) {
-        return 'Variety not selected';
-      }
-      if (!startFloweringDate) {
-        return 'Flowering date not selected';
-      }
-
-      const days = Moment(startFloweringDate).add(variety.floTime, 'd').diff(currentDate.value, 'days');
-      const daysWork = variety.floTime - days;
-      if (props.plant.isFlowering() && daysWork > 0) {
-        return `Flowering ${daysWork} / ${variety.floTime} days`;
-      }
-      if (props.plant.isDrying() || props.plant.isCurring()) {
-        const date = Moment(collectedDate).diff(startFloweringDate, 'days');
-        return `Flowering complete ${date} / ${variety.floTime}`;
-      }
-      if (daysWork === 0) {
-        return 'Flowering start tomorrow';
-      }
-      return `Flowering start in ${-daysWork} days`; */
     });
 
     /**

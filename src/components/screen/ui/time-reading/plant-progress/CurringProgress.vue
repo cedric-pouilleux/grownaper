@@ -1,5 +1,6 @@
 <template>
-  <el-progress :text-inside="true"
+  <el-progress v-if="plant.startCurringDate"
+               :text-inside="true"
                :percentage="percent"
                :stroke-width="16"
                :status="status">

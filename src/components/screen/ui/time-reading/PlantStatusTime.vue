@@ -1,7 +1,7 @@
 <template>
   <div class="plant-time-reading">
     <div class="plant-time-reading__progress">
-      <growing-progress :plant="plant" />
+      <growing-progress :plant="plant"/>
     </div>
     <div class="plant-time-reading__progress">
       <flowering-progress :plant="plant"/>
