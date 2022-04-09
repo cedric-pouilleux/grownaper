@@ -29,7 +29,7 @@ export default defineComponent({
     const currentDate = ref(Moment());
 
     const getDryingDuration: ComputedRef<number> = computed((): number => {
-      if (props.plant?.collectedDate || props.plant?.startCurringDate) {
+      if (props.plant.collectedDate || props.plant.startCurringDate) {
         return Moment(props.plant.startCurringDate).diff(props.plant.collectedDate, 'days');
       }
       return 0;
@@ -39,11 +39,13 @@ export default defineComponent({
      * Text render
      */
     const text: ComputedRef<string> = computed((): string => {
-      if (props.plant?.isDrying()) {
-        return `Drying ${getDryingDuration.value}`;
-      }
-      if (props.plant?.isCurring()) {
+      if (props.plant.isCurring()) {
+        const finishedDay = currentDate.value.diff(getDryingDuration.value, 'days');
         return `Drying complete on ${getDryingDuration.value} days`;
+      }
+      if (props.plant.isDrying()) {
+        const days = currentDate.value.diff(props.plant.collectedDate, 'days');
+        return `Drying ${days} days`;
       }
       return 'Drying not started';
       /*

@@ -26,7 +26,7 @@
                                    :can-save="!canSave"
                                    @change="editPlant"
                                    @save="savePlant"/>
-              <plant-end-timing-resume :plant="selectedPlant"/>
+              <plant-time-reading :plant="selectedPlant" />
             </el-col>
             <el-col :span="24" :md="24" :lg="12" :xl="12">
               <plant-finished-resume v-if="selectedPlant.startCurringDate" :plant="selectedPlant" />
@@ -51,7 +51,6 @@
 import {
   defineComponent, computed, ref, ComputedRef,
 } from 'vue';
-// import PlantTimingResume from '@/components/screen/ui/PlantTimingResume.vue';
 
 import PlantList from '@/components/PlantList.vue';
 import PlantStore from '@/store/plants';
@@ -61,7 +60,6 @@ import { Plus } from '@element-plus/icons-vue';
 import PlantListHeader from '@/components/screen/ui/PlantListHeader.vue';
 import PlantHistoryHeader from '@/components/screen/ui/PlantHistoryHeader.vue';
 import PlantIdentificationResume from '@/components/screen/ui/PlantIdentificationResume.vue';
-import PlantEndTimingResume from '@/components/screen/ui/PlantEndTimingResume.vue';
 import FloweringDateForm from '@/components/screen/form/EditPlant.vue';
 import { storeToRefs } from 'pinia';
 import Moment from 'moment';
@@ -71,10 +69,12 @@ import PlantNote from '@/components/screen/ui/PlantNote.vue';
 import PlantPictures from '@/components/screen/ui/PlantPictures.vue';
 import PlantFinishedResume from '@/components/screen/ui/PlantFinishedResume.vue';
 import PlantResource from '@/resources/PlantResource';
+import PlantTimeReading from '@/components/screen/ui/time-reading/PlantTimeReading.vue';
 
 export default defineComponent({
   name: 'HomePage',
   components: {
+    PlantTimeReading,
     PlantFinishedResume,
     PlantPictures,
     PlantNote,
@@ -85,7 +85,6 @@ export default defineComponent({
     PlantList,
     PlantIdentificationResume,
     FloweringDateForm,
-    PlantEndTimingResume,
   },
   setup() {
     const plantStore = PlantStore();

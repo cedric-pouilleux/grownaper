@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils';
-import GrowingProgress from '@/components/screen/ui/plant-progress/GrowingProgress.vue';
+import GrowingProgress from '@/components/screen/ui/time-reading/plant-progress/GrowingProgress.vue';
 import ElementPlus from 'element-plus';
 import PlantResource from '@/resources/PlantResource';
 import Moment from 'moment';
