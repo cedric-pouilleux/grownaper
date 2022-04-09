@@ -6,7 +6,13 @@
     <template #default>
       <el-form label-width="120px">
         <el-form-item label="Title">
-          <el-input v-model="name" />
+          <el-input type="text" v-model="name" clearable style="{ width: 100%; }">
+            <template #append>
+              <el-button type="primary" @click="refreshName">
+                Randomise
+              </el-button>
+            </template>
+          </el-input>
         </el-form-item>
         <el-form-item label="Start growing">
           <el-date-picker v-model="startGrowingDate"
@@ -86,7 +92,11 @@ export default defineComponent({
           offset: 100,
         });
       }
-      Object.assign(plant, added);
+      Object.assign(plant, generateInitial());
+    }
+
+    function refreshName() {
+      plant.name = NameGenerator.generateName();
     }
 
     return {
@@ -94,6 +104,7 @@ export default defineComponent({
       ...toRefs(plant),
       varietyStore,
       action,
+      refreshName,
       handleClose: () => emit('close'),
     };
   },

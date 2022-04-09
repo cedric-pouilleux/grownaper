@@ -14,7 +14,6 @@ import {
 } from 'vue';
 import Moment from 'moment';
 import PlantResource from '@/resources/PlantResource';
-import { object } from 'vue-types';
 import { Percent } from '@/common/utils';
 
 export default defineComponent({
