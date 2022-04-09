@@ -57,28 +57,24 @@ class PlantResource implements IPlantResource {
   }
 
   public isFlowering(): boolean {
-    return Moment().isBetween(
-      this.startGrowingDate,
-      this.startFloweringDate,
-    );
+    if (!this.startFloweringDate || !this.startGrowingDate || this.collectedDate) {
+      return false;
+    }
+    return true;
   }
 
   public isDrying(): boolean {
-    if (!this.startFloweringDate && this.collectedDate) {
+    if (this.isFlowering() || this.isCurring() || this.isGrowing()) {
       return false;
     }
-    return Moment().isAfter(this.startFloweringDate);
+    if (!this.collectedDate) {
+      return false;
+    }
+    return !this.isFlowering();
   }
 
   public isCurring(): boolean {
     return !!this.startCurringDate;
-  }
-
-  public canGrow(): boolean {
-    return !this.isGrowing()
-      && !this.isFlowering()
-      && !this.isDrying()
-      && !this.isCurring();
   }
 }
 

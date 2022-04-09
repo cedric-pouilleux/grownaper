@@ -6,7 +6,7 @@
           <el-progress type="circle"
                        :width="90"
                        :percentage="percent"
-                       :status="plant.collected ? 'success' : ''">
+                       :status="plant.collectedDate ? 'success' : ''">
             {{ percentText }}
           </el-progress>
         </el-col>

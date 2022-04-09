@@ -1,16 +1,22 @@
 <template>
 
-  <div v-if="plant">
+  <span v-if="plant">
 
-    <el-button v-if="plant.canGrow()" type="warning" effect="plain" size="small" round plain @click="startGrowing">
+    <el-button v-if="displayGrowingStartBtn"
+               type="warning"
+               effect="plain"
+               size="small"
+               @click="startGrowing"
+               round plain>
       Start growing
     </el-button>
+
     <el-button v-if="plant.isGrowing()" type="success" size="small" @click="startFlowering" round plain>
       Start flowering
     </el-button>
 
     <!-- Collect btn -->
-    <el-popconfirm v-if="plant.isFlowering()" title="Are you sure to collect this plant ?" @confirm="cutPlant">
+    <el-popconfirm v-if="displayCollectStartBtn" title="Are you sure to collect this plant ?" @confirm="cutPlant">
       <template #reference>
         <el-button type="warning" effect="plain" size="small" round plain>
           Collect
@@ -39,7 +45,7 @@
       </el-button>
     </el-popover>
 
-  </div>
+  </span>
 
 </template>
 
@@ -63,11 +69,6 @@ export default defineComponent({
   setup(props, { emit }) {
     const weight = ref<number>(0);
     const plantStore = PlantStore();
-
-    watch(() => props.plant, () => {
-      console.log(props.plant.isFlowering());
-      console.log(props.plant.isGrowing());
-    });
 
     async function startGrowing(): Promise<void> {
       if (!props.plant._id) {
@@ -125,11 +126,28 @@ export default defineComponent({
       }
     }
 
+    const displayGrowingStartBtn = computed(() => {
+      if (props.plant.collectedDate) {
+        return false;
+      }
+      return !props.plant.isGrowing()
+      && !props.plant.isFlowering()
+      && !props.plant.isDrying()
+      && !props.plant.isCurring();
+    });
+
+    const displayCollectStartBtn = computed(() => props.plant.isFlowering()
+        && !props.plant.isDrying()
+        && !props.plant.isGrowing()
+        && !props.plant.isCurring());
+
     return {
       cutPlant,
       startFlowering,
       startCurring,
       startGrowing,
+      displayGrowingStartBtn,
+      displayCollectStartBtn,
       weight,
     };
   },

@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from 'vue';
+import { computed, defineComponent } from 'vue';
 import QrcodeVue from 'qrcode.vue';
 import Moment from 'moment';
 import { SIMPLE_DATE } from '@/common/DateFormatConfig';

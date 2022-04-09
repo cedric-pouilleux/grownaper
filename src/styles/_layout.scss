@@ -18,6 +18,10 @@ body {
   --el-card-padding: 6px 12px 10px 12px;
 }
 
+.el-progress-bar__outer {
+  background-color: #ccc;
+}
+
 .view-header {
   display: flex;
   justify-content: space-between;

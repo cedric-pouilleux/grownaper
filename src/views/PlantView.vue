@@ -97,8 +97,8 @@ export default defineComponent({
     const { all } = storeToRefs(plantStore);
 
     function selectPlant(plant: PlantResource): void {
-      selectedPlant.value = new PlantResource(plant);
-      comparePlant.value = new PlantResource(plant);
+      selectedPlant.value = plant;
+      comparePlant.value = plant;
     }
 
     function addPlant(plant: PlantResource): void {
