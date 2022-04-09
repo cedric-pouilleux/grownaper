@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import Moment from 'moment';
 import PlantResource from '@/resources/PlantResource';
 import { object } from 'vue-types';
@@ -22,23 +22,30 @@ export default defineComponent({
   },
 
   setup(props) {
+    const currentDate = ref(Moment());
+
     const text = computed(() => {
-      if (!props.plant) {
-        return null;
-      }
       const { variety, startFloweringDate, collectedDate } = props.plant;
-      if (!variety || !startFloweringDate) {
-        return 'flowering not started';
+      if (!variety) {
+        return 'Variety not selected';
+      }
+      if (!startFloweringDate) {
+        return 'Flowering date not selected';
+      }
+
+      const days = Moment(startFloweringDate).add(variety.floTime, 'd').diff(currentDate.value, 'days');
+      const daysWork = variety.floTime - days;
+      if (props.plant.isFlowering() && daysWork > 0) {
+        return `Flowering ${daysWork} / ${variety.floTime} days`;
       }
       if (props.plant.isDrying() || props.plant.isCurring()) {
         const date = Moment(collectedDate).diff(startFloweringDate, 'days');
         return `Flowering complete ${date} / ${variety.floTime}`;
       }
-      const days = Moment(startFloweringDate).add(variety.floTime, 'd').diff(Moment(), 'days');
-      if (variety.floTime - days > 0) {
-        return `${variety.floTime - days} / ${variety.floTime} flowering`;
+      if (daysWork === 0) {
+        return 'Flowering start tomorrow';
       }
-      return `Flowering start in ${-(variety.floTime - days)} days`;
+      return `Flowering start in ${-daysWork} days`;
     });
 
     const percent = computed(() => {
@@ -49,8 +56,15 @@ export default defineComponent({
       if (collectedDate) {
         return 100;
       }
-      const days = Moment().diff(startFloweringDate, 'days');
-      return Percent(days, variety.floTime);
+      const days = currentDate.value.diff(startFloweringDate, 'days');
+      if (days > 0) {
+        const val = Percent(days, variety.floTime);
+        if (val > 100) {
+          return 100;
+        }
+        return Percent(days, variety.floTime);
+      }
+      return 0;
     });
 
     const status = computed(() => {
@@ -58,16 +72,14 @@ export default defineComponent({
       if (collectedDate) {
         return 'success';
       }
-      if (!startFloweringDate || !variety) {
-        return 'danger';
-      }
-      return 'primary';
+      return '';
     });
 
     return {
       text,
       percent,
       status,
+      currentDate, // use for unit testing
     };
   },
 });

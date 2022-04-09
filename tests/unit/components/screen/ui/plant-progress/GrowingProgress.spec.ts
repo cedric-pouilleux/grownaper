@@ -34,7 +34,7 @@ describe('Plant growing progress', () => {
     const wrapper = prepareMount(growingPlantFixture);
     wrapper.vm.currentDate = Moment(growingPlantFixture.startGrowingDate);
     await wrapper.vm.$nextTick();
-    expect(wrapper.text()).toEqual('Start today');
+    expect(wrapper.text()).toEqual('Growing start today');
     expect(wrapper.vm.status).toBe('');
     expect(wrapper.vm.percent).toBe(100);
   });

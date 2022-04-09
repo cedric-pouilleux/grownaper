@@ -32,7 +32,7 @@ export default defineComponent({
       const days = currentDate.value.diff(props.plant?.startGrowingDate, 'days');
       if (props.plant.isGrowing()) {
         if (days === 0) {
-          return 'Start today';
+          return 'Growing start today';
         }
         return `Growing start since ${days} days`;
       }
@@ -42,7 +42,7 @@ export default defineComponent({
         }
         return `Growing start in ${-days} days`;
       }
-      return '';
+      return `Growing start in ${-days} days`;
     });
 
     const percent: ComputedRef<number> = computed((): number => {
@@ -63,7 +63,7 @@ export default defineComponent({
       text,
       percent,
       status,
-      currentDate,
+      currentDate, // use for unit testing
     };
   },
 });
