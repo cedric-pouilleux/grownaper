@@ -24,12 +24,6 @@
       </template>
     </el-popconfirm>
 
-    <!-- Collected btn -->
-    <el-button v-if="plant.isCurring() || plant.isDrying()"
-               disabled type="success" size="small" @click="cutPlant" round plain>
-      Collected
-    </el-button>
-
     <!-- Start curring btn -->
     <el-popover trigger="hover" :width="185" v-if="plant.isDrying() && !plant.isCurring()">
       <template #reference>
@@ -56,9 +50,10 @@ import {
 import PlantStore from '@/store/plants';
 import { ElNotification } from 'element-plus';
 import PlantResource from '@/resources/PlantResource';
+import Moment from 'moment';
 
 export default defineComponent({
-  name: 'PlantSelectionHeader',
+  name: 'PlantStatusAction',
   props: {
     plant: {
       type: PlantResource,
@@ -130,16 +125,26 @@ export default defineComponent({
       if (props.plant.collectedDate) {
         return false;
       }
+      if (Moment().isBefore(props.plant.startGrowingDate)) {
+        return true;
+      }
       return !props.plant.isGrowing()
       && !props.plant.isFlowering()
       && !props.plant.isDrying()
       && !props.plant.isCurring();
     });
 
-    const displayCollectStartBtn = computed(() => props.plant.isFlowering()
-        && !props.plant.isDrying()
-        && !props.plant.isGrowing()
-        && !props.plant.isCurring());
+    const displayCollectStartBtn = computed(
+      () => {
+        if (props.plant.startGrowingDate) {
+          return false;
+        }
+        return props.plant.isFlowering()
+          && !props.plant.isDrying()
+          && !props.plant.isGrowing()
+          && !props.plant.isCurring();
+      },
+    );
 
     return {
       cutPlant,

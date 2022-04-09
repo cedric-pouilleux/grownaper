@@ -27,6 +27,7 @@
                                    @change="editPlant"
                                    @save="savePlant"/>
               <plant-time-reading :plant="selectedPlant" />
+              <plant-end-actions :plant="selectedPlant" @edit="editStatusPlant"/>
             </el-col>
             <el-col :span="24" :md="24" :lg="12" :xl="12">
               <plant-finished-resume v-if="selectedPlant.startCurringDate" :plant="selectedPlant" />
@@ -60,6 +61,7 @@ import { Plus } from '@element-plus/icons-vue';
 import PlantListHeader from '@/components/screen/ui/PlantListHeader.vue';
 import PlantHistoryHeader from '@/components/screen/ui/PlantHistoryHeader.vue';
 import PlantIdentificationResume from '@/components/screen/ui/PlantIdentificationResume.vue';
+import PlantEndActions from '@/components/widget/plant-time/PlantStatusActions.vue';
 import FloweringDateForm from '@/components/screen/form/EditPlant.vue';
 import { storeToRefs } from 'pinia';
 import Moment from 'moment';
@@ -69,7 +71,7 @@ import PlantNote from '@/components/screen/ui/PlantNote.vue';
 import PlantPictures from '@/components/screen/ui/PlantPictures.vue';
 import PlantFinishedResume from '@/components/screen/ui/PlantFinishedResume.vue';
 import PlantResource from '@/resources/PlantResource';
-import PlantTimeReading from '@/components/screen/ui/time-reading/PlantStatusTime.vue';
+import PlantTimeReading from '@/components/widget/plant-time/PlantStatusTime.vue';
 
 export default defineComponent({
   name: 'HomePage',
@@ -81,6 +83,7 @@ export default defineComponent({
     PlantHistoryHeader,
     PlantListHeader,
     PlantHistoryResume,
+    PlantEndActions,
     AddPlant,
     PlantList,
     PlantIdentificationResume,
@@ -158,9 +161,14 @@ export default defineComponent({
       isEditPlantOpen.value = !isEditPlantOpen.value;
     }
 
+    function editStatusPlant(plant: PlantResource): void {
+      selectedPlant.value = plant;
+    }
+
     return {
       historyMode,
       clearSelectedPlant: () => { selectedPlant.value = null; },
+      editStatusPlant,
       isPlantFormOpened,
       isEditPlantOpen,
       all,

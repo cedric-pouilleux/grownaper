@@ -17,7 +17,7 @@ import Moment from 'moment';
 import PlantResource from '@/resources/PlantResource';
 
 export default defineComponent({
-  name: 'dryingProgress',
+  name: 'DryingProgress',
 
   props: {
     plant: {

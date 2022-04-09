@@ -18,10 +18,10 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import PlantResource from '@/resources/PlantResource';
-import GrowingProgress from '@/components/screen/ui/time-reading/plant-progress/GrowingProgress.vue';
-import FloweringProgress from '@/components/screen/ui/time-reading/plant-progress/FloweringProgress.vue';
-import DryingProgress from '@/components/screen/ui/time-reading/plant-progress/DryingProgress.vue';
-import CurringProgress from '@/components/screen/ui/time-reading/plant-progress/CurringProgress.vue';
+import GrowingProgress from '@/components/widget/plant-time/plant-progress/GrowingProgress.vue';
+import FloweringProgress from '@/components/widget/plant-time/plant-progress/FloweringProgress.vue';
+import DryingProgress from '@/components/widget/plant-time/plant-progress/DryingProgress.vue';
+import CurringProgress from '@/components/widget/plant-time/plant-progress/CurringProgress.vue';
 
 export default defineComponent({
   name: 'PlantStatusTime',

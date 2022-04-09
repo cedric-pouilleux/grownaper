@@ -18,7 +18,7 @@ import PlantResource from '@/resources/PlantResource';
 import { Percent } from '@/common/utils';
 
 export default defineComponent({
-  name: 'curringProgress',
+  name: 'CurringProgress',
 
   props: {
     plant: {

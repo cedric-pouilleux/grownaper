@@ -18,7 +18,7 @@ import { object } from 'vue-types';
 import { Percent } from '@/common/utils';
 
 export default defineComponent({
-  name: 'floweringProgress',
+  name: 'FloweringProgress',
 
   props: {
     plant: object<PlantResource>().isRequired,

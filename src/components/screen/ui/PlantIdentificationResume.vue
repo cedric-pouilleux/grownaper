@@ -3,10 +3,12 @@
     <header class="plant-identification-resume__header">
       <qrcode-vue :value="plant.qrcode" style="width: 60px; height: 60px;" :size="200"/>
       <div>
-        <h1 :data-plantid="plant._id">{{ plant.name }}</h1>
+        <div class="plant-identification-resume__header-title">
+          <h1 :data-plantid="plant._id">{{ plant.name }}</h1>
+          <el-tag v-if="plant.collectedDate" type="success">Collected</el-tag>
+        </div>
         <plant-variety-resume :variety="plant.variety" />
         <p class="date">Created at : {{ readableCreatedAt }}</p>
-        <plant-end-actions :plant="plant" @edit="editStatusPlant"/>
         <el-button size="small"
                    @click="openEditPlant"
                    plain round>
@@ -32,7 +34,6 @@ import Moment from 'moment';
 import { SIMPLE_DATE } from '@/common/DateFormatConfig';
 import PlantStore from '@/store/plants';
 import PlantVarietyResume from '@/components/screen/ui/PlantVarietyResume.vue';
-import PlantEndActions from '@/components/screen/ui/PlantEndActions.vue';
 import PlantResource from '@/resources/PlantResource';
 
 export default defineComponent({
@@ -40,7 +41,6 @@ export default defineComponent({
   components: {
     QrcodeVue,
     PlantVarietyResume,
-    PlantEndActions,
   },
   props: {
     plant: {
@@ -93,6 +93,14 @@ export default defineComponent({
     .date {
       margin: 6px 0 12px 0;
       font-size: .7em;
+    }
+
+    &-title {
+      display: flex;
+      margin-bottom: 12px;
+      column-gap: 10px;
+      align-content: baseline;
+      justify-content: space-between;
     }
   }
 
