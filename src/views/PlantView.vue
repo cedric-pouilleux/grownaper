@@ -131,6 +131,7 @@ export default defineComponent({
     }
 
     async function savePlant(plant: PlantResource): Promise<void> {
+      // TODO => remove this logic
       const params: Partial<PlantResource> = {
         ...!isSameVariety.value ? { variety: plant.variety } : {},
         ...!isSameName.value ? { name: plant.name } : {},

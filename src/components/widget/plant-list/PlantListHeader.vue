@@ -1,12 +1,12 @@
 <template>
   <el-header class="view-header">
-    <h2>Plants ({{count}})</h2>
+    <h2>{{ $t('plant', count, { count }) }}</h2>
     <el-button type="primary"
                size="small"
                :icon="Plus"
                @click="newPlant"
     round>
-      New
+      {{ $t('add') }}
     </el-button>
   </el-header>
 </template>
