@@ -59,6 +59,13 @@ const floweringPlant = new PlantResource({
   startFloweringDate,
 });
 
+const floweringPlantSameDate = new PlantResource({
+  ...plantBase,
+  createdAt,
+  startGrowingDate,
+  startFloweringDate: startGrowingDate,
+});
+
 const dryingPlant = new PlantResource({
   ...plantBase,
   createdAt,
@@ -84,4 +91,5 @@ export {
   floweringPlant as floweringPlantFixture,
   dryingPlant as dryingPlantFixture,
   curringPlant as curringPlantFixture,
+  floweringPlantSameDate as floweringPlantSameDateFixture,
 };

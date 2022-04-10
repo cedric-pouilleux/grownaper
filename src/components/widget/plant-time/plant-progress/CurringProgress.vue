@@ -1,5 +1,5 @@
 <template>
-  <el-progress v-if="plant.startCurringDate"
+  <el-progress v-if="isVisible"
                :text-inside="true"
                :percentage="percent"
                :stroke-width="16"
@@ -29,6 +29,7 @@ export default defineComponent({
 
   setup(props) {
     const currentDate = ref(Moment());
+    const isVisible: ComputedRef<boolean> = computed((): boolean => !!props.plant.startCurringDate);
     const recommendationDays = ref<number>(60);
 
     const getDryingFromNow: ComputedRef<number> = computed((): number => {
@@ -80,6 +81,7 @@ export default defineComponent({
     });
 
     return {
+      isVisible,
       text,
       percent,
       status,

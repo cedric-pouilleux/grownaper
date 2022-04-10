@@ -1,5 +1,5 @@
 <template>
-  <el-progress v-if="plant.collectedDate"
+  <el-progress v-if="isVisible"
                :text-inside="true"
                :percentage="percent"
                :stroke-width="16"
@@ -28,6 +28,7 @@ export default defineComponent({
 
   setup(props) {
     const currentDate = ref(Moment());
+    const isVisible: ComputedRef<boolean> = computed((): boolean => !!props.plant.collectedDate);
 
     const getDryingDuration: ComputedRef<number> = computed((): number => {
       if (props.plant.collectedDate || props.plant.startCurringDate) {
@@ -40,12 +41,17 @@ export default defineComponent({
      * Text render
      */
     const text: ComputedRef<string> = computed((): string => {
+      if (!props.plant.collectedDate) {
+        return 'Drying not started';
+      }
       if (props.plant.isCurring()) {
-        const finishedDay = currentDate.value.diff(getDryingDuration.value, 'days');
         return `Drying complete on ${getDryingDuration.value} days`;
       }
       if (props.plant.isDrying()) {
         const days = currentDate.value.diff(props.plant.collectedDate, 'days');
+        if (days === 0) {
+          return 'Start drying today';
+        }
         return `Drying ${days} days`;
       }
       return 'Drying not started';
@@ -72,6 +78,7 @@ export default defineComponent({
     });
 
     return {
+      isVisible,
       text,
       percent,
       status,

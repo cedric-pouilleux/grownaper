@@ -1,5 +1,6 @@
 <template>
-  <el-progress :text-inside="true"
+  <el-progress v-if="isVisible"
+               :text-inside="true"
                :percentage="percent"
                :stroke-width="16"
                :status="status">
@@ -30,6 +31,17 @@ export default defineComponent({
     const expiredDays: ComputedRef<number> = computed(
       () => currentDate.value.diff(props.plant?.startGrowingDate, 'days'),
     );
+
+    const isVisible: ComputedRef<boolean> = computed((): boolean => {
+      const { startGrowingDate, startFloweringDate } = props.plant;
+      if (!startGrowingDate || !startFloweringDate) {
+        return true;
+      }
+      if (Moment(startGrowingDate).isSame(startFloweringDate, 'day')) {
+        return false;
+      }
+      return true;
+    });
 
     const text: ComputedRef<string> = computed((): string => {
       if (!props.plant?.startGrowingDate) {
@@ -67,6 +79,7 @@ export default defineComponent({
     });
 
     return {
+      isVisible,
       text,
       percent,
       status,

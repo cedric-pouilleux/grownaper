@@ -6,7 +6,7 @@ import Moment from 'moment';
 import {
   growingPlantFixture,
   creatingPlantFixture,
-  floweringPlantFixture,
+  floweringPlantFixture, floweringPlantSameDateFixture,
 } from '../../../../../mocks/PlantsMocks';
 
 function prepareMount(plant: PlantResource) {
@@ -46,6 +46,14 @@ describe('Plant growing progress', () => {
     expect(wrapper.text()).toEqual('Growing start today');
     expect(wrapper.vm.status).toBe('');
     expect(wrapper.vm.percent).toBe(100);
+  });
+
+  it('Not visible when start growing date is the same has start flowering date', async () => {
+    const wrapper = prepareMount(floweringPlantSameDateFixture);
+    wrapper.vm.currentDate = Moment(growingPlantFixture.startGrowingDate);
+    await wrapper.vm.$nextTick();
+    expect(wrapper.text()).toEqual('');
+    expect(wrapper.vm.isVisible).toBeFalsy();
   });
 
   it('Test growing plant render', async () => {

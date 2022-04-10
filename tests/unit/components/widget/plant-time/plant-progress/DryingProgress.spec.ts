@@ -6,7 +6,7 @@ import Moment from 'moment';
 import {
   creatingPlantFixture,
   curringPlantFixture,
-  dryingPlantFixture,
+  dryingPlantFixture, floweringPlantFixture,
 } from '../../../../../mocks/PlantsMocks';
 
 function prepareMount(plant: PlantResource) {
@@ -22,12 +22,20 @@ function prepareMount(plant: PlantResource) {
 
 describe('Plant curring progress', () => {
   it('Dying not started', async () => {
-    const wrapper = prepareMount(creatingPlantFixture);
+    const wrapper = prepareMount(floweringPlantFixture);
     wrapper.vm.currentDate = Moment('2022-04-01');
     await wrapper.vm.$nextTick();
-    expect(wrapper.text()).toEqual('Drying not started');
+    expect(wrapper.text()).toEqual('');
+    expect(wrapper.vm.isVisible).toBeFalsy();
+  });
+
+  it('Dying start today', async () => {
+    const wrapper = prepareMount(dryingPlantFixture);
+    wrapper.vm.currentDate = Moment(dryingPlantFixture.collectedDate);
+    await wrapper.vm.$nextTick();
+    expect(wrapper.text()).toEqual('Start drying today');
     expect(wrapper.vm.status).toBe('success');
-    expect(wrapper.vm.percent).toBe(0);
+    expect(wrapper.vm.percent).toBe(100);
   });
 
   it('Dying started', async () => {

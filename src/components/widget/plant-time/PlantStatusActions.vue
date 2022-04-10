@@ -2,21 +2,32 @@
 
   <span v-if="plant">
 
+    <!-- Growing btn -->
     <el-button v-if="displayGrowingStartBtn"
                type="warning"
                effect="plain"
                size="small"
                @click="startGrowing"
-               round plain>
+               round plain
+               data-testid="growing">
       Start growing
     </el-button>
 
-    <el-button v-if="plant.isGrowing()" type="success" size="small" @click="startFlowering" round plain>
+    <!-- Flowering btn -->
+    <el-button v-if="displayFloweringStartBtn"
+               type="success"
+               size="small"
+               @click="startFlowering"
+               data-testid="flowering"
+               round plain>
       Start flowering
     </el-button>
 
     <!-- Collect btn -->
-    <el-popconfirm v-if="displayCollectStartBtn" title="Are you sure to collect this plant ?" @confirm="cutPlant">
+    <el-popconfirm v-if="displayCollectStartBtn"
+                   title="Are you sure to collect this plant ?"
+                   @confirm="cutPlant"
+                   data-testid="collect">
       <template #reference>
         <el-button type="warning" effect="plain" size="small" round plain>
           Collect
@@ -25,7 +36,10 @@
     </el-popconfirm>
 
     <!-- Start curring btn -->
-    <el-popover trigger="hover" :width="185" v-if="plant.isDrying() && !plant.isCurring()">
+    <el-popover trigger="hover"
+                :width="185"
+                v-if="plant.isDrying() && !plant.isCurring()"
+                data-testid="curring">
       <template #reference>
         <el-button type="warning" size="small" round plain>
           Start curring
@@ -45,7 +59,7 @@
 
 <script lang="ts">
 import {
-  computed, defineComponent, ref, watch,
+  computed, ComputedRef, defineComponent, ref, watch,
 } from 'vue';
 import PlantStore from '@/store/plants';
 import { ElNotification } from 'element-plus';
@@ -64,6 +78,7 @@ export default defineComponent({
   setup(props, { emit }) {
     const weight = ref<number>(0);
     const plantStore = PlantStore();
+    const currentDate = ref(Moment());
 
     async function startGrowing(): Promise<void> {
       if (!props.plant._id) {
@@ -122,37 +137,33 @@ export default defineComponent({
     }
 
     const displayGrowingStartBtn = computed(() => {
-      if (props.plant.collectedDate) {
+      if (props.plant.startFloweringDate) {
         return false;
       }
-      if (Moment().isBefore(props.plant.startGrowingDate)) {
-        return true;
+      if (props.plant.startGrowingDate) {
+        return currentDate.value.isBefore(props.plant.startGrowingDate);
       }
-      return !props.plant.isGrowing()
-      && !props.plant.isFlowering()
-      && !props.plant.isDrying()
-      && !props.plant.isCurring();
+      return true;
     });
 
-    const displayCollectStartBtn = computed(
-      () => {
-        if (props.plant.startGrowingDate) {
-          return false;
-        }
-        return props.plant.isFlowering()
-          && !props.plant.isDrying()
-          && !props.plant.isGrowing()
-          && !props.plant.isCurring();
-      },
-    );
+    const displayCollectStartBtn: ComputedRef<boolean> = computed((): boolean => props.plant.isFlowering());
+
+    const displayFloweringStartBtn: ComputedRef<boolean> = computed((): boolean => {
+      if (props.plant.startFloweringDate) {
+        return currentDate.value.isBefore(props.plant.startFloweringDate);
+      }
+      return true;
+    });
 
     return {
       cutPlant,
+      currentDate,
       startFlowering,
       startCurring,
       startGrowing,
       displayGrowingStartBtn,
       displayCollectStartBtn,
+      displayFloweringStartBtn,
       weight,
     };
   },

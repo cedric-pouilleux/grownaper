@@ -21,9 +21,8 @@ describe('Plant curring progress', () => {
     const wrapper = prepareMount(creatingPlantFixture);
     wrapper.vm.currentDate = Moment('2022-04-01');
     await wrapper.vm.$nextTick();
-    expect(wrapper.text()).toEqual('Curring not started');
-    expect(wrapper.vm.status).toBe('success');
-    expect(wrapper.vm.percent).toBe(0);
+    expect(wrapper.text()).toEqual('');
+    expect(wrapper.vm.isVisible).toBeFalsy();
   });
 
   it('Curring is started', async () => {
