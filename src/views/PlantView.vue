@@ -8,8 +8,7 @@
 
     <!-- PlantResource list -->
     <el-container style="min-width: 600px; max-width: 600px;" direction="vertical">
-      <plant-list-header :count="all.length" @new-plant="togglePlantForm" />
-      <plant-list :plants="all" @select="selectPlant"/>
+      <plant-list :plants="all" @select="selectPlant" @new-plant="togglePlantForm"/>
     </el-container>
     <!-- Selected plant infos -->
     <template v-if="selectedPlant">
@@ -30,8 +29,6 @@
               <plant-end-actions :plant="selectedPlant" @edit="editStatusPlant"/>
             </el-col>
             <el-col :span="24" :md="24" :lg="12" :xl="12">
-              <plant-finished-resume v-if="selectedPlant.startCurringDate" :plant="selectedPlant" />
-              <br/>
               <plant-note :plant="selectedPlant" @add-note="selectPlant"/>
               <br/>
               <plant-pictures />
@@ -53,23 +50,21 @@ import {
   defineComponent, computed, ref, ComputedRef,
 } from 'vue';
 
-import PlantList from '@/components/PlantList.vue';
+import PlantList from '@/components/widget/plant-list/PlantList.vue';
 import PlantStore from '@/store/plants';
-import AddPlant from '@/components/screen/form/AddPlant.vue';
-import PlantHistoryResume from '@/components/screen/ui/PlantHistoryResume.vue';
+import AddPlant from '@/components/form/AddPlant.vue';
+import PlantHistoryResume from '@/components/widget/plant-history/PlantHistoryResume.vue';
 import { Plus } from '@element-plus/icons-vue';
-import PlantListHeader from '@/components/screen/ui/PlantListHeader.vue';
-import PlantHistoryHeader from '@/components/screen/ui/PlantHistoryHeader.vue';
-import PlantIdentificationResume from '@/components/screen/ui/PlantIdentificationResume.vue';
+import PlantHistoryHeader from '@/components/widget/plant-history/PlantHistoryHeader.vue';
+import PlantIdentificationResume from '@/components/widget/plant-identification/PlantIdentificationResume.vue';
 import PlantEndActions from '@/components/widget/plant-time/PlantStatusActions.vue';
-import FloweringDateForm from '@/components/screen/form/EditPlant.vue';
+import FloweringDateForm from '@/components/form/EditPlant.vue';
 import { storeToRefs } from 'pinia';
 import Moment from 'moment';
 import { isEqual } from '@/common/utils';
 import { ElNotification } from 'element-plus';
-import PlantNote from '@/components/screen/ui/PlantNote.vue';
-import PlantPictures from '@/components/screen/ui/PlantPictures.vue';
-import PlantFinishedResume from '@/components/screen/ui/PlantFinishedResume.vue';
+import PlantNote from '@/components/widget/plant-note/PlantNote.vue';
+import PlantPictures from '@/components/widget/plant-pictures/PlantPictures.vue';
 import PlantResource from '@/resources/PlantResource';
 import PlantTimeReading from '@/components/widget/plant-time/PlantStatusTime.vue';
 
@@ -77,11 +72,9 @@ export default defineComponent({
   name: 'HomePage',
   components: {
     PlantTimeReading,
-    PlantFinishedResume,
     PlantPictures,
     PlantNote,
     PlantHistoryHeader,
-    PlantListHeader,
     PlantHistoryResume,
     PlantEndActions,
     AddPlant,

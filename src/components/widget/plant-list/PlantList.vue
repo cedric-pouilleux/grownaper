@@ -1,4 +1,5 @@
 <template>
+  <plant-list-header :count="plants.length" @new-plant="newPlant" />
   <el-scrollbar>
     <div class="plants-list">
       <el-table size="small"
@@ -10,13 +11,7 @@
         <el-table-column prop="name" label="Name" />
         <el-table-column>
           <template #default="scope">
-            <el-progress
-                         :text-inside="true"
-                         :stroke-width="16"
-                         :status="status(scope.row)"
-                         :percentage="percent(scope.row)">
-              {{getProgressText(scope.row)}}
-            </el-progress>
+            <plant-progress-table v-if="scope.row" :plant="scope.row" />
           </template>
         </el-table-column>
         <el-table-column prop="variety" label="Varieties" width="200">
@@ -59,83 +54,36 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from 'vue';
+import { defineComponent, PropType } from 'vue';
 import {
   Male, Female, Timer, InfoFilled,
 } from '@element-plus/icons-vue';
-import Moment from 'moment';
 import PlantResource from '@/resources/PlantResource';
+import PlantListHeader from '@/components/widget/plant-list/PlantListHeader.vue';
+import PlantProgressTable from '@/components/widget/plant-list/PlantProgressTable.vue';
 
 export default defineComponent({
   name: 'PlantList',
 
-  emits: ['select'],
+  emits: ['select', 'new-plant'],
+
+  components: {
+    PlantProgressTable,
+    PlantListHeader,
+  },
 
   props: {
     plants: Array as PropType<PlantResource[]>,
   },
 
   setup(props, { emit }) {
-    // TODO => get percent and text in the same object
-    function getProgressText(plant: PlantResource): string {
-      if (plant.isGrowing()) {
-        return 'Growing';
-      }
-      if (plant.isFlowering()) {
-        return 'Flowering';
-      }
-      if (plant.isDrying()) {
-        return 'Drying';
-      }
-      if (plant.isCurring()) {
-        return 'Curring';
-      }
-      return 'Not started';
-    }
-
-    function percent(plant: PlantResource): number | null {
-      if (plant.isFlowering()) {
-        return plant.floweringPercent();
-      }
-      if (plant.isCurring()) {
-        return plant.curringPercent();
-      }
-      if (plant.isDrying() || plant.isGrowing()) {
-        return 100;
-      }
-      return 0;
-    }
-
-    function status(plant: PlantResource): string {
-      if (plant.isGrowing()) {
-        return 'success';
-      }
-      if (plant.isDrying()) {
-        return 'success';
-      }
-      if (plant.isFlowering()) {
-        return plant.floweringPercent() === 100 ? 'success' : '';
-      }
-      if (plant.isCurring()) {
-        return plant.curringPercent() === 100 ? 'success' : '';
-      }
-      return '';
-    }
-
-    function isFloweringStarted(plant: PlantResource): boolean {
-      return Moment().isAfter(plant.startFloweringDate);
-    }
-
     return {
       open: (plant: PlantResource) => { emit('select', plant); },
-      getProgressText,
-      isFloweringStarted,
-      status,
+      newPlant: (plant: PlantResource) => { emit('new-plant', plant); },
       Male,
       Female,
       Timer,
       InfoFilled,
-      percent,
     };
   },
 
@@ -144,51 +92,10 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-
-  .plants-list {
-
-    &__cell-icons {
-      float: left;
-      margin: 4px 8px 0 0;
-    }
-
-    &__createdAt   {
-      margin-top: 6px;
-      font-size: .8em;
-      font-weight: 700;
-    }
-
-    header {
-      padding: 12px;
-    }
-
-    p {
-      margin: 0;
-    }
-
-    ul {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      display: flex;
-      flex-wrap: wrap;
-
-      li {
-        border: 1px solid #ebebeb;
-        margin: 4px;
-        display: flex;
-        font-size: .9em;
-        align-content: center;
-        flex-direction: column;
-        justify-content: flex-end;
-        padding: 10px;
-        max-width: 140px;
-
-        canvas {
-          margin-bottom: 10px;
-        }
-      }
-    }
+.plants-list {
+  &__cell-icons {
+    float: left;
+    margin: 4px 8px 0 0;
   }
-
+}
 </style>

@@ -33,7 +33,7 @@ import QrcodeVue from 'qrcode.vue';
 import Moment from 'moment';
 import { SIMPLE_DATE } from '@/common/DateFormatConfig';
 import PlantStore from '@/store/plants';
-import PlantVarietyResume from '@/components/screen/ui/PlantVarietyResume.vue';
+import PlantVarietyResume from '@/components/widget/plant-identification/PlantVarietyResume.vue';
 import PlantResource from '@/resources/PlantResource';
 
 export default defineComponent({

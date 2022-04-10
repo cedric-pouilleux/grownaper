@@ -19,7 +19,7 @@ import { defineComponent, PropType } from 'vue';
 import { Variety } from '@/common/types';
 
 export default defineComponent({
-  name: 'PlantVariety',
+  name: 'PlantVarietyResume',
   props: {
     variety: {
       type: Object as PropType<Variety>,

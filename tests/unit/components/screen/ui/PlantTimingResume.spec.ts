@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils';
-import PlantTimingResume from '@/components/screen/ui/PlantTimingResume.vue';
+import PlantTimingResume from '@/components/PlantTimingResume.vue';
 import ElementPlus from 'element-plus';
 
 function isNotValid(wrapper: any) {

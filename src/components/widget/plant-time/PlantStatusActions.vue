@@ -59,7 +59,7 @@
 
 <script lang="ts">
 import {
-  computed, ComputedRef, defineComponent, ref, watch,
+  computed, ComputedRef, defineComponent, ref,
 } from 'vue';
 import PlantStore from '@/store/plants';
 import { ElNotification } from 'element-plus';

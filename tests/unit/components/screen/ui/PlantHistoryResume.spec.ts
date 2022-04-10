@@ -1,5 +1,5 @@
 import { mount, shallowMount } from '@vue/test-utils';
-import PlantHistoryResume from '@/components/screen/ui/PlantHistoryResume.vue';
+import PlantHistoryResume from '@/components/widget/plant-history/PlantHistoryResume.vue';
 import ElementPlus from 'element-plus';
 import {
   expectResult,
