@@ -22,11 +22,11 @@
                                            @open-edit-plant="openEditPlant"/>
               <flowering-date-form v-if="isEditPlantOpen"
                                    :plant="selectedPlant"
-                                   :can-save="!canSave"
+                                   :compare="comparePlant"
                                    @change="editPlant"
                                    @save="savePlant"/>
               <plant-time-reading :plant="selectedPlant" />
-              <plant-end-actions :plant="selectedPlant" @edit="editStatusPlant"/>
+              <plant-end-actions :plant="selectedPlant" @edit="selectPlant"/>
             </el-col>
             <el-col :span="24" :md="24" :lg="12" :xl="12">
               <plant-note :plant="selectedPlant" @add-note="selectPlant"/>
@@ -58,7 +58,7 @@ import { Plus } from '@element-plus/icons-vue';
 import PlantHistoryHeader from '@/components/widget/plant-history/PlantHistoryHeader.vue';
 import PlantIdentificationResume from '@/components/widget/plant-identification/PlantIdentificationResume.vue';
 import PlantEndActions from '@/components/widget/plant-time/PlantStatusActions.vue';
-import FloweringDateForm from '@/components/form/EditPlant.vue';
+import FloweringDateForm from '@/components/widget/plant-edition/PlantEdition.vue';
 import { storeToRefs } from 'pinia';
 import Moment from 'moment';
 import { isEqual } from '@/common/utils';
@@ -91,6 +91,10 @@ export default defineComponent({
     const isPlantFormOpened = ref<boolean>(false);
     const { all } = storeToRefs(plantStore);
 
+    function openEditPlant(): void {
+      isEditPlantOpen.value = !isEditPlantOpen.value;
+    }
+
     function selectPlant(plant: PlantResource): void {
       selectedPlant.value = plant;
       comparePlant.value = plant;
@@ -101,73 +105,40 @@ export default defineComponent({
       isPlantFormOpened.value = false;
     }
 
-    const isSameDate: ComputedRef<boolean> = computed(
-      (): boolean => Moment(comparePlant.value?.startFloweringDate)
-        .isSame(selectedPlant.value?.startFloweringDate, 'day'),
-    );
-
-    const isSameGrowingDate: ComputedRef<boolean> = computed(
-      (): boolean => Moment(comparePlant.value?.startGrowingDate)
-        .isSame(selectedPlant.value?.startGrowingDate, 'day'),
-    );
-
-    const isSameVariety: ComputedRef<boolean> = computed(
-      (): boolean => isEqual(comparePlant.value?.variety, selectedPlant.value?.variety),
-    );
-
-    const isSameName: ComputedRef<boolean> = computed(
-      (): boolean => comparePlant.value?.name === selectedPlant.value?.name,
-    );
-
-    const canSave: ComputedRef<boolean> = computed(
-      (): boolean => isSameName.value
-        && isSameVariety.value
-        && isSameDate.value
-        && isSameGrowingDate.value,
-    );
-
     function editPlant(plant: PlantResource): void {
       selectedPlant.value = new PlantResource(plant);
     }
 
     async function savePlant(plant: PlantResource): Promise<void> {
       // TODO => remove this logic
+      /*
       const params: Partial<PlantResource> = {
         ...!isSameVariety.value ? { variety: plant.variety } : {},
         ...!isSameName.value ? { name: plant.name } : {},
         ...!isSameDate.value ? { startFloweringDate: plant.startFloweringDate } : {},
         ...!isSameGrowingDate.value ? { startGrowingDate: plant.startGrowingDate } : {},
-      };
+      }; */
       if (plant._id) {
-        const edited = await plantStore.edit(plant._id, params);
+        const edited = await plantStore.edit(plant._id, plant);
         if (edited) {
           ElNotification.success({
             message: `PlantResource ${edited.name} has been edited`,
             offset: 100,
           });
-          selectedPlant.value = new PlantResource(edited);
-          comparePlant.value = new PlantResource(edited);
+          selectedPlant.value = edited;
+          comparePlant.value = edited;
         }
       }
-    }
-
-    function openEditPlant(): void {
-      isEditPlantOpen.value = !isEditPlantOpen.value;
-    }
-
-    function editStatusPlant(plant: PlantResource): void {
-      selectedPlant.value = plant;
     }
 
     return {
       historyMode,
       clearSelectedPlant: () => { selectedPlant.value = null; },
-      editStatusPlant,
       isPlantFormOpened,
+      comparePlant,
       isEditPlantOpen,
       all,
       selectedPlant,
-      canSave,
       addPlant,
       selectPlant,
       savePlant,
