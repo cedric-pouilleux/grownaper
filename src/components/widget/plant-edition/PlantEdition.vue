@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import {
-  computed, ComputedRef, defineComponent, reactive, toRef, toRefs, watch,
+  computed, ComputedRef, defineComponent, reactive, watch,
 } from 'vue';
 import { Refresh } from '@element-plus/icons-vue';
 import PlantResource from '@/resources/PlantResource';
@@ -26,6 +26,8 @@ import PlantEditionGrowingDate
   from '@/components/widget/plant-edition/inputs/PlantEditionGrowingDate.vue';
 import Moment from 'moment';
 import { isEqual } from '@/common/utils';
+import { ElNotification } from 'element-plus';
+import PlantStore from '@/store/plants';
 
 export default defineComponent({
   name: 'PlantEdition',
@@ -47,6 +49,8 @@ export default defineComponent({
   },
   emits: ['change', 'save'],
   setup(props, { emit }) {
+    const plantStore = PlantStore();
+
     const form = reactive<Partial<PlantResource>>({
       startFloweringDate: props.plant.startFloweringDate || undefined,
       startGrowingDate: props.plant.startGrowingDate || undefined,
@@ -96,10 +100,30 @@ export default defineComponent({
       form.name = value.name || undefined;
     });
 
+    async function savePlantInDatabase(plant: PlantResource): Promise<void> {
+      // TODO => use for define history database push, add this logic in backend
+      const params: Partial<PlantResource> = {
+        ...!isSameVariety.value ? { variety: form.variety } : {},
+        ...!isSameName.value ? { name: form.name } : {},
+        ...!isSameDate.value ? { startFloweringDate: form.startFloweringDate } : {},
+        ...!isSameGrowingDate.value ? { startGrowingDate: form.startGrowingDate } : {},
+      };
+      if (props.plant._id) {
+        const edited = await plantStore.edit(props.plant._id, params);
+        if (edited) {
+          ElNotification.success({
+            message: `PlantResource ${edited.name} has been edited`,
+            offset: 100,
+          });
+          emit('save', edited);
+        }
+      }
+    }
+
     return {
       form,
       canSave,
-      savePlantInDatabase: () => { emit('save', { ...props.plant, ...form }); },
+      savePlantInDatabase,
       Refresh,
     };
   },

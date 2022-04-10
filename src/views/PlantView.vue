@@ -24,7 +24,7 @@
                                    :plant="selectedPlant"
                                    :compare="comparePlant"
                                    @change="editPlant"
-                                   @save="savePlant"/>
+                                   @save="selectPlant"/>
               <plant-time-reading :plant="selectedPlant" />
               <plant-end-actions :plant="selectedPlant" @edit="selectPlant"/>
             </el-col>
@@ -46,10 +46,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent, computed, ref, ComputedRef,
-} from 'vue';
-
+import { defineComponent, ref } from 'vue';
 import PlantList from '@/components/widget/plant-list/PlantList.vue';
 import PlantStore from '@/store/plants';
 import AddPlant from '@/components/form/AddPlant.vue';
@@ -60,9 +57,6 @@ import PlantIdentificationResume from '@/components/widget/plant-identification/
 import PlantEndActions from '@/components/widget/plant-time/PlantStatusActions.vue';
 import FloweringDateForm from '@/components/widget/plant-edition/PlantEdition.vue';
 import { storeToRefs } from 'pinia';
-import Moment from 'moment';
-import { isEqual } from '@/common/utils';
-import { ElNotification } from 'element-plus';
 import PlantNote from '@/components/widget/plant-note/PlantNote.vue';
 import PlantPictures from '@/components/widget/plant-pictures/PlantPictures.vue';
 import PlantResource from '@/resources/PlantResource';
@@ -109,28 +103,6 @@ export default defineComponent({
       selectedPlant.value = new PlantResource(plant);
     }
 
-    async function savePlant(plant: PlantResource): Promise<void> {
-      // TODO => remove this logic
-      /*
-      const params: Partial<PlantResource> = {
-        ...!isSameVariety.value ? { variety: plant.variety } : {},
-        ...!isSameName.value ? { name: plant.name } : {},
-        ...!isSameDate.value ? { startFloweringDate: plant.startFloweringDate } : {},
-        ...!isSameGrowingDate.value ? { startGrowingDate: plant.startGrowingDate } : {},
-      }; */
-      if (plant._id) {
-        const edited = await plantStore.edit(plant._id, plant);
-        if (edited) {
-          ElNotification.success({
-            message: `PlantResource ${edited.name} has been edited`,
-            offset: 100,
-          });
-          selectedPlant.value = edited;
-          comparePlant.value = edited;
-        }
-      }
-    }
-
     return {
       historyMode,
       clearSelectedPlant: () => { selectedPlant.value = null; },
@@ -141,7 +113,6 @@ export default defineComponent({
       selectedPlant,
       addPlant,
       selectPlant,
-      savePlant,
       editPlant,
       togglePlantForm: (): void => { isPlantFormOpened.value = !isPlantFormOpened.value; },
       changeHistoryMode: (mode: string): void => { historyMode.value = mode; },
