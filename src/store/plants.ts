@@ -96,8 +96,8 @@ const plantStore = defineStore('plant', () => {
     return null;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   fetch().then(() => {
-    console.info('All plants feetch');
   });
 
   return {
