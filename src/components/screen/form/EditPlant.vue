@@ -22,7 +22,7 @@
         </el-option>
       </el-select>
     </el-form-item>
-    <el-form-item v-if="!plant.collectedDate"
+    <el-form-item v-if="!plant.isFlowering()"
                   label="Growing date">
       <el-date-picker v-model="selectedGrowingDate"
                       type="date"

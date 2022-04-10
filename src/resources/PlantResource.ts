@@ -2,6 +2,7 @@ import { Variety, Note, PlantHistory } from '@/common/types';
 import Moment from 'moment';
 import { IPlantResource } from '@/resources/IPlantResource';
 import { IPlantParam } from '@/resources/IPlantParam';
+import { Percent } from '@/common/utils';
 
 class PlantResource implements IPlantResource {
   _id: string | undefined = undefined;
@@ -75,6 +76,31 @@ class PlantResource implements IPlantResource {
 
   public isCurring(): boolean {
     return !!this.startCurringDate;
+  }
+
+  public floweringPercent(): number {
+    const days = Moment().diff(this.startFloweringDate, 'days');
+    if (days > 0 && this.variety) {
+      const val = Percent(days, this.variety.floTime);
+      if (val > 100) {
+        return 100;
+      }
+      return val;
+    }
+    return 0;
+  }
+
+  public curringPercent(): number {
+    if (!this.startCurringDate) {
+      return 0;
+    }
+    const diff = Moment().diff(this.startCurringDate, 'days');
+
+    const currentPercent = Percent(diff, 60);
+    if (currentPercent > 100) {
+      return 100;
+    }
+    return currentPercent;
   }
 }
 

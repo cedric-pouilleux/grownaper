@@ -18,4 +18,5 @@ export interface IPlantResource {
   isFlowering(): boolean,
   isCurring(): boolean,
   isDrying(): boolean,
+  floweringPercent(): number
 }

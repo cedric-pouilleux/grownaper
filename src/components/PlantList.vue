@@ -10,11 +10,12 @@
         <el-table-column prop="name" label="Name" />
         <el-table-column>
           <template #default="scope">
-            <el-progress v-if="isFloweringStarted(scope.row)"
+            <el-progress
                          :text-inside="true"
-                         :status="scope.row.collected && 'success'"
+                         :stroke-width="16"
+                         :status="status(scope.row)"
                          :percentage="percent(scope.row)">
-              <span></span>
+              {{getProgressText(scope.row)}}
             </el-progress>
           </template>
         </el-table-column>
@@ -58,7 +59,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { computed, defineComponent, PropType } from 'vue';
 import {
   Male, Female, Timer, InfoFilled,
 } from '@element-plus/icons-vue';
@@ -75,19 +76,50 @@ export default defineComponent({
   },
 
   setup(props, { emit }) {
+    // TODO => get percent and text in the same object
+    function getProgressText(plant: PlantResource): string {
+      if (plant.isGrowing()) {
+        return 'Growing';
+      }
+      if (plant.isFlowering()) {
+        return 'Flowering';
+      }
+      if (plant.isDrying()) {
+        return 'Drying';
+      }
+      if (plant.isCurring()) {
+        return 'Curring';
+      }
+      return 'Not started';
+    }
+
     function percent(plant: PlantResource): number | null {
-      if (plant.collectedDate) {
+      if (plant.isFlowering()) {
+        return plant.floweringPercent();
+      }
+      if (plant.isCurring()) {
+        return plant.curringPercent();
+      }
+      if (plant.isDrying() || plant.isGrowing()) {
         return 100;
       }
-      if (plant.variety) {
-        const { floTime } = plant.variety;
-        const { startFloweringDate } = plant;
-        const leaveDay = Moment(startFloweringDate)
-          .add(floTime, 'd')
-          .diff(Moment(), 'days');
-        return Math.round(100 - (leaveDay / floTime) * 100);
+      return 0;
+    }
+
+    function status(plant: PlantResource): string {
+      if (plant.isGrowing()) {
+        return 'success';
       }
-      return null;
+      if (plant.isDrying()) {
+        return 'success';
+      }
+      if (plant.isFlowering()) {
+        return plant.floweringPercent() === 100 ? 'success' : '';
+      }
+      if (plant.isCurring()) {
+        return plant.curringPercent() === 100 ? 'success' : '';
+      }
+      return '';
     }
 
     function isFloweringStarted(plant: PlantResource): boolean {
@@ -96,7 +128,9 @@ export default defineComponent({
 
     return {
       open: (plant: PlantResource) => { emit('select', plant); },
+      getProgressText,
       isFloweringStarted,
+      status,
       Male,
       Female,
       Timer,
