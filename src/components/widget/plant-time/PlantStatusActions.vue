@@ -141,7 +141,7 @@ export default defineComponent({
         return false;
       }
       if (props.plant.startGrowingDate) {
-        return currentDate.value.isBefore(props.plant.startGrowingDate);
+        return currentDate.value.isBefore(props.plant.startGrowingDate, 'd');
       }
       return true;
     });
@@ -150,7 +150,7 @@ export default defineComponent({
 
     const displayFloweringStartBtn: ComputedRef<boolean> = computed((): boolean => {
       if (props.plant.startFloweringDate) {
-        return currentDate.value.isBefore(props.plant.startFloweringDate);
+        return currentDate.value.isBefore(props.plant.startFloweringDate, 'd');
       }
       return true;
     });

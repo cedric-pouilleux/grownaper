@@ -74,7 +74,7 @@ export default defineComponent({
       const sorted: SortedHistory[] = [];
       props.history?.forEach((historyItem) => {
         const sortIndex = sorted.findIndex(
-          (sortedItem: SortedHistory): boolean => Moment(historyItem.date).isSame(sortedItem.date, 'days'),
+          (sortedItem: SortedHistory): boolean => Moment(historyItem.date).isSame(sortedItem.date, 'day'),
         );
         if (sortIndex !== -1) {
           const res: SortedHistory = sorted[sortIndex];
