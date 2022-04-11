@@ -15,6 +15,7 @@ import {
 } from 'vue';
 import Moment from 'moment';
 import PlantResource from '@/resources/PlantResource';
+import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
   name: 'DryingProgress',
@@ -30,6 +31,8 @@ export default defineComponent({
     const currentDate = ref(Moment());
     const isVisible: ComputedRef<boolean> = computed((): boolean => !!props.plant.collectedDate);
 
+    const { t } = useI18n({ inheritLocale: true });
+
     const getDryingDuration: ComputedRef<number> = computed((): number => {
       if (props.plant.collectedDate || props.plant.startCurringDate) {
         return Moment(props.plant.startCurringDate).diff(props.plant.collectedDate, 'days');
@@ -41,20 +44,17 @@ export default defineComponent({
      * Text render
      */
     const text: ComputedRef<string> = computed((): string => {
-      if (!props.plant.collectedDate) {
-        return 'Drying not started';
-      }
       if (props.plant.isCurring()) {
-        return `Drying complete on ${getDryingDuration.value} days`;
+        return t('plant.time.drying.complete', getDryingDuration.value);
       }
       if (props.plant.isDrying()) {
         const days = currentDate.value.diff(props.plant.collectedDate, 'days');
         if (days === 0) {
-          return 'Start drying today';
+          return t('plant.time.drying.start.today');
         }
-        return `Drying ${days} days`;
+        return t('plant.time.current.drying', days);
       }
-      return 'Drying not started';
+      return t('plant.time.drying.not.start');
     });
 
     /**

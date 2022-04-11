@@ -16,6 +16,7 @@ import Moment from 'moment';
 import PlantResource from '@/resources/PlantResource';
 import { object } from 'vue-types';
 import { Percent } from '@/common/utils';
+import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
   name: 'FloweringProgress',
@@ -26,31 +27,33 @@ export default defineComponent({
 
   setup(props) {
     const currentDate = ref(Moment());
+    const { t } = useI18n();
 
     /**
      * Text render
+     * TODO => Refacto
      */
     const text: ComputedRef<string> = computed((): string => {
       const { variety, startFloweringDate, collectedDate } = props.plant;
       if (!variety) {
-        return 'Variety not selected';
+        return t('plant.time.no.variety.date');
       }
       if (!startFloweringDate) {
-        return 'Flowering date not selected';
+        return t('plant.time.no.flowering.date');
       }
       const days = Moment(startFloweringDate).add(variety.floTime, 'd').diff(currentDate.value, 'days');
       const daysWork = variety.floTime - days;
       if (props.plant.isFlowering() && daysWork > 0) {
-        return `Flowering ${daysWork} / ${variety.floTime} days`;
+        return t('plant.time.current.flowering', { daysWork, floTime: variety.floTime });
       }
       if (props.plant.isDrying() || props.plant.isCurring()) {
-        const date = Moment(collectedDate).diff(startFloweringDate, 'days');
-        return `Flowering complete ${date} / ${variety.floTime}`;
+        const totalDays = Moment(collectedDate).diff(startFloweringDate, 'days');
+        return t('plant.time.flowering.complete', { totalDays, floTime: variety.floTime });
       }
       if (daysWork === 0) {
-        return 'Flowering start tomorrow';
+        return t('plant.time.flowering.start.today');
       }
-      return `Flowering start in ${-daysWork} days`;
+      return t('plant.time.flowering.start.in', { days: -daysWork });
     });
 
     /**

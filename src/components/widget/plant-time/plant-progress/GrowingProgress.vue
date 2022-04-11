@@ -14,6 +14,7 @@ import {
 } from 'vue';
 import Moment from 'moment';
 import PlantResource from '@/resources/PlantResource';
+import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
   name: 'GrowingProgress',
@@ -27,9 +28,10 @@ export default defineComponent({
 
   setup(props) {
     const currentDate = ref(Moment());
+    const { t } = useI18n({ inheritLocale: true });
 
     const expiredDays: ComputedRef<number> = computed(
-      () => currentDate.value.diff(props.plant?.startGrowingDate, 'days'),
+      (): number => currentDate.value.diff(props.plant?.startGrowingDate, 'days'),
     );
 
     const isVisible: ComputedRef<boolean> = computed((): boolean => {
@@ -45,20 +47,20 @@ export default defineComponent({
 
     const text: ComputedRef<string> = computed((): string => {
       if (!props.plant?.startGrowingDate) {
-        return 'Growing date not selected';
+        return t('plant.time.no.growing.date');
       }
       if (props.plant.isGrowing()) {
         if (expiredDays.value === 0) {
-          return 'Growing start today';
+          return t('plant.time.growing.start.today');
         }
         if (expiredDays.value > 0) {
-          return `Growing start since ${expiredDays.value} days`;
+          return t('plant.time.growing.start.since', expiredDays.value);
         }
       }
       if (expiredDays.value > 0) {
-        return `Growing complete on ${expiredDays.value} days`;
+        return t('plant.time.growing.complete', expiredDays.value);
       }
-      return `Growing start in ${-expiredDays.value} days`;
+      return t('plant.time.start.in', { days: -expiredDays.value });
     });
 
     const percent: ComputedRef<number> = computed((): number => {
@@ -80,6 +82,7 @@ export default defineComponent({
 
     return {
       isVisible,
+      expiredDays, // use for unit testing
       text,
       percent,
       status,

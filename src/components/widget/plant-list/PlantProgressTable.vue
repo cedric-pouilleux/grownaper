@@ -10,6 +10,7 @@
 <script lang="ts">
 import { computed, ComputedRef, defineComponent } from 'vue';
 import PlantResource from '@/resources/PlantResource';
+import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
 
@@ -24,22 +25,24 @@ export default defineComponent({
 
   setup(props) {
     const getProgressText: ComputedRef<string> = computed((): string => {
+      const { t } = useI18n({ inheritLocale: true });
+
       if (!props.plant) {
         return '';
       }
       if (props.plant.isGrowing()) {
-        return 'Growing';
+        return t('growing');
       }
       if (props.plant.isFlowering()) {
-        return 'Flowering';
+        return t('flowering');
       }
       if (props.plant.isDrying()) {
-        return 'Drying';
+        return t('drying');
       }
       if (props.plant.isCurring()) {
-        return 'Curring';
+        return t('curring');
       }
-      return 'Not started';
+      return t('not.started');
     });
 
     const percent: ComputedRef<number> = computed((): number => {

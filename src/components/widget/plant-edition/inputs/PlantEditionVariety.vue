@@ -1,7 +1,7 @@
 <template>
-  <el-form-item label="Variety">
+  <el-form-item :label="$t('variety')" >
     <el-select v-model="selectedVariety" style="{ width: 100%; }"
-               :placeholder="selectedVariety?.title || 'Your plant'">
+               :placeholder="selectedVariety?.title || $t('your.plant')">
       <el-option v-for="optVariety in varietyStore.all"
                  :key="optVariety._id"
                  :value="optVariety">
@@ -28,7 +28,7 @@ export default defineComponent({
   setup(props, { emit }) {
     const varietyStore = VarietyStore();
 
-    const selectedVariety: WritableComputedRef<string> = computed({
+    const selectedVariety: WritableComputedRef<Variety> = computed({
       get() {
         return props.variety;
       },

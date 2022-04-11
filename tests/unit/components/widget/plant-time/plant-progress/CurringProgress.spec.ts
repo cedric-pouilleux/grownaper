@@ -3,12 +3,13 @@ import CurringProgress from '@/components/widget/plant-time/plant-progress/Curri
 import ElementPlus from 'element-plus';
 import PlantResource from '@/resources/PlantResource';
 import Moment from 'moment';
+import i18n from '@/i18n/config';
 import { creatingPlantFixture, curringPlantFixture } from '../../../../../mocks/PlantsMocks';
 
 function prepareMount(plant: PlantResource) {
   return mount(CurringProgress, {
     global: {
-      plugins: [ElementPlus],
+      plugins: [ElementPlus, i18n],
     },
     props: {
       plant,

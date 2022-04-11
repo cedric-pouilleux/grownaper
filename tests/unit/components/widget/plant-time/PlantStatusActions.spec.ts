@@ -4,6 +4,7 @@ import ElementPlus from 'element-plus';
 import PlantResource from '@/resources/PlantResource';
 import Moment from 'moment';
 import { createTestingPinia } from '@pinia/testing';
+import i18n from '@/i18n/config';
 import {
   creatingPlantFixture, curringPlantFixture,
   floweringPlantFixture,
@@ -13,7 +14,7 @@ import {
 function prepareMount(plant: PlantResource) {
   return mount(PlantStatusActions, {
     global: {
-      plugins: [ElementPlus, createTestingPinia()],
+      plugins: [ElementPlus, createTestingPinia(), i18n],
     },
     props: {
       plant,

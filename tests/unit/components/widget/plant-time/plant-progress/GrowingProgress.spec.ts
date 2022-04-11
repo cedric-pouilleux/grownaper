@@ -3,6 +3,8 @@ import GrowingProgress from '@/components/widget/plant-time/plant-progress/Growi
 import ElementPlus from 'element-plus';
 import PlantResource from '@/resources/PlantResource';
 import Moment from 'moment';
+import i18n from '@/i18n/config';
+
 import {
   growingPlantFixture,
   creatingPlantFixture,
@@ -12,7 +14,7 @@ import {
 function prepareMount(plant: PlantResource) {
   return mount(GrowingProgress, {
     global: {
-      plugins: [ElementPlus],
+      plugins: [ElementPlus, i18n],
     },
     props: {
       plant,
@@ -34,7 +36,7 @@ describe('Plant growing progress', () => {
     const wrapper = prepareMount(growingPlantFixture);
     wrapper.vm.currentDate = Moment('2022-01-03');
     await wrapper.vm.$nextTick();
-    expect(wrapper.text()).toEqual('Growing start in 2 days');
+    expect(wrapper.text()).toEqual('Growing start in 1 day');
     expect(wrapper.vm.status).toBe('');
     expect(wrapper.vm.percent).toBe(0);
   });
@@ -67,9 +69,10 @@ describe('Plant growing progress', () => {
 
   it('Test flowering plant render', async () => {
     const wrapper = prepareMount(floweringPlantFixture);
-    wrapper.vm.currentDate = Moment('2022-01-10');
+    wrapper.vm.currentDate = Moment('2022-01-20');
     await wrapper.vm.$nextTick();
-    expect(wrapper.text()).toEqual('Growing complete on 4 days');
+    // expect(wrapper.vm.expiredDays).toBe(14);
+    expect(wrapper.text()).toEqual('Growing complete on 14 days');
     expect(wrapper.vm.status).toBe('success');
     expect(wrapper.vm.percent).toBe(100);
   });

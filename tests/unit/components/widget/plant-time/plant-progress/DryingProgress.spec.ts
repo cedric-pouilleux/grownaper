@@ -3,8 +3,8 @@ import DryingProgress from '@/components/widget/plant-time/plant-progress/Drying
 import ElementPlus from 'element-plus';
 import PlantResource from '@/resources/PlantResource';
 import Moment from 'moment';
+import i18n from '@/i18n/config';
 import {
-  creatingPlantFixture,
   curringPlantFixture,
   dryingPlantFixture, floweringPlantFixture,
 } from '../../../../../mocks/PlantsMocks';
@@ -12,7 +12,7 @@ import {
 function prepareMount(plant: PlantResource) {
   return mount(DryingProgress, {
     global: {
-      plugins: [ElementPlus],
+      plugins: [ElementPlus, i18n],
     },
     props: {
       plant,

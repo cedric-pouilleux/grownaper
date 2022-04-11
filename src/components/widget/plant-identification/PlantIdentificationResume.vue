@@ -5,20 +5,20 @@
       <div>
         <div class="plant-identification-resume__header-title">
           <h1 :data-plantid="plant._id">{{ plant.name }}</h1>
-          <el-tag v-if="plant.collectedDate" type="success">Collected</el-tag>
+          <el-tag v-if="plant.collectedDate" type="success">{{ $t('collected') }}</el-tag>
         </div>
         <plant-variety-resume :variety="plant.variety" />
-        <p class="date">Created at : {{ readableCreatedAt }}</p>
+        <p class="date">{{ $t('created.at')}} {{ $d(plant.createdAt, 'long') }}</p>
         <el-button size="small"
                    @click="openEditPlant"
                    plain round>
-          Edit
+          {{ $t('edit') }}
         </el-button>
-        <el-popconfirm title="Are you sure to delete this ?"
+        <el-popconfirm :title="$t('popconfirm.delete.plant')"
                        @confirm="removePlant">
           <template #reference>
             <el-button size="small" type="danger" plain round>
-              Delete
+              {{ $t('delete') }}
             </el-button>
           </template>
         </el-popconfirm>

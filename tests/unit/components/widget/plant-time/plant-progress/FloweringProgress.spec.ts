@@ -3,6 +3,7 @@ import FloweringProgress from '@/components/widget/plant-time/plant-progress/Flo
 import ElementPlus from 'element-plus';
 import PlantResource from '@/resources/PlantResource';
 import Moment from 'moment';
+import i18n from '@/i18n/config';
 import {
   creatingPlantFixture,
   floweringPlantFixture, dryingPlantFixture,
@@ -11,7 +12,7 @@ import {
 function prepareMount(plant: PlantResource) {
   return mount(FloweringProgress, {
     global: {
-      plugins: [ElementPlus],
+      plugins: [ElementPlus, i18n],
     },
     props: {
       plant,
@@ -33,7 +34,7 @@ describe('Plant flowering progress', () => {
     const wrapper = prepareMount(floweringPlantFixture);
     wrapper.vm.currentDate = Moment('2022-01-10');
     await wrapper.vm.$nextTick();
-    expect(wrapper.text()).toEqual('Flowering start tomorrow');
+    expect(wrapper.text()).toEqual('Flowering start today');
     expect(wrapper.vm.status).toBe('');
     expect(wrapper.vm.percent).toBe(0);
   });
@@ -51,7 +52,7 @@ describe('Plant flowering progress', () => {
     const wrapper = prepareMount(dryingPlantFixture);
     wrapper.vm.currentDate = Moment('2022-03-01');
     await wrapper.vm.$nextTick();
-    expect(wrapper.text()).toEqual('Flowering complete 64 / 70');
+    expect(wrapper.text()).toEqual('Flowering complete 64 / 70 days');
     expect(wrapper.vm.status).toBe('success');
     expect(wrapper.vm.percent).toBe(100);
   });

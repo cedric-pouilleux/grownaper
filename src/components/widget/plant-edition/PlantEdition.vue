@@ -2,8 +2,10 @@
   <el-form size="small" class="edit-plant-form" label-width="110px">
     <plant-edition-input-name v-model:name="form.name"/>
     <plant-edition-variety v-model:variety="form.variety"/>
-    <plant-edition-growing-date v-model:growing-date="form.startGrowingDate"/>
-    <plant-edition-flowering-date v-model:flowering-date="form.startFloweringDate"/>
+    <plant-edition-growing-date v-if="isVisibleGrowingDate"
+                                v-model:growing-date="form.startGrowingDate"/>
+    <plant-edition-flowering-date v-if="isVisibleFloweringDate"
+                                  v-model:flowering-date="form.startFloweringDate"/>
     <el-form-item>
       <el-button type="primary" @click="savePlantInDatabase" v-if="canSave">
         {{ $t('save') }}
@@ -66,11 +68,8 @@ export default defineComponent({
     }, { deep: true });
 
     const isSameDate: ComputedRef<boolean> = computed(
-      (): boolean => {
-        const a = Moment(props.compare.startFloweringDate)
-          .isSame(form.startFloweringDate, 'day');
-        return a;
-      },
+      (): boolean => Moment(props.compare.startFloweringDate)
+        .isSame(form.startFloweringDate, 'day'),
     );
 
     const isSameGrowingDate: ComputedRef<boolean> = computed(
@@ -100,7 +99,7 @@ export default defineComponent({
       form.name = value.name || undefined;
     });
 
-    async function savePlantInDatabase(plant: PlantResource): Promise<void> {
+    async function savePlantInDatabase(): Promise<void> {
       // TODO => use for define history database push, add this logic in backend
       const params: Partial<PlantResource> = {
         ...!isSameVariety.value ? { variety: form.variety } : {},
@@ -120,10 +119,26 @@ export default defineComponent({
       }
     }
 
+    const isVisibleGrowingDate: ComputedRef<boolean> = computed((): boolean => {
+      if (props.compare.isFlowering() || props.compare.isCurring() || props.compare.isDrying()) {
+        return false;
+      }
+      return true;
+    });
+
+    const isVisibleFloweringDate: ComputedRef<boolean> = computed((): boolean => {
+      if (props.plant.collectedDate) {
+        return false;
+      }
+      return true;
+    });
+
     return {
       form,
       canSave,
       savePlantInDatabase,
+      isVisibleFloweringDate,
+      isVisibleGrowingDate,
       Refresh,
     };
   },

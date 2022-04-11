@@ -1,7 +1,46 @@
 const messages: Record<string, string> = {
-  plant: 'Plante | Plantes',
+  plant: 'Plante | Plantes | Plantes ({count})',
   add: 'Ajouter',
   save: 'Sauvegarder',
+  name: 'Nom',
+  variety: 'Variété | Variétés',
+  breeder: 'Semencier | Semenciers',
+  growing: 'Croissance',
+  flowering: 'Floraison',
+  curring: 'Affinage',
+  drying: 'Séchage',
+  'not.started': 'Non démarré',
+  collected: 'Collectée',
+  edit: 'Editer',
+  delete: 'Supprimer',
+  'popconfirm.delete.plant': 'Etes vous certain de vouloir supprimer cette plante ?',
+  'created.at': 'Crée le',
+  randomise: 'Générer',
+  'your.plant': 'Votre plante',
+  'flowering.date': 'Date floraison',
+  'growing.date': 'Date croissance',
+
+  /**
+   * Plant time widget
+   */
+  'plant.time.no.growing.date': 'Date de croissance non sélectionnée',
+  'plant.time.growing.start.today': 'Croissande commence aujourd\'hui',
+  'plant.time.growing.start.since': 'Croissance en cours depuis 1 jour  | Croissance en cours depuis {days} jours',
+  'plant.time.growing.complete': 'Croissance terminée depuis 1 jour | Croissance terminée depuis {days} jours',
+  'plant.time.start.in': 'Croissance débute dans 1 jour | Croissance débute dans {days} jours',
+  'plant.time.no.variety.date': 'Variété non selectionnée',
+  'plant.time.no.flowering.date': 'Date de floraison non sélectionnée',
+  'plant.time.current.flowering': 'Floraison en cours {daysWork} / {floTime} jours',
+  'plant.time.flowering.complete': 'Floraison complète en {totalDays} / {floTime} jours',
+  'plant.time.flowering.start.today': 'Floraison commence aujourd\'hui',
+  'plant.time.flowering.start.in': 'Floraison commence dans 1 jour | Floraison commence dans {days} jours',
+  'plant.time.drying.not.start': 'Séchage non commencé',
+  'plant.time.drying.complete': 'Séchage complet depuis 1 jour | Séchage complet depuis {days} jours',
+  'plant.time.drying.start.today': 'Séchage commencé aujourd\'hui',
+  'plant.time.current.drying': 'Séchage en cours depuis 1 day | Séchage en cours depuis {days} jours',
+  'plant.time.curring.complete': 'Affinage complet dans 1 jour | Affinage complet dans {days} jours',
+  'plant.time.current.curring': 'Affinage en cours {currentDays} / {totalDays} jours',
+  'plant.time.curring.not.started': 'Affinage non commencé',
 };
 
 export default messages;

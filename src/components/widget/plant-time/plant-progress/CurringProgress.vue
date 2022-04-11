@@ -16,6 +16,7 @@ import {
 import Moment from 'moment';
 import PlantResource from '@/resources/PlantResource';
 import { Percent } from '@/common/utils';
+import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
   name: 'CurringProgress',
@@ -31,6 +32,7 @@ export default defineComponent({
     const currentDate = ref(Moment());
     const isVisible: ComputedRef<boolean> = computed((): boolean => !!props.plant.startCurringDate);
     const recommendationDays = ref<number>(60);
+    const { t } = useI18n({ inheritLocale: true });
 
     const getDryingFromNow: ComputedRef<number> = computed((): number => {
       if (props.plant.startCurringDate) {
@@ -48,12 +50,15 @@ export default defineComponent({
      */
     const text: ComputedRef<string> = computed((): string => {
       if (isComplete.value) {
-        return `Curring completed in ${recommendationDays.value} days`;
+        return t('plant.time.curring.complete', recommendationDays.value);
       }
       if (props.plant.startCurringDate) {
-        return `Curring ${getDryingFromNow.value} / ${recommendationDays.value} days`;
+        return t('plant.time.current.curring', {
+          currentDays: getDryingFromNow.value,
+          totalDays: recommendationDays.value,
+        });
       }
-      return 'Curring not started';
+      return t('plant.time.curring.not.started');
     });
 
     /**

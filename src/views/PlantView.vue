@@ -3,9 +3,7 @@
   <add-plant :opened="isPlantFormOpened"
              @close="togglePlantForm"
              @add="addPlant"/>
-
   <el-container :offset="10" style="height: calc(100vh - 59px);">
-
     <!-- PlantResource list -->
     <el-container style="min-width: 600px; max-width: 600px;" direction="vertical">
       <plant-list :plants="all" @select="selectPlant" @new-plant="togglePlantForm"/>

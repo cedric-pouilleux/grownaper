@@ -8,13 +8,13 @@
                 highlight-current-row
                 @current-change="open"
       >
-        <el-table-column prop="name" label="Name" />
+        <el-table-column prop="name" :label="$t('name')" />
         <el-table-column>
           <template #default="scope">
             <plant-progress-table v-if="scope.row" :plant="scope.row" />
           </template>
         </el-table-column>
-        <el-table-column prop="variety" label="Varieties" width="200">
+        <el-table-column prop="variety" :label="$t('variety')" width="200">
           <template #default="scope">
             <div v-if="scope.row.variety">
               <!-- eslint-disable max-len -->
@@ -43,7 +43,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="Breeder">
+        <el-table-column :label="$t('breeder')">
           <template #default="scope">
             {{ scope.row.variety.breeder.title }}
           </template>

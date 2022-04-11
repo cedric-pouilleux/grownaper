@@ -1,12 +1,12 @@
 <template>
-  <el-form-item label="Name" >
+  <el-form-item :label="$t('name')" >
     <el-input type="text"
               v-model="selectedName"
               clearable
               style="{ width: 100%; }">
       <template #append>
         <el-button type="primary" @click="refreshName">
-          Randomise
+          {{ $t('randomise') }}
         </el-button>
       </template>
     </el-input>

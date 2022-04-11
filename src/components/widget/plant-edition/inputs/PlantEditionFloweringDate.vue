@@ -1,5 +1,5 @@
 <template>
-  <el-form-item label="Flowering date">
+  <el-form-item :label="$t('flowering.date')">
     <el-date-picker v-model="selectedFlowering"
                     type="date"
                     format="YYYY/MM/DD"
@@ -24,7 +24,7 @@ export default defineComponent({
   setup(props, { emit }) {
     const varietyStore = VarietyStore();
 
-    const selectedFlowering: WritableComputedRef<string> = computed({
+    const selectedFlowering: WritableComputedRef<string | undefined> = computed({
       get() {
         return props.floweringDate;
       },
