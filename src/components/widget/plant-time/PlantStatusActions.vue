@@ -10,7 +10,7 @@
                @click="startGrowing"
                round plain
                data-testid="growing">
-      Start growing
+      {{ $t('plant.time.actions.start.growing' )}}
     </el-button>
 
     <!-- Flowering btn -->
@@ -20,17 +20,17 @@
                @click="startFlowering"
                data-testid="flowering"
                round plain>
-      Start flowering
+      {{ $t('plant.time.actions.start.flowering' )}}
     </el-button>
 
     <!-- Collect btn -->
-    <el-popconfirm v-if="displayCollectStartBtn"
+    <el-popconfirm v-if="plant.isFlowering()"
                    title="Are you sure to collect this plant ?"
                    @confirm="cutPlant"
                    data-testid="collect">
       <template #reference>
         <el-button type="warning" effect="plain" size="small" round plain>
-          Collect
+          {{ $t('plant.time.actions.start.collect' )}}
         </el-button>
       </template>
     </el-popconfirm>
@@ -42,14 +42,14 @@
                 data-testid="curring">
       <template #reference>
         <el-button type="warning" size="small" round plain>
-          Start curring
+          {{ $t('plant.time.actions.start.curring' )}}
         </el-button>
       </template>
       <el-input size="small" style="width: 120px;" type="text" v-model.number="weight">
         <template #append>gr</template>
       </el-input>
       <el-button size="small" type="warning" plain @click="startCurring" style="margin-left: 12px;">
-        Send
+        {{ $t('send')}}
       </el-button>
     </el-popover>
 

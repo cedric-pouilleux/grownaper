@@ -1,13 +1,14 @@
 <template>
   <el-header class="view-header">
-    <h2>History</h2>
+    <h2>{{ $t('plant.history.widget.title') }}</h2>
     <div class="tools">
       <el-select v-model="historyMode"
                  placeholder="Select"
                  size="small"
-                 @change="changeHistoryMode">
-        <el-option label="Display All" value="ALL"/>
-        <el-option label="Display per day" value="PER_DAYS"/>
+                 @change="changeHistoryMode"
+                 style="">
+        <el-option :label="$t('plant.history.widget.display.all')" value="ALL"/>
+        <el-option :label="$t('plant.history.widget.display.day')" value="PER_DAYS"/>
       </el-select>
     </div>
   </el-header>
@@ -34,6 +35,6 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .tools {
-  width: 140px;
+  width: 110px;
 }
 </style>

@@ -50,12 +50,7 @@ export default defineComponent({
         return t('plant.time.no.growing.date');
       }
       if (props.plant.isGrowing()) {
-        if (expiredDays.value === 0) {
-          return t('plant.time.growing.start.today');
-        }
-        if (expiredDays.value > 0) {
-          return t('plant.time.growing.start.since', expiredDays.value);
-        }
+        return t('plant.time.growing.start.since', expiredDays.value);
       }
       if (expiredDays.value > 0) {
         return t('plant.time.growing.complete', expiredDays.value);

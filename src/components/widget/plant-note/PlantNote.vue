@@ -1,13 +1,13 @@
 <template>
   <el-card shadow="never" class="plant-note" v-if="plant.notes">
     <el-header class="view-header view-header__small">
-      <h3>Notes ({{ plant.notes.length }})</h3>
+      <h3>{{ $t('plant.note.widget.title', plant.notes.length) }}</h3>
       <div>
         <el-button size="small"
                    type="primary"
                    @click="toggleNoteForm"
                    round>
-          Add note
+          {{ $t('plant.note.widget.add') }}
         </el-button>
       </div>
     </el-header>
@@ -18,28 +18,30 @@
              :model="formData"
              size="small">
       <el-form-item prop="content">
-        <el-input placeholder="Your note description here"
+        <el-input :placeholder="$t('plant.note.widget.add.description.placeholder')"
                   v-model="formData.content"
                   type="textarea"/>
       </el-form-item>
       <el-form-item>
         <el-button size="small"
                    @click="addNote(ruleFormRef)"
-                   type="primary" plain round>Submit</el-button>
+                   type="primary" plain round>
+          {{ $t('send') }}
+        </el-button>
       </el-form-item>
     </el-form>
 
     <div v-if="plant.notes.length">
-      <el-table size="small" :data="plant.notes" style="width: 100%">
+      <el-table size="small" :data="plant.notes" style="width: 100%" :show-header="false">
         <el-table-column prop="createdAt" label="Date" :width="125">
           <template #default="scope">
             {{readableCreatedAt(scope.row.createdAt)}}
           </template>
         </el-table-column>
-        <el-table-column prop="content" />
+        <el-table-column prop="content" label="description" />
       </el-table>
     </div>
-    <el-alert v-else title="This plant don't have note" :closable="false"/>
+    <el-alert v-else :title="$t('plant.note.widget.no.data')" :closable="false"/>
   </el-card>
 </template>
 

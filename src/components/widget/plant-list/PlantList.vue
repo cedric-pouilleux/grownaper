@@ -7,7 +7,7 @@
                 style="width: 100%"
                 highlight-current-row
                 @current-change="open"
-      >
+                v-loading="!plants.length">
         <el-table-column prop="name" :label="$t('name')" />
         <el-table-column>
           <template #default="scope">

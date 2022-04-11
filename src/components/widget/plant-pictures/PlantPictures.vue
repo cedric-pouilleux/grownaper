@@ -1,14 +1,16 @@
 <template>
   <el-card shadow="never" class="plant-pictures">
     <el-header class="view-header view-header__small">
-      <h3>Picture ({{pictures.length}})</h3>
+      <h3>{{ $t('plant.picture.widget.title', pictures.length) }}</h3>
       <div>
-        <el-button size="small" type="primary" round>Add picture</el-button>
+        <el-button size="small" type="primary" round>
+          {{ $t('plant.picture.widget.add') }}
+        </el-button>
       </div>
     </el-header>
     <div v-if="pictures.length">
     </div>
-    <el-alert v-else title="This plant don't have pictures" :closable="false"/>
+    <el-alert v-else :title="$t('plant.picture.widget.no.data')" :closable="false"/>
   </el-card>
 </template>
 
