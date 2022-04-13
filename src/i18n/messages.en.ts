@@ -1,4 +1,4 @@
-export default {
+const messages: Record<string, string> = {
   plant: 'Plant | Plants | Plants ({count})',
   add: 'Add',
   save: 'Save',
@@ -20,6 +20,7 @@ export default {
   'flowering.date': 'Flowering date',
   'growing.date': 'Growing date',
   send: 'Send',
+  connect: 'Connect',
 
   'plant.time.no.growing.date': 'Growing date not selected',
   'plant.time.growing.start.today': 'Growing start today',
@@ -57,3 +58,5 @@ export default {
   'plant.history.widget.display.day': 'Per day',
   'plant.history.widget.display.all': 'All',
 };
+
+export default messages;

@@ -20,6 +20,7 @@ const messages: Record<string, string> = {
   'flowering.date': 'Date floraison',
   'growing.date': 'Date croissance',
   send: 'Envoyer',
+  connect: 'Se connecter',
 
   /**
    * Plant time widget

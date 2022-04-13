@@ -9,7 +9,8 @@
       <el-menu-item index="/">Home</el-menu-item>
       <el-menu-item index="/plants">Plants</el-menu-item>
       <el-menu-item index="/admin">Admin</el-menu-item>
-      <div class="languages">
+      <el-link href="http://localhost:3000/auth/google" target="_blank">{{ $t('connect') }}</el-link>
+      <div class="menu-right-tools">
         <el-select v-model="$i18n.locale" size="small">
           <el-option label="French" value="fr-FR"/>
           <el-option label="English" value="en-US"/>
@@ -27,6 +28,7 @@ export default defineComponent({
   name: 'App',
   setup() {
     const language = ref<string>('en');
+
     return {
       language,
     };
@@ -37,7 +39,7 @@ export default defineComponent({
 <style lang="scss">
 @import "./styles/reset.scss";
 @import "./styles/layout.scss";
-.languages {
+.menu-right-tools {
   margin-left: auto;
   padding: 16px;
 }

@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "es5",
     "module": "esnext",
+    "noImplicitAny": false, //use for auth2 vue module, issue exist for typescript compatibility
     "strict": true,
     "jsx": "preserve",
     "importHelpers": true,
