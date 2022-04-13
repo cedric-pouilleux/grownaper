@@ -54,6 +54,16 @@ interface Feeder {
 }
 
 type historyDisplayMode = 'PER_DAYS' | 'ALL';
+type UserRolesType = 'ADMIN' | 'USER';
+
+interface IUser {
+  createdAt?: Date,
+  roles: UserRolesType[],
+  googleId: string,
+  displayName: string,
+  emails: [],
+  photos: []
+}
 
 export {
   Variety,
@@ -64,4 +74,5 @@ export {
   PlantHistory,
   HistoryType,
   historyDisplayMode,
+  IUser,
 };

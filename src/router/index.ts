@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue';
 import PlantView from '../views/PlantView.vue';
 import AdminFeedersView from '../views/admin/AdminFeedersView.vue';
 import AdminVarietiesView from '../views/admin/AdminVarietiesView.vue';
+import AccountView from '../views/AccountView.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -30,11 +31,23 @@ const routes: Array<RouteRecordRaw> = [
     name: 'AdminFeeders',
     component: AdminFeedersView,
   },
+  {
+    path: '/account',
+    name: 'Account',
+    component: AccountView,
+  },
 ];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  /*
+   * const user = UserStore();
+   */
+  next();
 });
 
 export default router;
