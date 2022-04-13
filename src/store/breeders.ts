@@ -20,7 +20,7 @@ const breederStore = defineStore('breeder', () => {
     formData.append('country', breeder.country || '');
     formData.append('picture', breeder.picture || '');
     formData.append('link', breeder.link || '');
-    const result = await axios.post(`${SERVER}/breeder/add`, formData, {
+    const result = await axios.post(`${SERVER}/breeders/add`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -39,7 +39,7 @@ const breederStore = defineStore('breeder', () => {
     formData.append('country', breeder.country || '');
     formData.append('picture', breeder.picture || '');
     formData.append('link', breeder.link || '');
-    const result = await axios.put(`${SERVER}/breeder/edit`, formData, {
+    const result = await axios.put(`${SERVER}/breeders/edit`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -52,7 +52,7 @@ const breederStore = defineStore('breeder', () => {
   }
 
   async function remove(id: string): Promise<boolean> {
-    const result = await axios.delete(`${SERVER}/breeder/delete/${id}`);
+    const result = await axios.delete(`${SERVER}/breeders/delete/${id}`);
     if (result.status === 201) {
       await fetch();
       return true;

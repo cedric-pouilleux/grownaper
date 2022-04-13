@@ -15,7 +15,7 @@ const varietyStore = defineStore('variety', () => {
   }
 
   async function add(variety: Partial<Variety>): Promise<boolean> {
-    const result = await axios.post(`${SERVER}/variety/add`, variety);
+    const result = await axios.post(`${SERVER}/varieties/add`, variety);
     if (result.status === 201) {
       await fetch();
       return true;
@@ -24,7 +24,7 @@ const varietyStore = defineStore('variety', () => {
   }
 
   async function edit(variety: Partial<Variety>): Promise<boolean> {
-    const result = await axios.put(`${SERVER}/variety/edit`, variety);
+    const result = await axios.put(`${SERVER}/varieties/edit`, variety);
     if (result.status === 201) {
       await fetch();
       return true;
@@ -33,7 +33,7 @@ const varietyStore = defineStore('variety', () => {
   }
 
   async function remove(id: string): Promise<boolean> {
-    const result = await axios.delete(`${SERVER}/variety/delete/${id}`);
+    const result = await axios.delete(`${SERVER}/varieties/delete/${id}`);
     if (result.status === 201) {
       await fetch();
       return true;
