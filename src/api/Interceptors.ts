@@ -8,11 +8,10 @@ const setup = (store) => {
   Api.interceptors.request.use(
     (config) => {
       const token = TokenService.getLocalAccessToken();
-      if (token) {
-        if (config.headers?.Authorization) {
-          // eslint-disable-next-line no-param-reassign
-          config.headers.Authorization = `Bearer ${token}`;
-        }
+      console.log(config);
+      if (token && config.headers) {
+        // eslint-disable-next-line no-param-reassign
+        config.headers.Authorization = `Bearer ${token}`;
       }
       return config;
     },
@@ -20,17 +19,17 @@ const setup = (store) => {
   );
 
   /**
-   * Refresh Bearer
+   * TODO => Refresh Bearer
    */
   Api.interceptors.response.use(
     (res) => res,
     async (err) => {
+      console.log(err);
+      /*
       const originalConfig = err.config;
       if (originalConfig.url !== '/auth/signin' && err.response) {
-        // If not authorized, refresh token
         if (err.response.status === 401 && !originalConfig._retry) {
           console.log('need refresh token');
-          /*
           originalConfig._retry = true;
           try {
             const rs = await Api.post('/auth/refreshtoken', {
@@ -42,9 +41,9 @@ const setup = (store) => {
             return Api(originalConfig);
           } catch (_error) {
             return Promise.reject(_error);
-          } */
+          }
         }
-      }
+      } */
       return Promise.reject(err);
     },
   );

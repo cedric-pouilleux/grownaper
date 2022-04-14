@@ -1,6 +1,5 @@
 <template>
   <div class="common-layout">
-    {{loggedIng}}
     <el-menu router
              default-active="1"
              mode="horizontal"
@@ -9,8 +8,8 @@
              active-text-color="#ff0000">
       <el-menu-item index="/"> Home</el-menu-item>
       <el-menu-item index="/plants">Plants</el-menu-item>
-      <el-menu-item v-if="isConnected" index="/admin">Admin</el-menu-item>
-      <el-menu-item v-if="isConnected" index="/account">{{ $t('account') }}</el-menu-item>
+      <el-menu-item v-if="loggedIng" index="/admin">Admin</el-menu-item>
+      <el-menu-item v-if="loggedIng" index="/account">{{ $t('account') }}</el-menu-item>
       <el-menu-item v-else>
         <el-link href="http://localhost:3000/auth/google" target="_blank">{{ $t('connect') }}</el-link>
       </el-menu-item>
@@ -32,18 +31,22 @@ import { computed, defineComponent, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import UsersStore from '@/store/users';
 import { storeToRefs } from 'pinia';
+import Token from '@/api/Token';
 
 export default defineComponent({
   name: 'App',
   setup() {
     const language = ref<string>('en');
-    // const route = useRoute();
-    const user = UsersStore();
-    // user.setToken(route.query?.token?.toString());
-    const { loggedIng } = storeToRefs(user);
+    const userStore = UsersStore();
+    const route = useRoute();
+
+    const { loggedIng } = storeToRefs(userStore);
+
+    if (route.query.token) {
+      Token.setLocalToken(route.query.token);
+    }
 
     return {
-      isConnected: computed((): boolean => !!token),
       loggedIng,
     };
   },

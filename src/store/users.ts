@@ -1,31 +1,33 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { IUser } from '@/common/types';
+import Api from '@/api/Api';
+import Token from '@/api/Token';
 
 const authStore = defineStore('auth', () => {
   const token = ref<string | null>(null);
   const identity = ref<IUser | null>(null);
 
-  const user = ref<object | null>(null);
   const loggedIng = ref<boolean>(false);
 
-  const tokenStorage = localStorage.getItem('AUTH_TOKEN_KEY');
-
-  if (tokenStorage) {
-    loggedIng.value = true;
-    token.value = tokenStorage;
+  async function getUser() {
+    const result = await Api.get('/user');
+    if (result) {
+      identity.value = result.data.user;
+    }
   }
 
-  function refreshToken(pToken) {
+  if (Token.item) {
     loggedIng.value = true;
-    user.value = { ...user.value, token: pToken };
+    token.value = Token.item;
+    getUser().then(() => console.log('user featch'));
   }
 
   return {
     token,
     identity,
     loggedIng,
-    refreshToken,
+    getUser,
   };
 });
 
