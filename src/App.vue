@@ -1,5 +1,6 @@
 <template>
   <div class="common-layout">
+    {{loggedIng}}
     <el-menu router
              default-active="1"
              mode="horizontal"
@@ -36,15 +37,14 @@ export default defineComponent({
   name: 'App',
   setup() {
     const language = ref<string>('en');
-    const route = useRoute();
+    // const route = useRoute();
     const user = UsersStore();
-    user.setToken(route.query?.token?.toString());
-    const { token, identity } = storeToRefs(user);
+    // user.setToken(route.query?.token?.toString());
+    const { loggedIng } = storeToRefs(user);
+
     return {
-      language,
-      token,
-      identity,
-      isConnected: computed((): boolean => !!identity.value || false),
+      isConnected: computed((): boolean => !!token),
+      loggedIng,
     };
   },
 });
