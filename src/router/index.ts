@@ -1,4 +1,8 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+import {
+  createRouter, createWebHistory, RouteRecordRaw, useRoute,
+} from 'vue-router';
+import Token from '@/api/Token';
+import UserStore from '@/store/users';
 import HomeView from '../views/HomeView.vue';
 import PlantView from '../views/PlantView.vue';
 import AdminFeedersView from '../views/admin/AdminFeedersView.vue';
@@ -43,10 +47,15 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
-  /*
-   * const user = UserStore();
-   */
+router.beforeEach(async (to, from, next) => {
+  if (to.query.token) {
+    const user = UserStore();
+    const { token } = to.query;
+    if (token) {
+      Token.setLocalToken(token);
+      await user.getUser();
+    }
+  }
   next();
 });
 

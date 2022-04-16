@@ -20,10 +20,11 @@ class TokenService {
   }
 
   getLocalAccessToken(): string | null {
-    if (!this.item) {
-      return null;
-    }
     return this.item;
+  }
+
+  removeToken() {
+    localStorage.removeItem(this.key);
   }
 }
 export default new TokenService();

@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import axios from 'axios';
 import { Variety } from '@/common/types';
 import PlantResource from '@/resources/PlantResource';
+import Api from '@/api/Api';
 
 const plantStore = defineStore('plant', () => {
   const SERVER = process.env.VUE_APP_SERVER_ADDRESS;
@@ -10,7 +10,7 @@ const plantStore = defineStore('plant', () => {
 
   async function fetch(): Promise<PlantResource[] | []> {
     try {
-      const result = await axios.get(`${SERVER}/plants`);
+      const result = await Api.get(`${SERVER}/plants`);
       all.value = result.data.map((item: PlantResource) => new PlantResource(item));
       return all.value;
     } catch (err) {
@@ -20,7 +20,7 @@ const plantStore = defineStore('plant', () => {
   }
 
   async function add(plant: Partial<PlantResource>): Promise<PlantResource | null> {
-    const result = await axios.post(`${SERVER}/plants/add`, plant);
+    const result = await Api.post(`${SERVER}/plants/add`, plant);
     if (result.status === 201) {
       await fetch();
       return new PlantResource(result.data);
@@ -29,7 +29,7 @@ const plantStore = defineStore('plant', () => {
   }
 
   async function addNote(plantId: string, content: string): Promise<PlantResource | null> {
-    const result = await axios.post(`${SERVER}/plants/notes/add/${plantId}`, {
+    const result = await Api.post(`${SERVER}/plants/notes/add/${plantId}`, {
       content,
     });
     if (result.status === 201) {
@@ -41,7 +41,7 @@ const plantStore = defineStore('plant', () => {
 
   async function remove(id: string): Promise<void> {
     try {
-      await axios.delete(`${SERVER}/plants/delete/${id}`);
+      await Api.delete(`${SERVER}/plants/delete/${id}`);
       await fetch();
     } catch (err) {
       console.error(err);
@@ -52,7 +52,7 @@ const plantStore = defineStore('plant', () => {
     plantId: string,
     data: { startFloweringDate?: Date | null, variety?: Variety| null },
   ): Promise<PlantResource | null> {
-    const result = await axios.put(`${SERVER}/plants/edit/${plantId}`, data);
+    const result = await Api.put(`${SERVER}/plants/edit/${plantId}`, data);
     if (result.status === 201) {
       await fetch();
       return new PlantResource(result.data);
@@ -61,7 +61,7 @@ const plantStore = defineStore('plant', () => {
   }
 
   async function cut(id: string): Promise<PlantResource | null> {
-    const result = await axios.put(`${SERVER}/plants/cut/${id}`);
+    const result = await Api.put(`${SERVER}/plants/cut/${id}`);
     if (result.status === 201) {
       await fetch();
       return new PlantResource(result.data);
@@ -70,7 +70,7 @@ const plantStore = defineStore('plant', () => {
   }
 
   async function startFlowering(id: string): Promise<PlantResource | null> {
-    const result = await axios.put(`${SERVER}/plants/start-flowering/${id}`);
+    const result = await Api.put(`${SERVER}/plants/start-flowering/${id}`);
     if (result.status === 201) {
       await fetch();
       return new PlantResource(result.data);
@@ -79,7 +79,7 @@ const plantStore = defineStore('plant', () => {
   }
 
   async function startCurring(id: string, weight : number): Promise<PlantResource | null> {
-    const result = await axios.put(`${SERVER}/plants/start-curring/${id}`, { weight });
+    const result = await Api.put(`${SERVER}/plants/start-curring/${id}`, { weight });
     if (result.status === 201) {
       await fetch();
       return new PlantResource(result.data);
@@ -88,7 +88,7 @@ const plantStore = defineStore('plant', () => {
   }
 
   async function startGrowing(id: string): Promise<PlantResource | null> {
-    const result = await axios.put(`${SERVER}/plants/start-growing/${id}`);
+    const result = await Api.put(`${SERVER}/plants/start-growing/${id}`);
     if (result.status === 201) {
       await fetch();
       return new PlantResource(result.data);
