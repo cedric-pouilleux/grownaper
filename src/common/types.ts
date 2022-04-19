@@ -1,4 +1,7 @@
-import Moment from 'moment';
+export type HistoryType = 'SIMPLE' | 'IMPORTANT' | 'SERVICE';
+export type FeederProductType = 'ALL' | 'FLOWERING' | 'GROWING';
+export type historyDisplayMode = 'PER_DAYS' | 'ALL';
+export type UserRolesType = 'ADMIN' | 'USER';
 
 interface Breeder {
   _id: string,
@@ -24,8 +27,6 @@ interface Note {
   content: string
 }
 
-type HistoryType = 'SIMPLE' | 'IMPORTANT' | 'SERVICE';
-
 type PlantHistory = {
   date: Date | string,
   action: HistoryType,
@@ -39,6 +40,9 @@ interface FeederProduct {
   description?: string,
   picture?: File,
   link?: string,
+  dosageMin?: number,
+  dosageMax?: number,
+  type: FeederProductType,
   // eslint-disable-next-line no-use-before-define
   feeder?: Feeder
 }
@@ -52,9 +56,6 @@ interface Feeder {
   link?: string,
   products?: FeederProduct[]
 }
-
-type historyDisplayMode = 'PER_DAYS' | 'ALL';
-type UserRolesType = 'ADMIN' | 'USER';
 
 interface IUser {
   createdAt?: Date,
@@ -72,7 +73,5 @@ export {
   Note,
   FeederProduct,
   PlantHistory,
-  HistoryType,
-  historyDisplayMode,
   IUser,
 };

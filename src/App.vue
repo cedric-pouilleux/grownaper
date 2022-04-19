@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent } from 'vue';
 import 'floating-vue/dist/style.css';
 import NavBar from '@/components/layout/NavBar.vue';
 
@@ -14,7 +14,7 @@ export default defineComponent({
   name: 'App',
   components: { NavBar },
   setup() {
-    const language = ref<string>('en');
+    // const language = ref<string>('en');
 
     return {
     };

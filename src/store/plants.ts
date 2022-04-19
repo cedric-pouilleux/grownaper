@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { Variety } from '@/common/types';
 import PlantResource from '@/resources/PlantResource';
-import Api from '@/api/Api';
+import { Api } from '@/api/Api';
 
 const plantStore = defineStore('plant', () => {
   const SERVER = process.env.VUE_APP_SERVER_ADDRESS;
@@ -20,6 +20,7 @@ const plantStore = defineStore('plant', () => {
   }
 
   async function add(plant: Partial<PlantResource>): Promise<PlantResource | null> {
+    console.log(plant);
     const result = await Api.post(`${SERVER}/plants/add`, plant);
     if (result.status === 201) {
       await fetch();

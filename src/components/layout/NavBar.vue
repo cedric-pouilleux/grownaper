@@ -5,15 +5,16 @@
         <li>
           <router-link to="/">
             <button>
-              Home
+              {{ $t('home') }}
             </button>
           </router-link>
         </li>
         <li>
           <router-link to="/plants">
             <button>
-              <font-awesome-icon icon="seedling" />
-              Plants</button>
+              <font-awesome-icon icon="cannabis" />
+              {{ $t('plants') }}
+            </button>
           </router-link>
         </li>
         <li v-if="loggedIng">
@@ -25,15 +26,24 @@
     </div>
     <div class="main-nav__right">
       <ul class="main-nav__list">
-        <li>
-          <a href="http://localhost:3000/auth/google" v-if="!loggedIng">
+        <li v-if="!loggedIng">
+          <a href="http://localhost:3000/auth/google">
             <button>
               {{ $t('connect with google') }}
               <font-awesome-icon icon="user" />
             </button>
           </a>
-          <button v-else @click="disconnect">
-            {{ $t('account') }}
+        </li>
+        <li v-if="loggedIng">
+          <router-link to="/account">
+            <button>
+              {{ $t('account') }}
+            </button>
+          </router-link>
+        </li>
+        <li v-if="loggedIng">
+          <button @click="disconnect">
+            <font-awesome-icon icon="xmark" />
           </button>
         </li>
       </ul>
@@ -41,7 +51,7 @@
   </nav>
 </template>
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
+import { defineComponent } from 'vue';
 import UsersStore from '@/store/users';
 import { storeToRefs } from 'pinia';
 
@@ -109,9 +119,12 @@ export default defineComponent({
     align-items: center;
 
     button, a {
-      height: 40px;
+      padding: 0 10px;
+      height: 100%;
+      cursor: pointer;
+      border: 0;
       color: #fff;
-      font-weight: 700;
+      background-color: initial;
     }
   }
 
@@ -136,6 +149,13 @@ export default defineComponent({
     color: #fff;
     height: 100%;
   }
+
+  button:hover {
+    background-color: #fff;
+    opacity: .8;
+    color: #333;
+  }
+
 }
 
 .menu-right-tools {

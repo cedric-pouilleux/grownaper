@@ -6,7 +6,6 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Api from '@/api/Api';
 import UsersStore from '@/store/users';
 import { storeToRefs } from 'pinia';
 

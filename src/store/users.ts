@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { IUser } from '@/common/types';
-import Api from '@/api/Api';
+import { Api } from '@/api/Api';
 import Token from '@/api/Token';
 
 const authStore = defineStore('auth', () => {

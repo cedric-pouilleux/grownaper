@@ -1,5 +1,6 @@
 import { Breeder, Variety } from '@/common/types';
 import PlantResource from '@/resources/PlantResource';
+import { BioFloProduct, BioGrowProduct } from './ProductsMocks';
 
 const breeder: Breeder = {
   _id: '624600ac67f855c1b7fd439e',
@@ -83,6 +84,13 @@ const curringPlant = new PlantResource({
   startCurringDate,
 });
 
+const productsPlant = new PlantResource({
+  ...plantBase,
+  startGrowingDate,
+  startFloweringDate,
+  products: [BioGrowProduct, BioFloProduct],
+});
+
 export {
   breeder as BreederFixture,
   variety as VarietyFixture,
@@ -92,4 +100,5 @@ export {
   dryingPlant as dryingPlantFixture,
   curringPlant as curringPlantFixture,
   floweringPlantSameDate as floweringPlantSameDateFixture,
+  productsPlant as productsPlantFixture,
 };

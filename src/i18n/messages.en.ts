@@ -21,6 +21,7 @@ const messages: Record<string, string> = {
   'growing.date': 'Growing date',
   send: 'Send',
   connect: 'Connect',
+  disconnect: 'Disconnect',
   account: 'Account',
 
   'plant.time.no.growing.date': 'Growing date not selected',

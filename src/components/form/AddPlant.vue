@@ -33,6 +33,17 @@
             </el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="Products">
+
+          <el-checkbox-group v-model="products">
+            <el-checkbox v-for="product in feederProductStore.all"
+                         :key="product.slug"
+                         :label="product"
+                         size="small">
+              {{product.title}}
+            </el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
       </el-form>
     </template>
     <template #footer>
@@ -52,6 +63,7 @@ import PlantStore from '@/store/plants';
 import { ElNotification } from 'element-plus';
 import NameGenerator from '@/common/NameGenerator';
 import PlantResource from '@/resources/PlantResource';
+import FeederProductStore from '@/store/feeders-products';
 
 export default defineComponent({
   name: 'AddPlant',
@@ -66,6 +78,7 @@ export default defineComponent({
     const drawer = ref<boolean>(false);
     const varietyStore = VarietyStore();
     const plantStore = PlantStore();
+    const feederProductStore = FeederProductStore();
 
     function generateInitial() {
       return {
@@ -73,6 +86,7 @@ export default defineComponent({
         startFloweringDate: undefined,
         startGrowingDate: undefined,
         startCurringDate: undefined,
+        products: [],
         variety: undefined,
       };
     }
@@ -102,6 +116,7 @@ export default defineComponent({
     return {
       drawer,
       ...toRefs(plant),
+      feederProductStore,
       varietyStore,
       action,
       refreshName,

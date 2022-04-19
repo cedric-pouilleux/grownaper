@@ -1,4 +1,6 @@
-import { Note, PlantHistory, Variety } from '@/common/types';
+import {
+  FeederProduct, Note, PlantHistory, Variety,
+} from '@/common/types';
 
 export interface IPlantResource {
   _id?: string,
@@ -14,10 +16,13 @@ export interface IPlantResource {
   weight?: number,
   notes?: Note[],
   history?: PlantHistory[],
+  products?: FeederProduct[],
   isGrowing(): boolean,
   isFlowering(): boolean,
   isCurring(): boolean,
   isDrying(): boolean,
   floweringPercent(): number,
   curringPercent(): number,
+  getFloweringProductsDoses(day: Date):string[],
+  getEndDay(): string | null
 }

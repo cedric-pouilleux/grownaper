@@ -25,11 +25,12 @@
                                    @save="selectPlant"/>
               <plant-time-reading :plant="selectedPlant" />
               <plant-end-actions :plant="selectedPlant" @edit="selectPlant"/>
-            </el-col>
-            <el-col :span="24" :md="24" :lg="12" :xl="12">
               <plant-note :plant="selectedPlant" @add-note="selectPlant"/>
               <br/>
               <plant-pictures />
+            </el-col>
+            <el-col :span="24" :md="24" :lg="12" :xl="12">
+              <plant-timeline :plant="selectedPlant" />
             </el-col>
           </el-row>
         </el-main>
@@ -59,10 +60,12 @@ import PlantNote from '@/components/widget/plant-note/PlantNote.vue';
 import PlantPictures from '@/components/widget/plant-pictures/PlantPictures.vue';
 import PlantResource from '@/resources/PlantResource';
 import PlantTimeReading from '@/components/widget/plant-time/PlantStatusTime.vue';
+import PlantTimeline from '@/components/widget/plant-timeline/PlantTimeline.vue';
 
 export default defineComponent({
   name: 'HomePage',
   components: {
+    PlantTimeline,
     PlantTimeReading,
     PlantPictures,
     PlantNote,

@@ -21,6 +21,7 @@ const messages: Record<string, string> = {
   'growing.date': 'Date croissance',
   send: 'Envoyer',
   connect: 'Se connecter',
+  disconnect: 'Se déconnecter',
   account: 'Compte',
 
   /**

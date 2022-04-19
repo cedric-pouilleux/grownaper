@@ -1,4 +1,6 @@
-import { Note, PlantHistory, Variety } from '@/common/types';
+import {
+  FeederProduct, Note, PlantHistory, Variety,
+} from '@/common/types';
 
 export type IPlantParam = {
   _id?: string,
@@ -14,4 +16,5 @@ export type IPlantParam = {
   weight?: number,
   notes?: Note[],
   history?: PlantHistory[],
+  products?: FeederProduct[];
 }

@@ -1,5 +1,5 @@
 import {
-  createRouter, createWebHistory, RouteRecordRaw, useRoute,
+  createRouter, createWebHistory, RouteRecordRaw,
 } from 'vue-router';
 import Token from '@/api/Token';
 import UserStore from '@/store/users';

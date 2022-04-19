@@ -5,6 +5,16 @@ import { FeederProduct } from '@/common/types';
 
 function generateFormData(feederProduct: Partial<FeederProduct>): FormData {
   const formData = new FormData();
+
+  if (feederProduct.dosageMin) {
+    formData.append('dosageMin', feederProduct.dosageMin.toString());
+  }
+  if (feederProduct.dosageMax) {
+    formData.append('dosageMax', feederProduct.dosageMax.toString());
+  }
+  if (feederProduct.type) {
+    formData.append('type', feederProduct.type);
+  }
   formData.append('title', feederProduct.title || '');
   formData.append('description', feederProduct.description || '');
   formData.append('picture', feederProduct.picture || '');
@@ -25,9 +35,10 @@ const feederProductStore = defineStore('feeder-product', () => {
   }
 
   async function add(feederProduct: Partial<FeederProduct>): Promise<boolean> {
-    const params = generateFormData(feederProduct);
-    console.log(params);
     console.log(feederProduct);
+    const params = generateFormData(feederProduct);
+    console.log(params.get('dosageMin'));
+    console.log(params.get('dosageMax'));
     const result = await axios.post(
       `${SERVER}/feeders-products/add`,
       params,

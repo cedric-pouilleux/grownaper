@@ -14,6 +14,19 @@
         <el-form-item label="Description">
           <el-input v-model="description" />
         </el-form-item>
+        <el-form-item label="Adapted for">
+          <el-select v-model="type" :placeholder="feeder?.title || 'Select associate feeder'">
+            <el-option v-for="list in lists" :key="list" :value="list">
+              {{list}}
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="Dosage minimun">
+          <el-input v-model="dosageMin" type="number"/>
+        </el-form-item>
+        <el-form-item label="Dosage maximun">
+          <el-input v-model="dosageMax" type="number"/>
+        </el-form-item>
         <el-form-item label="Feeder">
           <el-select v-model="feeder" :placeholder="feeder?.title || 'Select associate feeder'">
             <el-option v-for="optionBreeder in feederStore.all"
@@ -53,7 +66,7 @@ import {
   computed,
   defineComponent, PropType, reactive, ref, toRefs, watch,
 } from 'vue';
-import { FeederProduct } from '@/common/types';
+import { FeederProduct, FeederProductType } from '@/common/types';
 import FeederProductStore from '@/store/feeders-products';
 import FeederStore from '@/store/feeders';
 import { ElNotification } from 'element-plus';
@@ -81,7 +94,13 @@ export default defineComponent({
       picture: undefined,
       link: '',
       feeder: undefined,
+      dosageMin: undefined,
+      dosageMax: undefined,
+      type: undefined,
+      products: [],
     };
+
+    const lists: FeederProductType[] = ['ALL', 'FLOWERING', 'GROWING'];
 
     const feederStore = FeederStore();
     const drawer = ref<boolean>(false);
@@ -137,9 +156,11 @@ export default defineComponent({
       ...toRefs(feederProduct),
       edition: computed(() => !!props.selected),
       feederStore,
+      feederProductStore,
       handleClose,
       action,
       change,
+      lists,
     };
   },
 });
